@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="No product photo">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ecfdf3"/><stop offset="1" stop-color="#d7f0e0"/></linearGradient></defs>
+  <rect width="400" height="300" fill="url(#g)"/>
+  <g fill="none" stroke="#2f855a" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity=".75">
+    <path d="M200 215V120"/>
+    <path d="M200 150c-38 0-58-22-58-52 38 0 58 20 58 52z"/>
+    <path d="M200 175c38 0 58-22 58-52-38 0-58 20-58 52z"/>
+    <path d="M150 225h100"/>
+  </g>
+  <text x="200" y="262" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#2f855a" opacity=".8">No photo uploaded</text>
+</svg>

@@ -1,0 +1,85 @@
+<%- include('../partials/head') %>
+<main class="ks-main"><div class="ks-container">
+<% if (!product) { %>
+  <div class="ks-card ks-empty"><i class="bi bi-exclamation-circle"></i><h5 data-i18n="pd.notfound">Crop not found</h5><a href="/buyer/browse" class="btn btn-success mt-2" data-i18n="nav.browse">Browse Crops</a></div>
+<% } else {
+   const live = ['Available', 'Approved'].includes(product.p_status) && Number(product.quantity) > 0;
+   const imgs = [product.p_img1, product.p_img2, product.p_img3].filter(Boolean);
+   const defAddr = [buyer.b_address, buyer.city, buyer.pincode].filter(Boolean).join(', ');
+   const wa = (product.farmer_mobile || '').replace(/\D/g, '');
+%>
+  <nav class="small mb-3"><a href="/buyer/browse" class="text-muted text-decoration-none" data-i18n="nav.browse">Browse Crops</a> <i class="bi bi-chevron-right small text-muted"></i> <span><%= product.product_name %></span></nav>
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div class="ks-card overflow-hidden mb-3"><img id="mainImg" src="<%= imgs[0] || placeholderImg %>" alt="<%= product.product_name %>" class="w-100" style="max-height:440px;object-fit:cover" onerror="this.onerror=null;this.src='<%= placeholderImg %>'"></div>
+      <% if (imgs.length > 1) { %><div class="d-flex gap-2 mb-3"><% imgs.forEach(i => { %><img src="<%= i %>" class="ks-thumb" style="width:76px;height:76px;cursor:pointer" onclick="document.getElementById('mainImg').src=this.src" alt=""><% }) %></div><% } %>
+      <div class="ks-card ks-card-pad">
+        <h5 class="fw-bold mb-3" data-i18n="pd.details">Crop details</h5>
+        <div class="row g-3 small">
+          <div class="col-6 col-md-4"><div class="text-muted" data-i18n="pd.category">Category</div><b><%= product.category_name || '—' %></b></div>
+          <div class="col-6 col-md-4"><div class="text-muted" data-i18n="pd.stock">Available stock</div><b><%= num(product.quantity) %> <%= product.unit %></b></div>
+          <div class="col-6 col-md-4"><div class="text-muted" data-i18n="pd.min">Minimum order</div><b><%= num(product.min_order || 1) %> <%= product.unit %></b></div>
+          <div class="col-6 col-md-4"><div class="text-muted" data-i18n="pd.location">Location</div><b><%= product.p_location || product.district || '—' %></b></div>
+          <div class="col-6 col-md-4"><div class="text-muted" data-i18n="pd.listed">Listed on</div><b><%= fdate(product.created_at) %></b></div>
+          <div class="col-6 col-md-4"><div class="text-muted" data-i18n="col.farmer">Farmer</div><b><%= product.farmer_name %></b></div>
+        </div>
+        <hr><p class="mb-0 text-muted" style="white-space:pre-line"><%= product.description && product.description.trim() ? product.description : 'Direct farm harvest, verified by KisanSetu.' %></p>
+      </div>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="ks-card ks-card-pad position-sticky" style="top:90px" id="order">
+        <div class="d-flex justify-content-between align-items-start">
+          <div><span class="ks-badge st-approved mb-2"><%= product.category_name || 'Crop' %></span><h3 class="fw-bold mb-1"><%= product.product_name %></h3></div>
+          <button class="ks-wish position-static <%= isWished ? 'on' : '' %>" data-wish="<%= product.product_id %>" style="border:1px solid var(--line)"><i class="bi <%= isWished ? 'bi-heart-fill' : 'bi-heart' %>"></i></button>
+        </div>
+        <div class="fs-2 fw-bold text-success"><%= inr(product.price) %> <small class="fs-6 text-muted">/ <%= product.unit %></small></div>
+
+        <% if (live) { %>
+        <!-- PLACE ORDER -->
+        <form method="POST" action="/buyer/orders/place" class="mt-3" id="orderForm">
+          <input type="hidden" name="product_id" value="<%= product.product_id %>">
+          <label class="form-label"><span data-i18n="pd.qty">Quantity</span> (<%= product.unit %>)</label>
+          <input type="number" name="quantity" id="qty" class="form-control mb-2" min="<%= Number(product.min_order || 1) %>" max="<%= Number(product.quantity) %>" step="any" value="<%= Number(product.min_order || 1) %>" required>
+          <label class="form-label" data-i18n="pd.address">Delivery address</label>
+          <textarea name="delivery_address" class="form-control mb-2" rows="2" required><%= defAddr %></textarea>
+          <label class="form-label"><span data-i18n="pd.note">Note to farmer</span> <small class="text-muted">(optional)</small></label>
+          <input name="note" class="form-control mb-3" maxlength="200">
+          <div class="d-flex justify-content-between align-items-center p-3 rounded-3 mb-3" style="background:var(--g-50)">
+            <span class="text-muted" data-i18n="pd.total">Order total</span><b class="fs-4 text-success" id="total"><%= inr(Number(product.price) * Number(product.min_order || 1)) %></b>
+          </div>
+          <button class="btn btn-success w-100 btn-lg" type="submit" data-loading="Placing…"><i class="bi bi-cart-check me-1"></i><span data-i18n="btn.place_order">Place Order</span></button>
+        </form>
+        <% } else { %>
+          <div class="alert alert-warning mt-3 mb-0"><i class="bi bi-exclamation-triangle me-1"></i><span data-i18n="pd.unavailable">This crop is currently not available for ordering.</span></div>
+        <% } %>
+
+        <hr class="my-4">
+        <!-- INQUIRY (works from the product page) -->
+        <h6 class="fw-bold" id="enquiry"><i class="bi bi-chat-dots text-success me-1"></i><span data-i18n="pd.ask">Ask the farmer a question</span></h6>
+        <form method="POST" action="/buyer/enquiries" class="d-grid gap-2">
+          <input type="hidden" name="product_id" value="<%= product.product_id %>">
+          <input type="hidden" name="return_to" value="/buyer/product/<%= product.product_id %>">
+          <input type="number" name="requested_quantity" class="form-control" min="0" step="any" placeholder="Quantity you need (optional)" data-i18n-ph="enq.qty_ph">
+          <textarea name="message" class="form-control" rows="3" minlength="5" required placeholder="E.g. Can you deliver to Pune? Is a bulk discount possible?" data-i18n-ph="enq.msg_ph"></textarea>
+          <button class="btn btn-outline-success" type="submit" data-loading="Sending…"><i class="bi bi-send me-1"></i><span data-i18n="btn.send_enquiry">Send Enquiry</span></button>
+        </form>
+
+        <div class="d-flex gap-2 mt-3">
+          <% if (product.farmer_mobile) { %>
+            <a class="btn btn-light flex-fill" href="tel:<%= product.farmer_mobile %>"><i class="bi bi-telephone me-1"></i><span data-i18n="btn.call">Call</span></a>
+            <a class="btn btn-light flex-fill" target="_blank" rel="noopener" href="https://wa.me/<%= wa.length === 10 ? '91' + wa : wa %>?text=<%= encodeURIComponent('Hello, I am interested in ' + product.product_name + ' on KisanSetu.') %>"><i class="bi bi-whatsapp me-1 text-success"></i>WhatsApp</a>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const price = <%= Number(product.price) %>, qty = document.getElementById('qty'), total = document.getElementById('total');
+      if (qty) qty.addEventListener('input', () => { total.textContent = KS.inr(price * (Number(qty.value) || 0)); });
+    })();
+  </script>
+<% } %>
+</div></main>
+<%- include('../partials/footer') %>

@@ -1,0 +1,269 @@
+<%- include("header") %>
+
+<div class="manage-farmers-page">
+
+    <!-- Page Heading -->
+    <div class="admin-page-heading">
+        <div>
+            <h1 data-translate="Manage Farmers">Manage Farmers</h1>
+            <p data-translate="Manage farmer accounts and monitor their marketplace activity.">Manage farmer accounts and monitor their marketplace activity.</p>
+        </div>
+
+        <button type="button" class="btn btn-success" id="exportFarmersBtn">
+            <i class="fa-solid fa-download me-2"></i><span data-translate="Export Farmers">Export Farmers</span>
+        </button>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="farmers-summary-grid">
+        <div class="farmers-summary-card">
+            <div class="farmers-summary-icon farmers-icon-green"><i class="fa-solid fa-tractor"></i></div>
+            <div>
+                <p data-translate="Total Farmers">Total Farmers</p>
+                <h3><%= (typeof farmers !== 'undefined') ? farmers.length : 0 %></h3>
+                <span data-translate="Registered farmer accounts">Registered farmer accounts</span>
+            </div>
+        </div>
+        <div class="farmers-summary-card">
+            <div class="farmers-summary-icon farmers-icon-blue"><i class="fa-solid fa-user-check"></i></div>
+            <div>
+                <p data-translate="Active Farmers">Active Farmers</p>
+                <h3><%= (typeof farmers !== 'undefined') ? farmers.filter(f => f.status === 'active').length : 0 %></h3>
+                <span data-translate="Currently active">Currently active</span>
+            </div>
+        </div>
+        <div class="farmers-summary-card">
+            <div class="farmers-summary-icon farmers-icon-orange"><i class="fa-solid fa-clock"></i></div>
+            <div>
+                <p data-translate="Pending KYC">Pending KYC</p>
+                <h3><%= (typeof farmers !== 'undefined') ? farmers.filter(f => f.kyc_status === 'pending').length : 0 %></h3>
+                <span data-translate="Verification required">Verification required</span>
+            </div>
+        </div>
+        <div class="farmers-summary-card">
+            <div class="farmers-summary-icon farmers-icon-red"><i class="fa-solid fa-user-slash"></i></div>
+            <div>
+                <p data-translate="Suspended Farmers">Suspended Farmers</p>
+                <h3><%= (typeof farmers !== 'undefined') ? farmers.filter(f => f.status === 'blocked').length : 0 %></h3>
+                <span data-translate="Accounts suspended">Accounts suspended</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Farmers Directory -->
+    <div class="farmers-table-panel">
+
+        <div class="farmers-panel-heading">
+            <div>
+                <h2 data-translate="Farmer Directory">Farmer Directory</h2>
+                <p data-translate="Review farmer profiles, locations, KYC status and activity.">Review farmer profiles, locations, KYC status and activity.</p>
+            </div>
+
+            <span class="farmers-record-count">
+                <i class="fa-solid fa-list me-2"></i>
+                <span id="farmersRecordCount">8</span>
+                <span data-translate="sample records">sample records</span>
+            </span>
+        </div>
+
+        <!-- Search and Filters -->
+        <div class="farmers-toolbar">
+
+            <div class="farmers-search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input
+                    type="search"
+                    id="farmerSearchInput"
+                    placeholder="Search by name, email, mobile or village..."
+                    data-translate-placeholder="Search by name, email, mobile or village..."
+                    aria-label="Search farmers"
+                >
+            </div>
+
+            <select id="farmerStatusFilter"
+                    class="form-select farmers-status-filter"
+                    aria-label="Filter by farmer status">
+                <option value="all" data-translate="All Account Statuses">All Account Statuses</option>
+                <option value="active" data-translate="Active">Active</option>
+                <option value="pending" data-translate="Pending">Pending</option>
+                <option value="suspended" data-translate="Suspended">Suspended</option>
+            </select>
+
+            <select id="farmerKycFilter"
+                    class="form-select farmers-status-filter"
+                    aria-label="Filter by KYC status">
+                <option value="all" data-translate="All KYC Statuses">All KYC Statuses</option>
+                <option value="verified" data-translate="Verified">Verified</option>
+                <option value="pending" data-translate="Pending KYC">Pending KYC</option>
+                <option value="rejected" data-translate="Rejected">Rejected</option>
+            </select>
+
+            <button type="button" class="btn btn-outline-secondary"
+                    id="resetFarmerFiltersBtn">
+                <i class="fa-solid fa-rotate-left me-2"></i><span data-translate="Reset">Reset</span>
+            </button>
+
+        </div>
+
+        <!-- Farmers Table -->
+        <div class="table-responsive farmers-table-wrapper">
+
+            <table class="table farmers-table align-middle">
+
+                <thead>
+                    <tr>
+                        <th data-translate="Farmer">Farmer</th>
+                        <th data-translate="Mobile Number">Mobile Number</th>
+                        <th data-translate="Village / District">Village / District</th>
+                        <th data-translate="Farm Size">Farm Size</th>
+                        <th data-translate="KYC Status">KYC Status</th>
+                        <th data-translate="Account Status">Account Status</th>
+                        <th class="text-center" data-translate="Actions">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="farmersTableBody">
+        <% if (typeof farmers !== 'undefined' && farmers.length > 0) { %>
+            <% farmers.forEach(farmer => { %>
+                <tr data-status="<%= farmer.status || 'active' %>" data-kyc="<%= farmer.kyc_status || 'pending' %>">
+                    <td>
+                        <div class="farmer-info">
+                            <div class="farmer-avatar farmer-avatar-green">
+                                <%= (farmer.full_name || 'F').substring(0, 2).toUpperCase() %>
+                            </div>
+                            <div>
+                                <h6><%= farmer.full_name %></h6>
+                                <span><%= farmer.email %></span>
+                            </div>
+                        </div>
+                    </td>
+                    <td><%= farmer.mobile %></td>
+                    <td>
+                        <strong class="farmer-location-name"><%= farmer.district || '—' %></strong>
+                        <span class="farmer-location-sub"><%= farmer.state || '—' %></span>
+                    </td>
+                    <td><%= farmer.farm_name || 'Farm' %></td>
+                    <td>
+                        <span class="farmer-status <%= farmer.kyc_status === 'verified' ? 'farmer-kyc-verified' : 'farmer-kyc-pending' %>">
+                            <%= farmer.kyc_status === 'verified' ? 'Verified' : 'Pending' %>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="farmer-status <%= farmer.status === 'active' ? 'farmer-account-active' : 'farmer-account-suspended' %>">
+                            <%= farmer.status === 'active' ? 'Active' : 'Blocked' %>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="farmer-action-buttons">
+                            <form method="POST" action="/admin/farmers/toggle-status/<%= farmer.id %>" style="display:inline;">
+                                <button type="submit" class="farmer-action-btn edit-farmer-btn" title="<%= farmer.status === 'blocked' ? 'Unblock Farmer' : 'Block Farmer' %>">
+                                    <i class="fa-solid <%= farmer.status === 'blocked' ? 'fa-check text-success' : 'fa-ban text-danger' %>"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            <% }); %>
+        <% } else { %>
+            <tr><td colspan="7" class="text-center py-4 text-muted">No registered farmers found.</td></tr>
+        <% } %>
+    </tbody>
+            </table>
+
+            <div id="farmersEmptyState" class="farmers-empty-state d-none">
+                <i class="fa-solid fa-tractor"></i>
+                <h5 data-translate="No farmers found">No farmers found</h5>
+                <p data-translate="Try changing your search or filters.">Try changing your search or filters.</p>
+            </div>
+
+        </div>
+
+        <!-- Pagination -->
+        <div class="farmers-pagination">
+            <span id="farmersPaginationInfo" data-translate="Showing 1–8 of 8 sample records">Showing 1–8 of 8 sample records</span>
+
+            <div class="farmers-pagination-buttons">
+                <button type="button" class="farmers-page-btn" disabled
+                        aria-label="Previous page" title="Previous page">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <button type="button" class="farmers-page-btn current-page"
+                        aria-current="page">1</button>
+                <button type="button" class="farmers-page-btn" disabled
+                        aria-label="Next page" title="Next page">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Farmer Details Modal -->
+<div class="modal fade" id="farmerDetailsModal" tabindex="-1"
+     aria-labelledby="farmerDetailsModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content farmer-details-modal">
+
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title" id="farmerDetailsModalLabel" data-translate="Farmer Details">
+                        Farmer Details
+                    </h5>
+                    <p class="mb-0 small text-muted" data-translate="Farmer account information">Farmer account information</p>
+                </div>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close" title="Close"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="farmer-modal-profile">
+                    <div class="farmer-avatar farmer-avatar-green" id="modalFarmerAvatar">--</div>
+                    <div>
+                        <h5 id="modalFarmerName">Farmer Name</h5>
+                        <span id="modalFarmerStatus"
+                              class="farmer-status farmer-account-active">Active</span>
+                    </div>
+                </div>
+
+                <div class="farmer-detail-row">
+                    <span><i class="fa-solid fa-envelope"></i> <span data-translate="Email">Email</span></span>
+                    <strong id="modalFarmerEmail">--</strong>
+                </div>
+
+                <div class="farmer-detail-row">
+                    <span><i class="fa-solid fa-phone"></i> <span data-translate="Mobile">Mobile</span></span>
+                    <strong id="modalFarmerMobile">--</strong>
+                </div>
+
+                <div class="farmer-detail-row">
+                    <span><i class="fa-solid fa-location-dot"></i> <span data-translate="Location">Location</span></span>
+                    <strong id="modalFarmerLocation">--</strong>
+                </div>
+
+                <div class="farmer-detail-row">
+                    <span><i class="fa-solid fa-seedling"></i> <span data-translate="Farm Size">Farm Size</span></span>
+                    <strong id="modalFarmerFarm">--</strong>
+                </div>
+
+                <div class="farmer-detail-row">
+                    <span><i class="fa-solid fa-id-card"></i> <span data-translate="KYC Status">KYC Status</span></span>
+                    <strong id="modalFarmerKyc">--</strong>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal" data-translate="Close">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<%- include("footer") %>

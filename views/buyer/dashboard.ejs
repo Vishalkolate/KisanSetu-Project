@@ -1,0 +1,143 @@
+<%- include('../partials/head') %>
+<%
+  const hour = new Date().getHours();
+  const greetKey = hour < 12 ? 'greet.morning' : (hour < 17 ? 'greet.afternoon' : 'greet.evening');
+  const greetFb = hour < 12 ? 'Good morning' : (hour < 17 ? 'Good afternoon' : 'Good evening');
+  const stepIdx = { pending: 0, accepted: 1, shipped: 2, delivered: 3 };
+%>
+<main class="ks-main"><div class="ks-container">
+
+  <section class="ks-hero mb-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 position-relative" style="z-index:1">
+      <div>
+        <h1><span data-i18n="<%= greetKey %>"><%= greetFb %></span>, <%= (buyer && buyer.full_name || currentUser.name).split(' ')[0] %> 👋</h1>
+        <p><%= buyer && buyer.b_name ? buyer.b_name : '' %> · <span data-i18n="dash.buyer.sub">Track orders, talk to farmers and buy fresh crops directly.</span></p>
+      </div>
+      <div class="d-flex gap-2 flex-wrap">
+        <a href="/buyer/browse" class="btn btn-light"><i class="bi bi-basket3 me-1"></i><span data-i18n="nav.browse">Browse Crops</span></a>
+        <a href="/buyer/enquiries" class="btn btn-outline-light"><i class="bi bi-chat-dots me-1"></i><span data-i18n="btn.new_enquiry">New Enquiry</span></a>
+      </div>
+    </div>
+  </section>
+
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h5 class="fw-bold m-0" data-i18n="dash.overview">Overview</h5><span class="ks-live" data-i18n="live.badge">Live</span>
+  </div>
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-4 col-xl-2"><a class="ks-stat" href="/buyer/orders"><span class="ks-stat-ico ico-green"><i class="bi bi-box-seam"></i></span><div><p class="ks-stat-label" data-i18n="stat.total_orders">Total Orders</p><p class="ks-stat-value" data-stat="totalOrders"><%= stats.totalOrders %></p></div></a></div>
+    <div class="col-6 col-lg-4 col-xl-2"><a class="ks-stat" href="/buyer/orders"><span class="ks-stat-ico ico-amber"><i class="bi bi-hourglass-split"></i></span><div><p class="ks-stat-label" data-i18n="stat.active_orders">Active Orders</p><p class="ks-stat-value" data-stat="activeOrders"><%= stats.activeOrders %></p></div></a></div>
+    <div class="col-6 col-lg-4 col-xl-2"><a class="ks-stat" href="/buyer/orders"><span class="ks-stat-ico ico-blue"><i class="bi bi-patch-check"></i></span><div><p class="ks-stat-label" data-i18n="stat.delivered">Delivered</p><p class="ks-stat-value" data-stat="deliveredOrders"><%= stats.deliveredOrders %></p></div></a></div>
+    <div class="col-6 col-lg-4 col-xl-2"><a class="ks-stat" href="/buyer/orders"><span class="ks-stat-ico ico-violet"><i class="bi bi-currency-rupee"></i></span><div><p class="ks-stat-label" data-i18n="stat.total_spend">Total Spend</p><p class="ks-stat-value" data-stat="totalSpend"><%= inr(stats.totalSpend) %></p></div></a></div>
+    <div class="col-6 col-lg-4 col-xl-2"><a class="ks-stat" href="/buyer/enquiries"><span class="ks-stat-ico ico-blue"><i class="bi bi-chat-dots"></i></span><div><p class="ks-stat-label" data-i18n="stat.enquiries">Enquiries</p><p class="ks-stat-value" data-stat="totalEnquiries"><%= stats.totalEnquiries %></p><span class="ks-stat-sub"><b data-stat="repliedEnquiries"><%= stats.repliedEnquiries %></b> <span data-i18n="stat.replied">replied</span></span></div></a></div>
+    <div class="col-6 col-lg-4 col-xl-2"><a class="ks-stat" href="/buyer/wishlist"><span class="ks-stat-ico ico-red"><i class="bi bi-heart"></i></span><div><p class="ks-stat-label" data-i18n="stat.wishlist">Wishlist</p><p class="ks-stat-value" data-stat="wishlistCount"><%= stats.wishlistCount %></p></div></a></div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-xl-8">
+      <!-- Recent orders -->
+      <div class="ks-card mb-4">
+        <div class="ks-card-head"><h5><i class="bi bi-box-seam text-success me-2"></i><span data-i18n="dash.recent_orders">Recent Orders</span></h5><a href="/buyer/orders" class="btn btn-sm btn-outline-success" data-i18n="btn.view_all">View all</a></div>
+        <div class="table-responsive"><table class="ks-table">
+          <thead><tr><th data-i18n="col.order">Order</th><th data-i18n="col.product">Crop</th><th data-i18n="col.farmer">Farmer</th><th data-i18n="col.amount">Amount</th><th data-i18n="col.status">Status</th><th></th></tr></thead>
+          <tbody id="dash-orders">
+          <% if (recentOrders.length) { recentOrders.forEach(o => { %>
+            <tr>
+              <td><b>#KS-<%= o.order_id %></b><div class="small text-muted"><%= fdate(o.created_at) %></div></td>
+              <td><%= o.product_name || '—' %><div class="small text-muted"><%= num(o.quantity) %> <%= o.unit || '' %></div></td>
+              <td><%= o.farmer_name || '—' %></td>
+              <td><b><%= inr(o.total_amount) %></b></td>
+              <td><%- statusBadge(o.status) %></td>
+              <td class="text-end"><a class="btn btn-sm btn-outline-success" href="/buyer/orders/<%= o.order_id %>/invoice"><i class="bi bi-receipt"></i></a></td>
+            </tr>
+          <% }) } else { %>
+            <tr><td colspan="6"><div class="ks-empty"><i class="bi bi-bag"></i><h5 data-i18n="empty.orders">No orders yet</h5><a href="/buyer/browse" class="btn btn-success btn-sm mt-2" data-i18n="btn.start_shopping">Start shopping</a></div></td></tr>
+          <% } %>
+          </tbody></table></div>
+      </div>
+
+      <!-- Inquiry section -->
+      <div class="ks-card" id="inquiries">
+        <div class="ks-card-head"><h5><i class="bi bi-chat-dots text-success me-2"></i><span data-i18n="dash.inquiries">My Inquiries</span></h5><a href="/buyer/enquiries" class="btn btn-sm btn-outline-success" data-i18n="btn.view_all">View all</a></div>
+        <div id="dash-enquiries" class="p-3 d-grid gap-3">
+        <% if (recentEnquiries.length) { recentEnquiries.forEach(e => { %>
+          <div class="border rounded-3 p-3">
+            <div class="d-flex justify-content-between gap-2 flex-wrap"><div><b><%= e.product_name || 'Crop' %></b> <span class="text-muted small">· <%= e.farmer_name || '' %></span></div><%- statusBadge(e.status) %></div>
+            <div class="ks-chat mt-2"><%= e.message %></div>
+            <% if (e.reply_message) { %><div class="ks-chat reply mt-2"><b class="small d-block" data-i18n="enq.farmer_reply">Farmer's reply</b><%= e.reply_message %></div><% } %>
+          </div>
+        <% }) } else { %>
+          <div class="ks-empty"><i class="bi bi-chat-square-text"></i><h5 data-i18n="empty.enquiries">No enquiries yet</h5><p class="mb-2" data-i18n="empty.enquiries_hint">Ask a farmer about price, quality or delivery.</p><a href="/buyer/enquiries" class="btn btn-success btn-sm" data-i18n="btn.new_enquiry">New Enquiry</a></div>
+        <% } %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-4">
+      <div class="ks-card mb-4" id="tracking">
+        <div class="ks-card-head"><h5><i class="bi bi-truck text-success me-2"></i><span data-i18n="dash.tracking">Order Tracking</span></h5></div>
+        <div id="dash-tracking" class="p-3 d-grid gap-3">
+        <% if (tracking.length) { tracking.forEach(o => { const si = stepIdx[o.status] ?? 0; %>
+          <div class="border rounded-3 p-3">
+            <div class="d-flex justify-content-between"><b>#KS-<%= o.order_id %></b><%- statusBadge(o.status) %></div>
+            <div class="small text-muted"><%= o.product_name %> · <%= num(o.quantity) %> <%= o.unit || '' %></div>
+            <div class="ks-steps">
+              <% ['Placed', 'Confirmed', 'On the way', 'Delivered'].forEach((s, i) => { %><div class="ks-step <%= i <= si ? 'done' : '' %>" data-i18n="step.<%= i %>"><%= s %></div><% }) %>
+            </div>
+          </div>
+        <% }) } else { %><div class="ks-empty py-4"><i class="bi bi-geo-alt"></i><span data-i18n="empty.tracking">No active shipments</span></div><% } %>
+        </div>
+      </div>
+
+      <div class="ks-card">
+        <div class="ks-card-head"><h5><i class="bi bi-lightning-charge text-warning me-2"></i><span data-i18n="dash.quick">Quick actions</span></h5></div>
+        <div class="p-3 d-grid gap-2">
+          <a class="btn btn-outline-success text-start" href="/buyer/profile"><i class="bi bi-person-circle me-2"></i><span data-i18n="nav.profile">My Profile</span></a>
+          <a class="btn btn-outline-success text-start" href="/buyer/support"><i class="bi bi-headset me-2"></i><span data-i18n="nav.support">Support</span></a>
+          <a class="btn btn-outline-success text-start" href="/buyer/notifications"><i class="bi bi-bell me-2"></i><span data-i18n="nav.notifications">Notifications</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h5 class="fw-bold mt-5 mb-3" data-i18n="dash.fresh">Fresh from the farms</h5>
+  <div class="row g-3">
+    <% featured.forEach(p => { %>
+    <div class="col-6 col-lg-3"><div class="ks-product">
+      <a class="img" href="/buyer/product/<%= p.product_id %>"><img src="<%= productImg(p) %>" alt="<%= p.product_name %>" loading="lazy" onerror="this.onerror=null;this.src='<%= placeholderImg %>'"><span class="cat"><%= p.category_name || '' %></span></a>
+      <div class="body"><h5><%= p.product_name %></h5><div class="price"><%= inr(p.price) %> <small>/ <%= p.unit %></small></div><div class="meta"><span><i class="bi bi-geo-alt"></i> <%= p.district || p.p_location || '' %></span></div>
+      <a href="/buyer/product/<%= p.product_id %>" class="btn btn-success btn-sm mt-auto" data-i18n="btn.view_buy">View & Buy</a></div>
+    </div></div>
+    <% }) %>
+    <% if (!featured.length) { %><div class="col-12"><div class="ks-card ks-empty"><i class="bi bi-basket3"></i><span data-i18n="empty.products">No crops available right now.</span></div></div><% } %>
+  </div>
+</div></main>
+
+<script>
+(function () {
+  const STEPS = ['Placed', 'Confirmed', 'On the way', 'Delivered'], IDX = { pending: 0, accepted: 1, shipped: 2, delivered: 3 };
+  const E = KS.esc;
+  function ordersHtml(list) {
+    if (!list.length) return '<tr><td colspan="6"><div class="ks-empty"><i class="bi bi-bag"></i><h5>' + KS.t('empty.orders', 'No orders yet') + '</h5></div></td></tr>';
+    return list.map(o => '<tr><td><b>#KS-' + o.order_id + '</b><div class="small text-muted">' + KS.date(o.created_at) + '</div></td><td>' + E(o.product_name || '—') + '<div class="small text-muted">' + Number(o.quantity) + ' ' + E(o.unit || '') + '</div></td><td>' + E(o.farmer_name || '—') + '</td><td><b>' + KS.inr(o.total_amount) + '</b></td><td>' + KS.badge(o.status) + '</td><td class="text-end"><a class="btn btn-sm btn-outline-success" href="/buyer/orders/' + o.order_id + '/invoice"><i class="bi bi-receipt"></i></a></td></tr>').join('');
+  }
+  function enqHtml(list) {
+    if (!list.length) return '<div class="ks-empty"><i class="bi bi-chat-square-text"></i><h5>' + KS.t('empty.enquiries', 'No enquiries yet') + '</h5></div>';
+    return list.map(e => '<div class="border rounded-3 p-3"><div class="d-flex justify-content-between gap-2 flex-wrap"><div><b>' + E(e.product_name || 'Crop') + '</b> <span class="text-muted small">· ' + E(e.farmer_name || '') + '</span></div>' + KS.badge(e.status) + '</div><div class="ks-chat mt-2">' + E(e.message) + '</div>' + (e.reply_message ? '<div class="ks-chat reply mt-2"><b class="small d-block" data-i18n="enq.farmer_reply">' + KS.t('enq.farmer_reply', "Farmer's reply") + '</b>' + E(e.reply_message) + '</div>' : '') + '</div>').join('');
+  }
+  function trackHtml(list) {
+    if (!list.length) return '<div class="ks-empty py-4"><i class="bi bi-geo-alt"></i><span>' + KS.t('empty.tracking', 'No active shipments') + '</span></div>';
+    return list.map(o => { const si = IDX[o.status] || 0; return '<div class="border rounded-3 p-3"><div class="d-flex justify-content-between"><b>#KS-' + o.order_id + '</b>' + KS.badge(o.status) + '</div><div class="small text-muted">' + E(o.product_name) + ' · ' + Number(o.quantity) + ' ' + E(o.unit || '') + '</div><div class="ks-steps">' + STEPS.map((s, i) => '<div class="ks-step ' + (i <= si ? 'done' : '') + '" data-i18n="step.' + i + '">' + s + '</div>').join('') + '</div></div>'; }).join('');
+  }
+  let last = '';
+  KS.onSummary(function (d) {
+    Object.keys(d.stats).forEach(k => KS.setStat(k, d.stats[k], k === 'totalSpend' ? KS.inr : null));
+    const sig = JSON.stringify([d.orders.map(o => [o.order_id, o.status]), d.enquiries.map(e => [e.enquiry_id, e.status, e.reply_message]), d.tracking.map(o => [o.order_id, o.status])]);
+    if (sig === last) return; last = sig;
+    document.getElementById('dash-orders').innerHTML = ordersHtml(d.orders);
+    document.getElementById('dash-enquiries').innerHTML = enqHtml(d.enquiries);
+    document.getElementById('dash-tracking').innerHTML = trackHtml(d.tracking);
+    if (window.KS_I18N) KS_I18N.apply(document.documentElement.lang);
+  });
+})();
+</script>
+<%- include('../partials/footer') %>

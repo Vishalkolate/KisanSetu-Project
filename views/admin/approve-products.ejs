@@ -1,0 +1,294 @@
+ <%- include("header") %>
+
+<section class="approve-products-page">
+
+    <!-- Page Heading -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h2 class="approval-title" data-translate="Approve Products">Approve Products</h2>
+            <p class="approval-subtitle" data-translate="Review farmer products before publishing them on the marketplace.">
+                Review farmer products before publishing them on the marketplace.
+            </p>
+        </div>
+
+        <button type="button" class="btn btn-outline-success rounded-pill px-4"
+                id="exportProductsBtn">
+            <i class="fa-solid fa-file-export me-2"></i>
+            <span data-translate="Export Products">Export Products</span>
+        </button>
+    </div>
+
+    <!-- Summary Cards -->
+    <% 
+        const prods = (typeof products !== 'undefined' && Array.isArray(products)) ? products : [];
+        const totalCount = prods.length;
+        const pendingCount = prods.filter(p => !p.p_status || p.p_status.toLowerCase() === 'pending').length;
+        const approvedCount = prods.filter(p => p.p_status && ['available', 'approved'].includes(p.p_status.toLowerCase())).length;
+        const rejectedCount = prods.filter(p => p.p_status && p.p_status.toLowerCase() === 'rejected').length;
+    %>
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="approval-stat-card">
+                <div class="approval-stat-icon green">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                </div>
+                <p data-translate="Total Products">Total Products</p>
+                <h3 id="approvalTotalCount"><%= totalCount %></h3>
+                <small data-translate="Products submitted by farmers">Products submitted by farmers</small>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="approval-stat-card">
+                <div class="approval-stat-icon orange">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <p data-translate="Pending Approval">Pending Approval</p>
+                <h3 id="approvalPendingCount"><%= pendingCount %></h3>
+                <small data-translate="Waiting for admin review">Waiting for admin review</small>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="approval-stat-card">
+                <div class="approval-stat-icon blue">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <p data-translate="Approved Products">Approved Products</p>
+                <h3 id="approvalApprovedCount"><%= approvedCount %></h3>
+                <small data-translate="Available for buyers">Available for buyers</small>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="approval-stat-card">
+                <div class="approval-stat-icon red">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </div>
+                <p data-translate="Rejected Products">Rejected Products</p>
+                <h3 id="approvalRejectedCount"><%= rejectedCount %></h3>
+                <small data-translate="Products not approved">Products not approved</small>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Product Approval Information -->
+    <div class="approval-notice mb-4">
+        <i class="fa-solid fa-circle-info"></i>
+        <div>
+            <strong data-translate="Product Verification">Product Verification</strong>
+            <p data-translate="Check product details, quantity, price and farmer information before approving a listing.">
+                Check product details, quantity, price and farmer information before approving a listing.
+            </p>
+        </div>
+    </div>
+
+    <!-- Product Table Panel -->
+    <div class="approval-panel">
+
+        <div class="approval-panel-heading">
+            <div>
+                <h5 data-translate="Product Approval List">Product Approval List</h5>
+                <p data-translate="Review and manage submitted marketplace products.">
+                    Review and manage submitted marketplace products.
+                </p>
+            </div>
+
+            <span class="approval-record-badge">
+                <span id="approvalVisibleCount"><%= totalCount %></span>
+                <span data-translate="Records">Records</span>
+            </span>
+        </div>
+
+        <!-- Filters -->
+        <div class="approval-filters">
+            <div class="approval-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="search" id="approvalSearchInput"
+                       class="form-control"
+                       placeholder="Search product, farmer or location..."
+                       data-translate-placeholder="Search product, farmer or location...">
+            </div>
+
+            <select id="approvalStatusFilter" class="form-select">
+                <option value="all" data-translate="All Statuses">All Statuses</option>
+                <option value="pending" data-translate="Pending">Pending</option>
+                <option value="approved" data-translate="Approved">Approved</option>
+                <option value="rejected" data-translate="Rejected">Rejected</option>
+            </select>
+
+            <select id="approvalCategoryFilter" class="form-select">
+                <option value="all" data-translate="All Categories">All Categories</option>
+                <option value="Vegetables" data-translate="Vegetables">Vegetables</option>
+                <option value="Fruits" data-translate="Fruits">Fruits</option>
+                <option value="Grains" data-translate="Grains">Grains</option>
+                <option value="Pulses" data-translate="Pulses">Pulses</option>
+            </select>
+
+            <button type="button" class="btn btn-light border"
+                    id="resetApprovalFiltersBtn">
+                <i class="fa-solid fa-rotate-left me-1"></i>
+                <span data-translate="Reset">Reset</span>
+            </button>
+        </div>
+
+        <!-- Responsive Table -->
+        <div class="table-responsive">
+            <table class="table approval-table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th data-translate="Product">Product</th>
+                        <th data-translate="Farmer">Farmer</th>
+                        <th data-translate="Category">Category</th>
+                        <th data-translate="Quantity">Quantity</th>
+                        <th data-translate="Price">Price</th>
+                        <th data-translate="Submitted On">Submitted On</th>
+                        <th data-translate="Status">Status</th>
+                        <th data-translate="Actions">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="approvalProductsTableBody">
+        <% if (typeof products !== 'undefined' && products.length > 0) { %>
+            <% products.forEach(product => { 
+                const rawStatus = (product.p_status || 'Pending').trim();
+                const isApproved = ['available', 'approved'].includes(rawStatus.toLowerCase());
+                const isRejected = rawStatus.toLowerCase() === 'rejected';
+                const isPending = !isApproved && !isRejected;
+                const normalizedStatus = isApproved ? 'approved' : (isRejected ? 'rejected' : 'pending');
+                const displayStatus = isApproved ? 'Approved' : (isRejected ? 'Rejected' : 'Pending');
+            %>
+                <tr data-status="<%= normalizedStatus %>" data-category="<%= product.category_name || 'Other' %>">
+                    <td>
+                        <div class="approval-product-cell">
+                            <img src="<%= product.p_img1 || '/web/images/product-placeholder.png' %>"
+                                 alt="<%= product.product_name %>"
+                                 style="width: 44px; height: 44px; border-radius: 8px; object-fit: cover;"
+                                 onerror="this.onerror=null; this.src='/web/images/product-placeholder.png';">
+                            <div>
+                                <strong><%= product.product_name %></strong>
+                                <small>PRD-<%= product.product_id %></small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="approval-farmer-info">
+                            <span><%= product.farmer_name || 'Farmer' %></span>
+                            <small class="text-muted"><%= product.district || 'India' %></small>
+                        </div>
+                    </td>
+                    <td><%= product.category_name || 'Other' %></td>
+                    <td><%= Number(product.quantity) %> <%= product.unit %></td>
+                    <td>₹<%= Number(product.price).toLocaleString('en-IN') %> / <%= product.unit %></td>
+                    <td><%= product.created_at ? new Date(product.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—' %></td>
+                    <td>
+                        <span class="approval-badge <%= normalizedStatus %>">
+                            <%= displayStatus %>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="d-flex gap-1 align-items-center">
+                            <% if (isPending) { %>
+                                <form method="POST" action="/admin/products/approve/<%= product.product_id %>" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-success" title="Approve Product">
+                                        <i class="fa-solid fa-check me-1"></i> Approve
+                                    </button>
+                                </form>
+                                <form method="POST" action="/admin/products/reject/<%= product.product_id %>" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Reject Product">
+                                        <i class="fa-solid fa-xmark me-1"></i> Reject
+                                    </button>
+                                </form>
+                            <% } else if (isApproved) { %>
+                                <span class="badge bg-success-subtle text-success border border-success px-2 py-1 me-1">
+                                    <i class="fa-solid fa-circle-check me-1"></i> Approved
+                                </span>
+                                <form method="POST" action="/admin/products/reject/<%= product.product_id %>" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Reject Product" onclick="return confirm('Reject this approved product?');">
+                                        <i class="fa-solid fa-xmark"></i> Reject
+                                    </button>
+                                </form>
+                            <% } else { %>
+                                <span class="badge bg-danger-subtle text-danger border border-danger px-2 py-1 me-1">
+                                    <i class="fa-solid fa-circle-xmark me-1"></i> Rejected
+                                </span>
+                                <form method="POST" action="/admin/products/approve/<%= product.product_id %>" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-outline-success" title="Re-approve Product">
+                                        <i class="fa-solid fa-rotate-right me-1"></i> Re-approve
+                                    </button>
+                                </form>
+                            <% } %>
+                        </div>
+                    </td>
+                </tr>
+            <% }); %>
+        <% } else { %>
+            <tr><td colspan="8" class="text-center py-4 text-muted">No products found for review.</td></tr>
+        <% } %>
+    </tbody>
+            </table>
+        </div>
+
+        <!-- Empty State -->
+        <div id="approvalEmptyState" class="approval-empty-state d-none">
+            <i class="fa-solid fa-box-open"></i>
+            <h6 data-translate="No products found">No products found</h6>
+            <p data-translate="Try changing your search or filters.">
+                Try changing your search or filters.
+            </p>
+        </div>
+
+        <div class="approval-table-footer">
+            <span id="approvalPaginationInfo">Showing <%= totalCount %> products</span>
+            <span data-translate="Sample records for frontend demonstration">
+                Sample records for frontend demonstration
+            </span>
+        </div>
+
+    </div>
+</section>
+
+<!-- Product Details Modal -->
+<div class="modal fade" id="approvalProductModal" tabindex="-1"
+     aria-labelledby="approvalProductModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content approval-modal">
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title" id="approvalProductModalTitle"
+                        data-translate="Product Details">Product Details</h5>
+                    <small class="text-muted" id="modalApprovalProductId">PRD-1001</small>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="approval-modal-product-icon">
+                    <i class="fa-solid fa-seedling"></i>
+                </div>
+
+                <h4 id="modalApprovalProductName">Fresh Tomatoes</h4>
+
+                <div class="approval-detail-list">
+                    <div><span data-translate="Farmer">Farmer</span><strong id="modalApprovalFarmer"></strong></div>
+                    <div><span data-translate="Location">Location</span><strong id="modalApprovalLocation"></strong></div>
+                    <div><span data-translate="Category">Category</span><strong id="modalApprovalCategory"></strong></div>
+                    <div><span data-translate="Quantity">Quantity</span><strong id="modalApprovalQuantity"></strong></div>
+                    <div><span data-translate="Price">Price</span><strong id="modalApprovalPrice"></strong></div>
+                    <div><span data-translate="Submitted On">Submitted On</span><strong id="modalApprovalDate"></strong></div>
+                    <div><span data-translate="Status">Status</span><strong id="modalApprovalStatus"></strong></div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light border"
+                        data-bs-dismiss="modal" data-translate="Close">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("footer") %>

@@ -1,0 +1,166 @@
+<%- include('header.ejs') %>
+
+<main class="contact-page flex-grow-1">
+  <section class="contact-hero">
+    <div class="container contact-hero-content">
+      <span class="contact-eyebrow"><i class="fa-solid fa-headset" aria-hidden="true"></i> Help &amp; Support</span>
+      <h1>We're Here to Help You</h1>
+      <p>Questions about crop listings, availability, pricing, or using KisanSetu? Find the right way to reach our team below.</p>
+    </div>
+  </section>
+
+  <section class="contact-content-section">
+    <div class="container">
+      <div class="row g-4 contact-channel-grid">
+        <div class="col-md-4">
+          <article class="contact-channel-card h-100">
+            <div class="contact-icon contact-icon-green"><i class="fa-solid fa-phone-volume" aria-hidden="true"></i></div>
+            <div>
+              <h2>Toll-Free Helpline</h2>
+              <p>Available Monday to Saturday, 8 AM–7 PM</p>
+              <a class="contact-channel-value" href="tel:+9118002663276">+91 1800-266-3276</a>
+            </div>
+          </article>
+        </div>
+        <div class="col-md-4">
+          <article class="contact-channel-card h-100">
+            <div class="contact-icon contact-icon-blue"><i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i></div>
+            <div>
+              <h2>Email Support</h2>
+              <p>Send the team your question by email.</p>
+              <a class="contact-channel-value" href="mailto:support@kisansetu.in">support@kisansetu.in</a>
+            </div>
+          </article>
+        </div>
+        <div class="col-md-4">
+          <article class="contact-channel-card h-100">
+            <div class="contact-icon contact-icon-amber"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></div>
+            <div>
+              <h2>Agricultural Tech Hub</h2>
+              <p>Administrative Office</p>
+              <span class="contact-channel-value">Pune &amp; Chh. Sambhajinagar, Maharashtra</span>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="row g-4 g-xl-5 contact-main-grid">
+        <div class="col-lg-7">
+          <section class="contact-panel h-100" aria-labelledby="contactFormHeading">
+            <div class="contact-panel-heading">
+              <span class="contact-section-kicker">Get in touch</span>
+              <h2 id="contactFormHeading">Send Us a Direct Message</h2>
+              <p>Share your question and include a crop listing or reference number when it helps us understand the issue.</p>
+            </div>
+
+            <% if (typeof currentPath !== 'undefined') { %><div id="contactResult"></div><script>(function(){var q=new URLSearchParams(location.search);var r=document.getElementById('contactResult');if(q.get('success'))r.innerHTML='<div class="alert alert-success"><i class="bi bi-check-circle-fill me-1"></i>Thank you! Your message was sent. Our team will contact you soon.</div>';if(q.get('error'))r.innerHTML='<div class="alert alert-danger">Please fill your name and message, then try again.</div>';})();</script><% } %>
+            <form action="/contact_save" method="POST" id="contactForm" class="contact-form">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="contactName" class="form-label">Full Name <span class="contact-required" aria-hidden="true">*</span><span class="visually-hidden"> required</span></label>
+                  <input id="contactName" type="text" name="c_name" class="form-control" placeholder="e.g. Ramesh Patil" autocomplete="name" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="contactMobile" class="form-label">Mobile Number <span class="contact-required" aria-hidden="true">*</span><span class="visually-hidden"> required</span></label>
+                  <input id="contactMobile" type="tel" name="mobile" class="form-control" placeholder="e.g. 9822012345" autocomplete="tel" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="contactEmail" class="form-label">Email Address (Optional)</label>
+                  <input id="contactEmail" type="email" name="email" class="form-control" placeholder="name@domain.com" autocomplete="email">
+                </div>
+                <div class="col-md-6">
+                  <label for="contactRole" class="form-label">I am a <span class="contact-required" aria-hidden="true">*</span><span class="visually-hidden"> required</span></label>
+                  <select id="contactRole" name="user_type" class="form-select" required>
+                    <option value="farmer" selected>Farmer</option>
+                    <option value="buyer">Buyer / Trader</option>
+                    <option value="general">Other / Visitor</option>
+                  </select>
+                </div>
+                <div class="col-12">
+                  <label for="contactSubject" class="form-label">Subject / Department <span class="contact-required" aria-hidden="true">*</span><span class="visually-hidden"> required</span></label>
+                  <select id="contactSubject" name="subject_department" class="form-select" required>
+                    <option value="crop_listing">Crop Listing &amp; Availability Help</option>
+                    <option value="kyc_verification">KYC &amp; Document Verification Issue</option>
+                    <option value="order_enquiry">Buyer Enquiry &amp; Order Tracking</option>
+                    <option value="complaint">Complaint / Dispute Resolution</option>
+                    <option value="other">General Technical Support</option>
+                  </select>
+                </div>
+                <div class="col-12">
+                  <label for="contactMessage" class="form-label">Your Message <span class="contact-required" aria-hidden="true">*</span><span class="visually-hidden"> required</span></label>
+                  <textarea id="contactMessage" name="message" class="form-control contact-message-input" rows="6" placeholder="Describe your question or the issue you need help with..." required></textarea>
+                </div>
+                <div class="col-12 pt-1">
+                  <div id="contactFormFeedback" class="alert alert-danger d-none" role="alert" aria-live="assertive" aria-atomic="true"></div>
+                  <span id="contactFormProgress" class="visually-hidden" role="status" aria-live="polite"></span>
+                  <button type="submit" class="btn btn-success contact-submit-button" id="contactSubmitButton">
+                    <i class="fa-solid fa-paper-plane me-2" aria-hidden="true"></i>
+                    <span id="contactSubmitLabel">Submit Inquiry</span>
+                    <span id="contactSubmitSpinner" class="spinner-border spinner-border-sm ms-2 d-none" aria-hidden="true"></span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </section>
+        </div>
+
+        <div class="col-lg-5">
+          <aside class="contact-aside">
+            <div class="contact-panel contact-faq-panel">
+              <div class="contact-panel-heading">
+                <span class="contact-section-kicker">A few helpful details</span>
+                <h2>Frequently Asked Questions</h2>
+                <p>What to include and what to expect when you contact us.</p>
+              </div>
+              <div class="accordion contact-accordion" id="faqAccordion">
+                <div class="accordion-item">
+                  <h3 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" aria-expanded="true" aria-controls="faq1">What can I contact the team about?</button>
+                  </h3>
+                  <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">You can ask general questions about crop information, quantities, listed prices, or using the website. Include the relevant listing details when available.</div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" aria-expanded="false" aria-controls="faq2">Is this form currently delivering messages?</button>
+                  </h3>
+                  <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body"><span>The form endpoint is not configured to deliver or save messages yet. A submission will show an error explaining that it was not saved. Please email</span> <a href="mailto:support@kisansetu.in">support@kisansetu.in</a>.</div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3" aria-expanded="false" aria-controls="faq3">What information should I include?</button>
+                  </h3>
+                  <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">Briefly describe your question. If it relates to a crop listing or previous conversation, include its name or reference details. Do not include passwords or sensitive personal information.</div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4" aria-expanded="false" aria-controls="faq4">How else can I reach KisanSetu?</button>
+                  </h3>
+                  <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">Use the email address or telephone number in the contact cards above. No WhatsApp assistance link is configured on this page.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="contact-assistance-card">
+              <span class="contact-assistance-icon"><i class="fa-solid fa-envelope" aria-hidden="true"></i></span>
+              <div>
+                <h3>Need Quick Assistance?</h3>
+                <p>For a direct support request, email our team.</p>
+                <a href="mailto:support@kisansetu.in"><span>Email support@kisansetu.in</span> <i class="fa-solid fa-arrow-right ms-1" aria-hidden="true"></i></a>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<%- include('footer.ejs') %>

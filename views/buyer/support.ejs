@@ -1,0 +1,37 @@
+<%- include('../partials/head') %>
+<%
+  const wa = support.whatsapp, msg = encodeURIComponent('Hello KisanSetu support, I am ' + buyer.full_name + '. I need help with…');
+%>
+<main class="ks-main"><div class="ks-container">
+  <div class="ks-page-head"><div><h1 data-i18n="nav.support">Help & Support</h1><p><i class="bi bi-clock"></i> <%= support.hours %></p></div></div>
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3"><a class="ks-contact-tile" href="tel:<%= support.phone %>"><span class="ks-stat-ico ico-green"><i class="bi bi-telephone"></i></span><div><small data-i18n="support.call">Call us</small><strong><%= support.phoneDisplay %></strong></div></a></div>
+    <div class="col-6 col-lg-3"><a class="ks-contact-tile" href="mailto:<%= support.email %>?subject=<%= encodeURIComponent('KisanSetu support – ' + buyer.full_name) %>"><span class="ks-stat-ico ico-blue"><i class="bi bi-envelope"></i></span><div><small data-i18n="support.mail">Email us</small><strong><%= support.email %></strong></div></a></div>
+    <div class="col-6 col-lg-3"><a class="ks-contact-tile" href="sms:<%= support.phone %>?body=<%= msg %>"><span class="ks-stat-ico ico-amber"><i class="bi bi-chat-text"></i></span><div><small data-i18n="support.text">Text message (SMS)</small><strong><%= support.phoneDisplay %></strong></div></a></div>
+    <div class="col-6 col-lg-3"><a class="ks-contact-tile" target="_blank" rel="noopener" href="https://wa.me/<%= wa %>?text=<%= msg %>"><span class="ks-stat-ico ico-green"><i class="bi bi-whatsapp"></i></span><div><small data-i18n="support.whatsapp">WhatsApp chat</small><strong><%= support.phoneDisplay %></strong></div></a></div>
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-6">
+      <form method="POST" action="/buyer/support" class="ks-card ks-card-pad" id="ticket">
+        <h5 class="fw-bold mb-3"><i class="bi bi-life-preserver text-success me-2"></i><span data-i18n="support.raise">Raise a support request</span></h5>
+        <div class="d-grid gap-3">
+          <div><label class="form-label" data-i18n="support.subject">Subject</label><input class="form-control" name="subject" required minlength="3" maxlength="150"></div>
+          <div><label class="form-label"><span data-i18n="support.order">Related order</span> <small class="text-muted">(optional)</small></label>
+            <select class="form-select" name="order_id"><option value="">—</option><% orders.forEach(o => { %><option value="<%= o.order_id %>">#KS-<%= o.order_id %></option><% }) %></select></div>
+          <div><label class="form-label" data-i18n="support.desc">Describe the problem</label><textarea class="form-control" name="description" rows="4" required minlength="10"></textarea></div>
+          <div><label class="form-label" data-i18n="support.pref">Contact me by</label>
+            <select class="form-select" name="contact_pref"><option value="email">Email</option><option value="phone">Phone call</option><option value="whatsapp">WhatsApp</option></select></div>
+          <button class="btn btn-success" type="submit" data-loading="Submitting…"><i class="bi bi-send me-1"></i><span data-i18n="btn.submit">Submit</span></button>
+        </div>
+      </form>
+    </div>
+    <div class="col-lg-6" id="tickets">
+      <div class="ks-card"><div class="ks-card-head"><h5 data-i18n="support.my">My requests</h5></div>
+        <div class="p-3 d-grid gap-2">
+          <% tickets.forEach(t => { %><div class="border rounded-3 p-3"><div class="d-flex justify-content-between gap-2"><b><%= t.subject %></b><%- statusBadge(t.status) %></div><div class="small text-muted"><%= fdate(t.created_at) %><% if (t.order_id) { %> · #KS-<%= t.order_id %><% } %></div><% if (t.resolution) { %><div class="ks-chat reply mt-2"><%= t.resolution %></div><% } %></div><% }) %>
+          <% if (!tickets.length) { %><div class="ks-empty py-4"><i class="bi bi-inbox"></i><span data-i18n="empty.tickets">No requests yet</span></div><% } %>
+        </div></div>
+    </div>
+  </div>
+</div></main>
+<%- include('../partials/footer') %>

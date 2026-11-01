@@ -1,0 +1,36 @@
+<%- include('../partials/head', { panel: (kind === 'farmer' ? 'farmer' : 'buyer'), title: 'Invoice' }) %>
+<%
+  const o = order, subtotal = Number(o.total_amount);
+  const isBuyer = kind === 'buyer';
+  const heading = isBuyer ? 'PURCHASE INVOICE' : 'SALES INVOICE';
+  const voided = ['cancelled', 'rejected'].includes(o.status);
+%>
+<main class="ks-main inv-page"><div class="inv-wrap px-2">
+  <div class="d-flex justify-content-between align-items-center mb-3 no-print">
+    <a href="<%= backUrl %>" class="btn btn-light"><i class="bi bi-arrow-left me-1"></i><span data-i18n="btn.back">Back</span></a>
+    <button class="btn btn-success" onclick="window.print()"><i class="bi bi-printer me-1"></i><span data-i18n="btn.print">Print / Save PDF</span></button>
+  </div>
+  <div class="inv">
+    <div class="d-flex justify-content-between flex-wrap gap-3 mb-4">
+      <div><%- include('../partials/logo') %></div>
+      <div class="text-end"><h1><%= heading %></h1><div class="text-muted small"><%= invoiceNo(o.order_id, o.created_at) %></div>
+        <div class="small"><%= fdate(o.created_at) %></div>
+        <div class="mt-1"><%- statusBadge(o.status) %> <span class="ks-badge st-<%= o.payment_status === 'paid' ? 'delivered' : 'pending' %>">Payment: <%= o.payment_status %></span></div></div>
+    </div>
+    <% if (voided) { %><div class="alert alert-danger py-2">This order was <b><%= o.status %></b>. This document is not valid for payment.</div><% } %>
+    <div class="row g-3 mb-4">
+      <div class="col-md-6"><div class="party"><h6><%= isBuyer ? 'Seller (Farmer)' : 'From (Farmer)' %></h6><b><%= o.farm_name || o.farmer_name %></b><br><%= o.farmer_name %><br><%= o.farmer_district || '' %><%= o.farmer_state ? ', ' + o.farmer_state : '' %><br><%= o.farmer_mobile || '' %></div></div>
+      <div class="col-md-6"><div class="party"><h6><%= isBuyer ? 'Bill to (Buyer)' : 'Sold to (Buyer)' %></h6><b><%= o.b_name || o.buyer_name %></b><br><%= o.buyer_name %><br><%= o.buyer_mobile || '' %> · <%= o.buyer_email || '' %><% if (o.gst_number) { %><br>GST: <%= o.gst_number %><% } %><br><span class="text-muted"><%= o.delivery_address %></span></div></div>
+    </div>
+    <div class="table-responsive"><table class="table inv-t mb-0 w-100">
+      <thead><tr><th>#</th><th>Description</th><th class="text-end">Qty</th><th class="text-end">Rate</th><th class="text-end">Amount</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><b><%= o.product_name %></b><div class="small text-muted">Order #KS-<%= o.order_id %></div></td><td class="text-end"><%= num(o.quantity) %> <%= o.unit %></td><td class="text-end"><%= inr(o.unit_price) %></td><td class="text-end"><%= inr(subtotal) %></td></tr>
+        <tr><td colspan="4" class="text-end text-muted">Marketplace commission</td><td class="text-end"><%= inr(0) %></td></tr>
+        <tr class="total-row"><td colspan="4" class="text-end"><%= isBuyer ? 'Total payable' : 'Total receivable' %></td><td class="text-end"><%= inr(subtotal) %></td></tr>
+      </tbody></table></div>
+    <% if (o.note) { %><p class="small text-muted mt-3 mb-0"><b>Note:</b> <%= o.note %></p><% } %>
+    <hr class="mt-4"><div class="d-flex justify-content-between small text-muted flex-wrap gap-2"><span>Thank you for using KisanSetu – direct from farm, no middlemen.</span><span>Computer generated invoice. No signature required.</span></div>
+  </div>
+</div></main>
+<%- include('../partials/footer') %>

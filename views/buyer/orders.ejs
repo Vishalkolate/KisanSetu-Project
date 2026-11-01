@@ -1,0 +1,70 @@
+<%- include('../partials/head') %>
+<%
+  const stepIdx = { pending: 0, accepted: 1, shipped: 2, delivered: 3 };
+  const tabs = [['all','All','tab.all'],['pending','Pending','status.pending'],['accepted','Confirmed','status.accepted'],['shipped','Shipped','status.shipped'],['delivered','Delivered','status.delivered'],['cancelled','Cancelled','status.cancelled']];
+  const cnt = k => k === 'all' ? orders.length : orders.filter(o => o.status === k).length;
+%>
+<main class="ks-main"><div class="ks-container">
+  <div class="ks-page-head"><div><h1 data-i18n="nav.orders">My Orders</h1><p data-i18n="orders.sub">Track every order and download invoices.</p></div><a href="/buyer/browse" class="btn btn-success"><i class="bi bi-plus-lg me-1"></i><span data-i18n="btn.new_order">New Order</span></a></div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3"><div class="ks-stat"><span class="ks-stat-ico ico-green"><i class="bi bi-box-seam"></i></span><div><p class="ks-stat-label" data-i18n="stat.total_orders">Total Orders</p><p class="ks-stat-value" data-stat="totalOrders"><%= stats.totalOrders %></p></div></div></div>
+    <div class="col-6 col-md-3"><div class="ks-stat"><span class="ks-stat-ico ico-amber"><i class="bi bi-hourglass-split"></i></span><div><p class="ks-stat-label" data-i18n="stat.active_orders">Active Orders</p><p class="ks-stat-value" data-stat="activeOrders"><%= stats.activeOrders %></p></div></div></div>
+    <div class="col-6 col-md-3"><div class="ks-stat"><span class="ks-stat-ico ico-blue"><i class="bi bi-patch-check"></i></span><div><p class="ks-stat-label" data-i18n="stat.delivered">Delivered</p><p class="ks-stat-value" data-stat="deliveredOrders"><%= stats.deliveredOrders %></p></div></div></div>
+    <div class="col-6 col-md-3"><div class="ks-stat"><span class="ks-stat-ico ico-violet"><i class="bi bi-currency-rupee"></i></span><div><p class="ks-stat-label" data-i18n="stat.total_spend">Total Spend</p><p class="ks-stat-value" data-stat="totalSpend"><%= inr(stats.totalSpend) %></p></div></div></div>
+  </div>
+
+  <div class="ks-card ks-filter">
+    <div class="row g-3 align-items-center">
+      <div class="col-lg-4"><div class="input-group"><span class="input-group-text"><i class="bi bi-search"></i></span><input id="q" class="form-control" placeholder="Search order, crop, farmer…" data-i18n-ph="f.search_orders"></div></div>
+      <div class="col-lg-8"><div class="ks-tabs" id="tabs"><% tabs.forEach((t, i) => { %><button type="button" class="<%= i === 0 ? 'active' : '' %>" data-filter="<%= t[0] %>"><span data-i18n="<%= t[2] %>"><%= t[1] %></span><span class="n"><%= cnt(t[0]) %></span></button><% }) %></div></div>
+    </div>
+  </div>
+
+  <div class="ks-card"><div class="table-responsive"><table class="ks-table">
+    <thead><tr><th data-i18n="col.order">Order</th><th data-i18n="col.product">Crop</th><th data-i18n="col.farmer">Farmer</th><th data-i18n="col.qty">Qty</th><th data-i18n="col.amount">Amount</th><th data-i18n="col.progress">Progress</th><th data-i18n="col.status">Status</th><th data-i18n="col.actions">Actions</th></tr></thead>
+    <tbody>
+    <% orders.forEach(o => { const si = stepIdx[o.status]; %>
+      <tr class="o-row" data-status="<%= o.status %>" data-search="#KS-<%= o.order_id %> <%= o.product_name %> <%= o.farmer_name %>" data-id="<%= o.order_id %>">
+        <td><b>#KS-<%= o.order_id %></b><div class="small text-muted"><%= fdate(o.created_at) %></div></td>
+        <td><div class="d-flex align-items-center gap-2"><img class="ks-thumb" src="<%= o.p_img1 || placeholderImg %>" alt="" onerror="this.onerror=null;this.src='<%= placeholderImg %>'"><b><%= o.product_name || '—' %></b></div></td>
+        <td><%= o.farmer_name || '—' %><% if (o.farmer_mobile) { %><div class="small"><a href="tel:<%= o.farmer_mobile %>"><i class="bi bi-telephone"></i> <%= o.farmer_mobile %></a></div><% } %></td>
+        <td><%= num(o.quantity) %> <%= o.unit || '' %></td>
+        <td><b><%= inr(o.total_amount) %></b><div class="small text-muted">@ <%= inr(o.unit_price) %></div></td>
+        <td style="min-width:200px"><% if (si !== undefined) { %><div class="ks-steps"><% ['Placed','Confirmed','On the way','Delivered'].forEach((s, i) => { %><div class="ks-step <%= i <= si ? 'done' : '' %>" data-i18n="step.<%= i %>"><%= s %></div><% }) %></div><% } else { %><span class="text-muted small">—</span><% } %></td>
+        <td class="st-cell"><%- statusBadge(o.status) %></td>
+        <td class="act-cell text-nowrap">
+          <a class="btn btn-sm btn-outline-success" href="/buyer/orders/<%= o.order_id %>/invoice" title="Invoice"><i class="bi bi-receipt"></i> <span data-i18n="btn.invoice">Invoice</span></a>
+          <% if (['pending', 'accepted'].includes(o.status)) { %><button class="btn btn-sm btn-outline-danger" data-cancel="<%= o.order_id %>"><i class="bi bi-x-circle"></i> <span data-i18n="btn.cancel">Cancel</span></button><% } %>
+        </td>
+      </tr>
+    <% }) %>
+    </tbody></table></div>
+    <div id="empty" class="ks-empty <%= orders.length ? 'd-none' : '' %>"><i class="bi bi-bag"></i><h5 data-i18n="empty.orders">No orders found</h5><a href="/buyer/browse" class="btn btn-success btn-sm mt-2" data-i18n="btn.start_shopping">Start shopping</a></div>
+  </div>
+</div></main>
+<script>
+  const run = KS.filterList({ rows: '.o-row', search: '#q', tabs: '#tabs button', empty: '#empty' });
+  document.addEventListener('click', async e => {
+    const b = e.target.closest('[data-cancel]'); if (!b) return;
+    if (!confirm(KS.t('confirm.cancel', 'Cancel this order?'))) return;
+    b.disabled = true;
+    const r = await KS.post('/buyer/orders/' + b.dataset.cancel + '/cancel');
+    if (!r.ok) { b.disabled = false; return KS.toast(r.message || 'Could not cancel', 'danger'); }
+    const row = b.closest('tr'); row.dataset.status = 'cancelled';
+    row.querySelector('.st-cell').innerHTML = KS.badge('cancelled'); b.remove();
+    row.querySelector('.ks-steps') && (row.querySelector('.ks-steps').outerHTML = '<span class="text-muted small">—</span>');
+    KS.toast(r.message); run(); KS.refreshNow(); if (window.KS_I18N) KS_I18N.apply(document.documentElement.lang);
+  });
+  // live: statuses changed by the farmer appear automatically
+  KS.onSummary(d => {
+    Object.keys(d.stats).forEach(k => KS.setStat(k, d.stats[k], k === 'totalSpend' ? KS.inr : null));
+    const known = document.querySelectorAll('.o-row').length;
+    if (d.stats.totalOrders !== known) return location.reload();
+    d.orders.forEach(o => {
+      const row = document.querySelector('.o-row[data-id="' + o.order_id + '"]');
+      if (row && row.dataset.status !== o.status) location.reload();
+    });
+  });
+</script>
+<%- include('../partials/footer') %>

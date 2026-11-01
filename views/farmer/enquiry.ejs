@@ -1,0 +1,27 @@
+<%- include('../partials/head') %>
+<%
+  const tabs = [['all','All','tab.all'],['pending','Pending','status.pending'],['responded','Replied','status.responded'],['closed','Closed','status.closed']];
+  const cnt = k => k === 'all' ? enquiries.length : enquiries.filter(o => o.status === k).length;
+%>
+<main class="ks-main"><div class="ks-container">
+  <div class="ks-page-head"><div><h1 data-i18n="nav.enquiries">Enquiries</h1><p data-i18n="fenq.sub">Questions from buyers about your crops.</p></div></div>
+  <div class="ks-card ks-filter"><div class="row g-3 align-items-center"><div class="col-md-4"><input id="q" class="form-control" placeholder="Search…" data-i18n-ph="f.search"></div><div class="col-md-8"><div class="ks-tabs" id="tabs"><% tabs.forEach((t, i) => { %><button type="button" class="<%= i === 0 ? 'active' : '' %>" data-filter="<%= t[0] %>"><span data-i18n="<%= t[2] %>"><%= t[1] %></span><span class="n"><%= cnt(t[0]) %></span></button><% }) %></div></div></div></div>
+  <div class="d-grid gap-3">
+  <% enquiries.forEach(e => { %>
+    <div class="ks-card ks-card-pad e-row" data-status="<%= e.status %>" data-search="<%= e.buyer_name %> <%= e.product_name %> <%= e.message %>">
+      <div class="d-flex justify-content-between flex-wrap gap-2"><div><b><%= e.buyer_name || 'Buyer' %></b> <span class="text-muted small">· <%= e.product_name %> · <%= fdate(e.created_at) %></span><div class="small text-muted"><% if (e.buyer_mobile) { %><a href="tel:<%= e.buyer_mobile %>"><i class="bi bi-telephone"></i> <%= e.buyer_mobile %></a> · <% } %><%= e.buyer_location || '' %><% if (e.requested_quantity) { %> · Needs <%= num(e.requested_quantity) %> <%= e.unit || '' %><% } %></div></div><%- statusBadge(e.status) %></div>
+      <div class="ks-chat mt-2"><%= e.message %></div>
+      <% if (e.reply_message) { %><div class="ks-chat reply mt-2"><b class="small d-block" data-i18n="fenq.your_reply">Your reply</b><%= e.reply_message %></div><% } %>
+      <% if (e.status === 'pending') { %>
+      <form method="POST" action="/farmer/enquiry/<%= e.enquiry_id %>/respond" class="mt-3 d-flex gap-2 flex-wrap"><input class="form-control flex-fill" name="replyMessage" required minlength="2" placeholder="Type your reply (price, availability, delivery)…" data-i18n-ph="fenq.ph" style="min-width:220px"><button class="btn btn-success" type="submit" data-loading="Sending…"><i class="bi bi-reply me-1"></i><span data-i18n="btn.reply">Reply</span></button></form>
+      <% } %>
+    </div>
+  <% }) %>
+  <div id="empty" class="ks-card ks-empty <%= enquiries.length ? 'd-none' : '' %>"><i class="bi bi-chat-square-text"></i><h5 data-i18n="empty.enquiries">No enquiries yet</h5></div>
+  </div>
+</div></main>
+<script>
+  KS.filterList({ rows: '.e-row', search: '#q', tabs: '#tabs button', empty: '#empty' });
+  KS.onSummary(d => { if (d.stats.totalEnquiries !== <%= enquiries.length %>) { KS.toast(KS.t('fenq.new', 'New enquiry received')); setTimeout(() => location.reload(), 1200); } });
+</script>
+<%- include('../partials/footer') %>

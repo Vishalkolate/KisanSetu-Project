@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title><%= typeof pageTitle !== 'undefined' ? pageTitle + ' - KisanSetu Admin' : 'KisanSetu Admin Panel' %></title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Admin CSS -->
+    <link rel="stylesheet" href="/admin/style.css">
+</head>
+<body>
+
+<div class="admin-layout">
+
+    <!-- Admin Sidebar -->
+    <aside class="admin-sidebar" id="adminSidebar">
+
+        <a href="/admin" class="admin-brand">
+            <span class="admin-brand-icon">
+                <img src="/images/logo.svg" alt="KisanSetu" width="38" height="38" style="border-radius:10px;display:block">
+            </span>
+
+            <span class="admin-brand-text">
+                <span class="admin-brand-title">Kisan<span>Setu</span></span>
+                <small data-translate="ADMIN PANEL">ADMIN PANEL</small>
+            </span>
+
+            <button type="button" class="sidebar-close-btn d-lg-none"
+                    id="sidebarCloseBtn" aria-label="Close sidebar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </a>
+
+        <div class="admin-sidebar-label" data-translate="MAIN MENU">MAIN MENU</div>
+
+        <nav class="admin-nav">
+
+            <a href="/admin" class="admin-nav-link">
+                <i class="fa-solid fa-gauge-high"></i>
+                <span data-translate="Dashboard">Dashboard</span>
+            </a>
+
+            <a href="/admin/statistics" class="admin-nav-link">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span data-translate="Statistics">Statistics</span>
+            </a>
+
+            <div class="admin-sidebar-label" data-translate="USER MANAGEMENT">USER MANAGEMENT</div>
+
+            <a href="/admin/farmers" class="admin-nav-link">
+                <i class="fa-solid fa-tractor"></i>
+                <span data-translate="Manage Farmers">Manage Farmers</span>
+            </a>
+
+            <a href="/admin/buyers" class="admin-nav-link">
+                <i class="fa-solid fa-users"></i>
+                <span data-translate="Manage Buyers">Manage Buyers</span>
+            </a>
+
+            <a href="/admin/kyc" class="admin-nav-link">
+                <i class="fa-solid fa-id-card"></i>
+                <span data-translate="Verify KYC">Verify KYC</span>
+                <span class="admin-nav-badge">!</span>
+            </a>
+
+            <div class="admin-sidebar-label" data-translate="MARKETPLACE">MARKETPLACE</div>
+
+            <a href="/admin/categories" class="admin-nav-link">
+                <i class="fa-solid fa-layer-group"></i>
+                <span data-translate="Manage Categories">Manage Categories</span>
+            </a>
+
+            <a href="/admin/products" class="admin-nav-link">
+                <i class="fa-solid fa-wheat-awn"></i>
+                <span data-translate="Approve Products">Approve Products</span>
+            </a>
+
+            <a href="/admin/orders" class="admin-nav-link">
+                <i class="fa-solid fa-box"></i>
+                <span data-translate="Manage Orders">Manage Orders</span>
+            </a>
+
+            <a href="/admin/enquiries" class="admin-nav-link">
+                <i class="fa-solid fa-comments"></i>
+                <span data-translate="Manage Enquiries">Manage Enquiries</span>
+            </a>
+
+            <a href="/admin/kyc" class="admin-nav-link">
+                <i class="fa-solid fa-headset"></i>
+                <span data-translate="Verify KYC">Verify KYC</span>
+            </a>
+
+            <div class="admin-sidebar-label" data-translate="PLATFORM SETTINGS">PLATFORM SETTINGS</div>
+               
+            
+            <a href="/admin/complaints" class="admin-nav-link">
+               <i class="fa-solid fa-comments"></i>
+                <span data-translate="Manage Complaints">Manage Complaints</span>
+            </a> 
+            
+            
+            <a href="/admin/banners" class="admin-nav-link">
+                <i class="fa-solid fa-images"></i>
+                <span data-translate="Manage Banners">Manage Banners</span>
+            </a>
+
+            <a href="/admin/locations" class="admin-nav-link">
+                <i class="fa-solid fa-map-location-dot"></i>
+                <span data-translate="Manage Districts / Talukas">Manage Districts / Talukas</span>
+            </a>
+
+            <a href="/admin/reports" class="admin-nav-link">
+                <i class="fa-solid fa-chart-column"></i>
+                <span data-translate="Sales & User Reports">Sales & User Reports</span>
+            </a>
+
+            <div class="admin-sidebar-label" data-translate="ACCOUNT">ACCOUNT</div>
+
+            <a href="/admin/profile" class="admin-nav-link">
+                <i class="fa-solid fa-user-gear"></i>
+                <span data-translate="Admin Profile">Admin Profile</span>
+            </a>
+
+            <a href="/admin/settings" class="admin-nav-link">
+                <i class="fa-solid fa-gear"></i>
+                <span data-translate="Settings">Settings</span>
+            </a>
+
+        </nav>
+
+        <div class="admin-sidebar-bottom">
+            <div class="admin-support-card">
+                <i class="fa-solid fa-shield-halved"></i>
+                <div>
+                    <strong data-translate="Admin Workspace">Admin Workspace</strong>
+                    <small data-translate="Manage KisanSetu securely">Manage KisanSetu securely</small>
+                </div>
+            </div>
+        </div>
+
+    </aside>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div class="admin-sidebar-overlay" id="adminSidebarOverlay"></div>
+
+    <!-- Main Application Area -->
+    <div class="admin-main-wrapper">
+
+        <!-- Top Header -->
+        <header class="admin-topbar">
+
+            <div class="d-flex align-items-center gap-3">
+
+                <button type="button" class="admin-menu-toggle"
+                        id="sidebarToggleBtn" aria-label="Toggle sidebar"
+                        aria-controls="adminSidebar" aria-expanded="false">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <div class="admin-page-heading">
+                    <h1 data-translate="<%= typeof pageTitle !== 'undefined' ? pageTitle : 'Dashboard' %>"><%= typeof pageTitle !== 'undefined' ? pageTitle : 'Dashboard' %></h1>
+                    <p data-translate="Welcome to your KisanSetu workspace">Welcome to your KisanSetu workspace</p>
+                </div>
+
+            </div>
+
+            <div class="admin-topbar-actions">
+
+                <!-- Language Selector -->
+                <div class="dropdown admin-language-dropdown">
+                    <button
+                        class="btn admin-language-btn dropdown-toggle"
+                        type="button"
+                        id="languageDropdown"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                        <i class="fas fa-globe me-2"></i>
+                        <span id="current-lang">English</span>
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                        <li>
+                            <button
+                                class="dropdown-item lang-option active"
+                                type="button"
+                                data-lang="en"
+                            >
+                                <span>🇬🇧</span> English
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                class="dropdown-item lang-option"
+                                type="button"
+                                data-lang="mr"
+                            >
+                                <span>🇮🇳</span> मराठी
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Notifications -->
+                <div class="dropdown">
+                    <button class="admin-icon-button admin-notification-btn"
+                            type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false" title="Notifications"
+                            aria-label="Notifications">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="admin-notification-dot"></span>
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end admin-dropdown admin-notification-menu">
+                        <li class="admin-dropdown-heading">
+                            <strong data-translate="Notifications">Notifications</strong>
+                            <span class="badge text-bg-success">Admin</span>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item notification-item" href="/admin/kyc">
+                                <i class="fa-solid fa-id-card text-success"></i>
+                                <span>
+                                    <strong data-translate="KYC verification">KYC verification</strong>
+                                    <small data-translate="Review pending farmer documents.">Review pending farmer documents.</small>
+                                </span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item notification-item" href="/admin/products">
+                                <i class="fa-solid fa-wheat-awn text-warning"></i>
+                                <span>
+                                    <strong data-translate="Product approvals">Product approvals</strong>
+                                    <small data-translate="Check products awaiting review.">Check products awaiting review.</small>
+                                </span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item notification-item" href="/admin/complaints">
+                                <i class="fa-solid fa-headset text-primary"></i>
+                                <span>
+                                    <strong data-translate="Complaints">Complaints</strong>
+                                    <small data-translate="Review unresolved complaints.">Review unresolved complaints.</small>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Admin Profile -->
+                <div class="dropdown">
+                    <button class="admin-user-button dropdown-toggle"
+                            type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+
+                        <span class="admin-avatar">
+                            <i class="fa-solid fa-user-shield"></i>
+                        </span>
+
+                        <span class="admin-user-details d-none d-sm-block">
+                            <strong data-translate="Administrator">Administrator</strong>
+                            <small data-translate="System Admin">System Admin</small>
+                        </span>
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end admin-dropdown">
+                        <li>
+                            <a class="dropdown-item" href="/admin/profile">
+                                <i class="fa-solid fa-user me-2"></i>
+                                <span data-translate="Admin Profile">Admin Profile</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item" href="/admin/settings">
+                                <i class="fa-solid fa-gear me-2"></i>
+                                <span data-translate="Settings">Settings</span>
+                            </a>
+                        </li>
+
+                        <li><hr class="dropdown-divider"></li>
+
+                        <li>
+                            <a class="dropdown-item text-danger" href="/login">
+                                <i class="fa-solid fa-right-from-bracket me-2"></i>
+                                <span data-translate="Sign Out">Sign Out</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </header>
+
+        <!-- Individual admin page content starts below -->
+        <main class="admin-content">

@@ -1,0 +1,246 @@
+<%- include("header") %>
+
+
+<main class="reports-container">
+
+    <!-- Page Header -->
+    <header class="reports-header">
+        <div>
+            <h1>
+                <i class="bi bi-bar-chart-line"></i>
+                <span data-translate="Sales and User Reports">Sales and User Reports</span>
+            </h1>
+
+            <p data-translate="Monitor marketplace sales and registered users.">
+                Monitor marketplace sales and registered users.
+            </p>
+        </div>
+
+        <div class="reports-header-actions">
+            <a href="banners.html" class="reports-back-btn">
+                <i class="bi bi-arrow-left"></i>
+                <span data-translate="Back">Back</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Summary Cards -->
+    <section class="reports-summary">
+
+        <article class="report-card">
+            <div class="report-icon green">
+                <i class="bi bi-currency-rupee"></i>
+            </div>
+            <div>
+                <p data-translate="Total Sales">Total Sales</p>
+                <h2>₹0.00</h2>
+                <span data-translate="Overall marketplace sales">Overall marketplace sales</span>
+            </div>
+        </article>
+
+        <article class="report-card">
+            <div class="report-icon blue">
+                <i class="bi bi-bag-check"></i>
+            </div>
+            <div>
+                <p data-translate="Total Orders">Total Orders</p>
+                <h2>0</h2>
+                <span data-translate="Orders received">Orders received</span>
+            </div>
+        </article>
+
+        <article class="report-card">
+            <div class="report-icon orange">
+                <i class="bi bi-person-workspace"></i>
+            </div>
+            <div>
+                <p data-translate="Total Farmers">Total Farmers</p>
+                <h2>0</h2>
+                <span data-translate="Registered farmers">Registered farmers</span>
+            </div>
+        </article>
+
+        <article class="report-card">
+            <div class="report-icon purple">
+                <i class="bi bi-people"></i>
+            </div>
+            <div>
+                <p data-translate="Total Buyers">Total Buyers</p>
+                <h2>0</h2>
+                <span data-translate="Registered buyers">Registered buyers</span>
+            </div>
+        </article>
+
+    </section>
+
+    <!-- Report Filters -->
+    <section class="reports-panel">
+
+        <h2>
+            <i class="bi bi-funnel"></i>
+            <span data-translate="Filter Reports">Filter Reports</span>
+        </h2>
+
+        <form class="reports-filters">
+
+            <div class="reports-field">
+                <label for="report-type" data-translate="Report Type">Report Type</label>
+
+                <select id="report-type" name="report-type">
+                    <option value="sales" data-translate="Sales Report">Sales Report</option>
+                    <option value="users" data-translate="User Report">User Report</option>
+                </select>
+            </div>
+
+            <div class="reports-field">
+                <label for="start-date" data-translate="From Date">From Date</label>
+                <input type="date" id="start-date" name="start-date">
+            </div>
+
+            <div class="reports-field">
+                <label for="end-date" data-translate="To Date">To Date</label>
+                <input type="date" id="end-date" name="end-date">
+            </div>
+
+            <div class="reports-field">
+                <label for="report-status" data-translate="Status">Status</label>
+
+                <select id="report-status" name="report-status">
+                    <option value="" data-translate="All Statuses">All Statuses</option>
+                    <option value="completed" data-translate="Completed">Completed</option>
+                    <option value="pending" data-translate="Pending">Pending</option>
+                    <option value="cancelled" data-translate="Cancelled">Cancelled</option>
+                    <option value="active" data-translate="Active">Active</option>
+                    <option value="inactive" data-translate="Inactive">Inactive</option>
+                </select>
+            </div>
+
+            <button type="button" class="reports-filter-btn">
+                <i class="bi bi-search"></i>
+                <span data-translate="Apply Filters">Apply Filters</span>
+            </button>
+
+        </form>
+
+    </section>
+
+    <!-- Sales Report -->
+    <section class="reports-panel">
+
+        <div class="reports-section-header">
+            <div>
+                <h2>
+                    <i class="bi bi-receipt"></i>
+                    <span data-translate="Sales Report">Sales Report</span>
+                </h2>
+
+                <p data-translate="Summary of marketplace transactions.">
+                    Summary of marketplace transactions.
+                </p>
+            </div>
+
+            <div class="reports-export">
+                <button type="button" class="export-btn">
+                    <i class="bi bi-file-earmark-excel"></i>
+                    <span data-translate="Excel">Excel</span>
+                </button>
+
+                <button type="button" class="export-btn pdf">
+                    <i class="bi bi-file-earmark-pdf"></i>
+                    <span data-translate="PDF">PDF</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="reports-table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th data-translate="Sr. No.">Sr. No.</th>
+                        <th data-translate="Order ID">Order ID</th>
+                        <th data-translate="Date">Date</th>
+                        <th data-translate="Buyer">Buyer</th>
+                        <th data-translate="Farmer">Farmer</th>
+                        <th data-translate="Amount">Amount</th>
+                        <th data-translate="Status">Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td colspan="7" class="reports-empty">
+                            <i class="bi bi-inbox"></i>
+                            <p data-translate="No sales records available.">
+                                No sales records available.
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+    <!-- User Report -->
+    <section class="reports-panel">
+
+        <div class="reports-section-header">
+            <div>
+                <h2>
+                    <i class="bi bi-people"></i>
+                    <span data-translate="User Report">User Report</span>
+                </h2>
+
+                <p data-translate="Registered users and account status.">
+                    Registered users and account status.
+                </p>
+            </div>
+
+            <div class="reports-export">
+                <button type="button" class="export-btn">
+                    <i class="bi bi-file-earmark-excel"></i>
+                    <span data-translate="Excel">Excel</span>
+                </button>
+
+                <button type="button" class="export-btn pdf">
+                    <i class="bi bi-file-earmark-pdf"></i>
+                    <span data-translate="PDF">PDF</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="reports-table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th data-translate="Sr. No.">Sr. No.</th>
+                        <th data-translate="User Name">User Name</th>
+                        <th data-translate="Email">Email</th>
+                        <th data-translate="Role">Role</th>
+                        <th data-translate="Registration Date">Registration Date</th>
+                        <th data-translate="Status">Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td colspan="6" class="reports-empty">
+                            <i class="bi bi-person-lines-fill"></i>
+                            <p data-translate="No user records available.">
+                                No user records available.
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+</main>
+
+<script src="script.js"></script>
+<script src="language.js"></script>
+<script src="reports.js"></script>
+
+<%- include("footer") %>

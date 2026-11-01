@@ -1,0 +1,260 @@
+<%- include('header.ejs') %>
+
+<!-- ==================== ABOUT US CONTENT ==================== -->
+<main class="about-page flex-grow-1">
+
+  <!-- Hero Section -->
+  <section class="about-hero text-center py-5 bg-light-green border-bottom">
+    <div class="container py-4">
+      <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill fw-semibold mb-3">Our Mission</span>
+      <h1 class="display-5 fw-bold text-dark mb-3">Empowering Farmers, Connecting Buyers</h1>
+      <p class="lead text-muted mx-auto" style="max-width: 760px;">
+        KisanSetu is an open, direct agricultural marketplace built to eliminate unnecessary intermediaries. We give farmers fair pricing control and provide verified traders direct farm-gate access.
+      </p>
+    </div>
+  </section>
+
+  <!-- Problem vs Vision Section -->
+  <section class="py-5">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+          <div class="pe-lg-3">
+            <h6 class="text-success fw-bold text-uppercase mb-2">Direct Trade Vision</h6>
+            <h2 class="fw-bold mb-4">Why We Built KisanSetu</h2>
+            <p class="text-muted leading-relaxed">
+              Traditional supply chains route produce through multiple middlemen before reaching city markets. Farmers receive suppressed rates while buyers pay inflated markups.
+            </p>
+            <p class="text-muted leading-relaxed">
+              KisanSetu eliminates this friction by providing a direct discovery channel. Farmers list verified crop stocks at their own prices, and traders initiate direct enquiries and orders with zero brokerage deductions.
+            </p>
+            
+            <div class="row g-3 pt-3">
+              <div class="col-sm-6">
+                <div class="d-flex align-items-start gap-3">
+                  <div class="text-success fs-4">
+                    <i class="fa-solid fa-chart-line"></i>
+                  </div>
+                  <div>
+                    <h6 class="fw-bold mb-1">Mandi Price Tracking</h6>
+                    <small class="text-muted">Daily reference prices to benchmark fair trading value.</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="d-flex align-items-start gap-3">
+                  <div class="text-success fs-4">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                  </div>
+                  <div>
+                    <h6 class="fw-bold mb-1">District & Taluka Filter</h6>
+                    <small class="text-muted">Procure nearby crops to lower logistics costs.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="row g-3">
+            <div class="col-6">
+              <div class="stats-card text-center p-4 bg-white rounded-4 shadow-sm border border-light-subtle h-100">
+                <i class="fa-solid fa-wheat-awn text-success fs-1 mb-3"></i>
+                <h3 class="fw-bold text-dark mb-1">100%</h3>
+                <p class="text-muted small mb-0">Direct Farm Produce</p>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="stats-card text-center p-4 bg-white rounded-4 shadow-sm border border-light-subtle h-100">
+                <i class="fa-solid fa-handshake-simple text-success fs-1 mb-3"></i>
+                <h3 class="fw-bold text-dark mb-1">0%</h3>
+                <p class="text-muted small mb-0">Middlemen Commission</p>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="stats-card text-center p-4 bg-white rounded-4 shadow-sm border border-light-subtle h-100">
+                <i class="fa-solid fa-shield-halved text-success fs-1 mb-3"></i>
+                <h3 class="fw-bold text-dark mb-1">Verified</h3>
+                <p class="text-muted small mb-0">Farmer KYC Security</p>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="stats-card text-center p-4 bg-white rounded-4 shadow-sm border border-light-subtle h-100">
+                <i class="fa-solid fa-language text-success fs-1 mb-3"></i>
+                <h3 class="fw-bold text-dark mb-1">2</h3>
+                <p class="text-muted small mb-0">Languages (EN / MR)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Platform Roles Section -->
+  <section class="py-5 bg-white border-top border-bottom">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h6 class="text-success fw-bold text-uppercase mb-2">Designed For Both Sides</h6>
+        <h2 class="fw-bold">How We Serve The Ecosystem</h2>
+        <p class="text-muted mx-auto" style="max-width: 600px;">
+          Tailored tools built specifically for agricultural producers and commercial stock buyers.
+        </p>
+      </div>
+
+      <div class="row g-4">
+        <!-- For Farmers -->
+        <div class="col-md-6">
+          <div class="card h-100 border-0 shadow-sm rounded-4 p-4 p-xl-5 card-hover">
+            <div class="card-icon-wrapper mb-4 bg-success-subtle text-success">
+              <i class="fa-solid fa-tractor fs-2"></i>
+            </div>
+            <h4 class="fw-bold mb-3">For Farmers (शेतकरी)</h4>
+            <p class="text-muted">
+              List harvested crops, upload pictures, set minimum rates, and receive enquiries directly from prospective buyers without agent commission.
+            </p>
+            <ul class="list-unstyled text-muted d-flex flex-column gap-2 mb-4">
+              <li><i class="fa-solid fa-check text-success me-2"></i> Crop listings with clear quantity units (Quintal, Ton)</li>
+              <li><i class="fa-solid fa-check text-success me-2"></i> Incoming buyer inquiries and order status tracking</li>
+              <li><i class="fa-solid fa-check text-success me-2"></i> Document KYC for instant buyer credibility</li>
+            </ul>
+            <a href="/farmer_register" class="btn btn-outline-success rounded-pill fw-semibold mt-auto align-self-start px-4">Register as Farmer</a>
+          </div>
+        </div>
+
+        <!-- For Buyers -->
+        <div class="col-md-6">
+          <div class="card h-100 border-0 shadow-sm rounded-4 p-4 p-xl-5 card-hover">
+            <div class="card-icon-wrapper mb-4 bg-primary-subtle text-primary">
+              <i class="fa-solid fa-cart-shopping fs-2"></i>
+            </div>
+            <h4 class="fw-bold mb-3">For Buyers & Traders (व्यापारी)</h4>
+            <p class="text-muted">
+              Explore authentic crop availability by district or crop variety. Send quotation enquiries and place order requests directly with local farmers.
+            </p>
+            <ul class="list-unstyled text-muted d-flex flex-column gap-2 mb-4">
+              <li><i class="fa-solid fa-check text-primary me-2"></i> Filter crops by category, price, district, and quantity</li>
+              <li><i class="fa-solid fa-check text-primary me-2"></i> Bulk inquiry tool to request quotes from multiple growers</li>
+              <li><i class="fa-solid fa-check text-primary me-2"></i> Order request tracking with status updates</li>
+            </ul>
+            <a href="/buyer_register" class="btn btn-primary rounded-pill fw-semibold mt-auto align-self-start px-4">Register as Trader</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Flow -->
+  <section class="py-5">
+    <div class="container py-3">
+      <div class="text-center mb-5">
+        <h6 class="text-success fw-bold text-uppercase mb-2">Simplicity First</h6>
+        <h2 class="fw-bold">How The Trade Flow Works</h2>
+      </div>
+
+      <div class="row g-4 text-center">
+        <div class="col-md-3">
+          <div class="p-3 step-card-wrapper position-relative">
+            <div class="step-number mb-3">1</div>
+            <h5 class="fw-bold mb-2">Sign Up</h5>
+            <p class="text-muted small mb-0">Create an account as a Farmer or Buyer with verified mobile/email credentials.</p>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="p-3 step-card-wrapper position-relative">
+            <div class="step-number mb-3">2</div>
+            <h5 class="fw-bold mb-2">List & Review</h5>
+            <p class="text-muted small mb-0">Farmers list crops with photos; Admin reviews and approves genuine listings.</p>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="p-3 step-card-wrapper position-relative">
+            <div class="step-number mb-3">3</div>
+            <h5 class="fw-bold mb-2">Direct Enquiry</h5>
+            <p class="text-muted small mb-0">Traders search by district and submit enquiry or purchase requests.</p>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="p-3 step-card-wrapper">
+            <div class="step-number mb-3">4</div>
+            <h5 class="fw-bold mb-2">Order Fulfillment</h5>
+            <p class="text-muted small mb-0">The farmer confirms the order, coordinates delivery, and fulfills the trade.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Community Impact / Testimonial Snippets -->
+  <section class="py-5 bg-light-green border-top border-bottom">
+    <div class="container py-3">
+      <div class="text-center mb-5">
+        <h6 class="text-success fw-bold text-uppercase mb-2">Voice of the Community</h6>
+        <h2 class="fw-bold">Real Perspectives from the Ground</h2>
+      </div>
+
+      <div class="row g-4 justify-content-center">
+        <div class="col-md-6 col-lg-5">
+          <div class="bg-white p-4 rounded-4 shadow-sm h-100 border">
+            <div class="d-flex text-warning mb-3">
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+            </div>
+            <p class="text-muted italic mb-4">
+              "Earlier, we had to accept whatever price local commission agents offered at the yard. Direct listing lets me set my floor rate and connect with buyers who need bulk stock directly."
+            </p>
+            <div class="d-flex align-items-center gap-3">
+              <div class="avatar-badge bg-success-subtle text-success fw-bold">RS</div>
+              <div>
+                <h6 class="fw-bold mb-0">Ramesh Shinde</h6>
+                <small class="text-muted">Onion & Soybean Farmer, Nashik</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-5">
+          <div class="bg-white p-4 rounded-4 shadow-sm h-100 border">
+            <div class="d-flex text-warning mb-3">
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+            </div>
+            <p class="text-muted italic mb-4">
+              "Being able to filter harvest lots by district and verify the farmer's KYC badge saves our team days of field travel and guarantees authentic batch origins."
+            </p>
+            <div class="d-flex align-items-center gap-3">
+              <div class="avatar-badge bg-primary-subtle text-primary fw-bold">AK</div>
+              <div>
+                <h6 class="fw-bold mb-0">Amit Kulkarni</h6>
+                <small class="text-muted">Wholesale Produce Trader, Pune</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bottom Call-To-Action Banner -->
+  <section class="py-5 mb-4">
+    <div class="container">
+      <div class="bg-success text-white p-5 rounded-4 shadow text-center position-relative overflow-hidden">
+        <div class="position-relative z-1">
+          <h2 class="fw-bold mb-3">Ready to Experience Transparent Agro Trade?</h2>
+          <p class="lead text-white-50 mb-4 mx-auto" style="max-width: 600px;">
+            Join farmers and traders transacting directly without intermediary cuts.
+          </p>
+          <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="/farmer_register" class="btn btn-light text-success fw-bold px-4 py-2 rounded-pill">Join as Farmer</a>
+            <a href="/products" class="btn btn-outline-light fw-bold px-4 py-2 rounded-pill">Browse Available Crops</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<%- include('footer.ejs') %>

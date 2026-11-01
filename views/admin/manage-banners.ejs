@@ -1,0 +1,197 @@
+<%- include("header") %>
+
+
+<main class="banners-container">
+
+    <header class="page-header">
+        <div>
+            <h1>
+                <i class="bi bi-images"></i>
+                <span data-translate="Manage Banners">Manage Banners</span>
+            </h1>
+
+            <p data-translate="Add and manage promotional banners for the marketplace.">
+                Add and manage promotional banners for the marketplace.
+            </p>
+        </div>
+
+        <div>
+            <a href="complaints.html" class="back-btn">
+                <i class="bi bi-arrow-left"></i>
+                <span data-translate="Back">Back</span>
+            </a>
+        </div>
+    </header>
+
+    <section class="banner-form">
+
+        <h2>
+            <i class="bi bi-plus-circle"></i>
+            <span data-translate="Add New Banner">Add New Banner</span>
+        </h2>
+
+        <form>
+
+            <div class="form-group">
+                <label for="banner-title">
+                    <i class="bi bi-type"></i>
+                    <span data-translate="Banner Title">Banner Title</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="banner-title"
+                    placeholder="Enter banner title"
+                    data-translate-placeholder="Enter banner title">
+            </div>
+
+            <div class="form-group">
+                <label for="banner-description">
+                    <i class="bi bi-card-text"></i>
+                    <span data-translate="Description">Description</span>
+                </label>
+
+                <textarea
+                    id="banner-description"
+                    placeholder="Enter banner description"
+                    data-translate-placeholder="Enter banner description"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="banner-image">
+                    <i class="bi bi-image"></i>
+                    <span data-translate="Banner Image">Banner Image</span>
+                </label>
+
+                <input
+                    type="file"
+                    id="banner-image"
+                    accept="image/*">
+            </div>
+
+            <div class="form-group">
+                <label for="banner-link">
+                    <i class="bi bi-link-45deg"></i>
+                    <span data-translate="Banner Link">Banner Link</span>
+                </label>
+
+                <input
+                    type="url"
+                    id="banner-link"
+                    placeholder="https://example.com">
+            </div>
+
+            <div class="form-group">
+                <label for="banner-status">
+                    <i class="bi bi-toggle-on"></i>
+                    <span data-translate="Status">Status</span>
+                </label>
+
+                <select id="banner-status">
+                    <option value="active" data-translate="Active">Active</option>
+                    <option value="inactive" data-translate="Inactive">Inactive</option>
+                </select>
+            </div>
+
+            <div class="form-group button-group">
+                <button type="button" class="add-banner-btn">
+                    <i class="bi bi-plus-lg"></i>
+                    <span data-translate="Add Banner">Add Banner</span>
+                </button>
+            </div>
+
+        </form>
+    </section>
+
+    <section class="banner-list">
+
+        <h2>
+            <i class="bi bi-collection"></i>
+            <span data-translate="Existing Banners">Existing Banners</span>
+        </h2>
+
+        <div class="banner-grid">
+
+            <article class="banner-card">
+
+                <div class="banner-preview banner-one">
+                    <i class="bi bi-flower1"></i>
+                    <span data-translate="Fresh From Farms">Fresh From Farms</span>
+                </div>
+
+                <div class="banner-info">
+                    <h3 data-translate="Fresh Farm Products">
+                        Fresh Farm Products
+                    </h3>
+
+                    <p data-translate="Discover fresh produce directly from farmers.">
+                        Discover fresh produce directly from farmers.
+                    </p>
+
+                    <span class="status active-status">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span data-translate="Active">Active</span>
+                    </span>
+
+                    <div class="banner-actions">
+                        <button type="button" class="edit-btn">
+                            <i class="bi bi-pencil-square"></i>
+                            <span data-translate="Edit">Edit</span>
+                        </button>
+
+                        <button type="button" class="delete-btn">
+                            <i class="bi bi-trash3"></i>
+                            <span data-translate="Delete">Delete</span>
+                        </button>
+                    </div>
+                </div>
+
+            </article>
+
+            <article class="banner-card">
+
+                <div class="banner-preview banner-two">
+                    <i class="bi bi-people"></i>
+                    <span data-translate="Support Local Farmers">Support Local Farmers</span>
+                </div>
+
+                <div class="banner-info">
+                    <h3 data-translate="Support Local Farmers">
+                        Support Local Farmers
+                    </h3>
+
+                    <p data-translate="Connect directly with local agricultural producers.">
+                        Connect directly with local agricultural producers.
+                    </p>
+
+                    <span class="status inactive-status">
+                        <i class="bi bi-pause-circle-fill"></i>
+                        <span data-translate="Inactive">Inactive</span>
+                    </span>
+
+                    <div class="banner-actions">
+                        <button type="button" class="edit-btn">
+                            <i class="bi bi-pencil-square"></i>
+                            <span data-translate="Edit">Edit</span>
+                        </button>
+
+                        <button type="button" class="delete-btn">
+                            <i class="bi bi-trash3"></i>
+                            <span data-translate="Delete">Delete</span>
+                        </button>
+                    </div>
+                </div>
+
+            </article>
+
+        </div>
+    </section>
+
+</main>
+
+<script src="script.js"></script>
+<script src="language.js"></script>
+<script src="banners.js"></script>
+
+
+<%- include("footer") %>

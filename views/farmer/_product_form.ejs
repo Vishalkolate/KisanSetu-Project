@@ -1,0 +1,51 @@
+<%
+  const isEdit = typeof product !== 'undefined' && product;
+  const P = isEdit ? product : {};
+  const imgs = isEdit ? [P.p_img1, P.p_img2, P.p_img3] : [null, null, null];
+  const units = ['kg', 'quintal', 'ton', 'dozen', 'piece', 'litre'];
+%>
+<form method="POST" action="<%= isEdit ? '/farmer/products/update' : '/farmer/products/add' %>" enctype="multipart/form-data" id="productForm" novalidate>
+  <% if (isEdit) { %><input type="hidden" name="productId" value="<%= P.product_id %>"><% } %>
+  <div class="row g-4">
+    <div class="col-lg-7"><div class="ks-card ks-card-pad">
+      <h5 class="fw-bold mb-3" data-i18n="pf.basic">Basic details</h5>
+      <div class="row g-3">
+        <div class="col-12"><label class="form-label" data-i18n="pf.name">Product name</label><input class="form-control" name="productName" required maxlength="150" value="<%= P.product_name || '' %>" placeholder="e.g. Nashik Red Onion"></div>
+        <div class="col-md-6"><label class="form-label" data-i18n="col.category">Category</label>
+          <select class="form-select" name="category_id" required><option value="" data-i18n="pf.choose_cat">Select category</option><% categories.forEach(c => { %><option value="<%= c.category_id %>" <%= isEdit && Number(P.category_id) === c.category_id ? 'selected' : '' %>><%= c.category_name %></option><% }) %></select></div>
+        <div class="col-md-6"><label class="form-label" data-i18n="pf.location">Farm location</label><input class="form-control" name="location" value="<%= P.p_location || '' %>" placeholder="Village, District"></div>
+        <div class="col-md-4"><label class="form-label" data-i18n="col.price">Price (₹)</label><input type="number" min="0.01" step="0.01" class="form-control" name="price" required value="<%= P.price || '' %>"></div>
+        <div class="col-md-4"><label class="form-label" data-i18n="col.stock">Quantity</label><input type="number" min="0" step="any" class="form-control" name="quantity" required value="<%= P.quantity !== undefined ? Number(P.quantity) : '' %>"></div>
+        <div class="col-md-4"><label class="form-label" data-i18n="pf.unit">Unit</label><select class="form-select" name="unit" required><option value="" data-i18n="pf.choose_unit">Select unit</option><% units.forEach(u => { %><option value="<%= u %>" <%= P.unit === u ? 'selected' : '' %>><%= u %></option><% }) %><% if (P.unit && !units.includes(P.unit)) { %><option value="<%= P.unit %>" selected><%= P.unit %></option><% } %></select></div>
+        <div class="col-md-6"><label class="form-label" data-i18n="pd.min">Minimum order</label><input type="number" min="0.01" step="any" class="form-control" name="min_order" value="<%= P.min_order ? Number(P.min_order) : 1 %>"></div>
+        <div class="col-12"><label class="form-label" data-i18n="pf.desc">Description</label><textarea class="form-control" name="description" rows="4" placeholder="Variety, grade, harvest date, packing…"><%= P.description || '' %></textarea></div>
+      </div>
+    </div></div>
+    <div class="col-lg-5"><div class="ks-card ks-card-pad">
+      <h5 class="fw-bold mb-1" data-i18n="pf.photos">Product photos</h5>
+      <p class="small text-muted mb-3"><i class="bi bi-info-circle"></i> JPG / PNG / WEBP · <b><span data-i18n="pf.max">max</span> <%= maxMB %> MB</b> <span data-i18n="pf.each">per image</span>.
+        <% if (isEdit) { %><b data-i18n="pf.optional">Changing photos is optional – leave empty to keep the current ones.</b><% } else { %><span data-i18n="pf.first_required">The first photo is required.</span><% } %></p>
+      <div class="row g-3">
+        <% [1, 2, 3].forEach(n => { const cur = imgs[n - 1]; %>
+        <div class="col-<%= n === 1 ? '12' : '6' %>">
+          <label class="ks-drop <%= cur ? 'has-img' : '' %>" style="min-height:<%= n === 1 ? 190 : 120 %>px">
+            <% if (cur) { %><img class="preview" src="<%= cur %>" alt="" onerror="this.remove()"><% } %>
+            <i class="bi bi-cloud-arrow-up"></i><strong class="small"><%= n === 1 ? 'Main photo' : 'Photo ' + n %></strong><span class="small text-muted" data-i18n="pf.click">Click or drop to upload</span>
+            <input type="file" name="image<%= n %>" accept="image/jpeg,image/png,image/webp">
+          </label>
+          <% if (isEdit && cur) { %><div class="form-check mt-1 small"><input class="form-check-input" type="checkbox" name="remove_image<%= n %>" id="rm<%= n %>" value="1"><label class="form-check-label text-danger" for="rm<%= n %>" data-i18n="pf.remove">Remove this photo</label></div><% } %>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+    <div class="d-flex gap-2 mt-3"><button class="btn btn-success btn-lg flex-fill" type="submit" data-loading="Saving…"><i class="bi bi-check2-circle me-1"></i><span data-i18n="<%= isEdit ? 'btn.save' : 'btn.submit_product' %>"><%= isEdit ? 'Save changes' : 'Submit product' %></span></button><a class="btn btn-light btn-lg" href="/farmer/products" data-i18n="btn.cancel_plain">Cancel</a></div>
+    </div>
+  </div>
+</form>
+<script>
+  KS.initUploads(<%= maxMB %>);
+  document.getElementById('productForm').addEventListener('submit', function (e) {
+    const f = this; if (!f.checkValidity()) { e.preventDefault(); f.classList.add('was-validated'); f.reportValidity(); return; }
+    <% if (!isEdit) { %>if (!f.image1.files.length) { e.preventDefault(); const m = KS.t('pf.need_main', 'Please upload the main product photo.'); KS.toast(m, 'danger'); alert(m); }<% } %>
+  });
+</script>

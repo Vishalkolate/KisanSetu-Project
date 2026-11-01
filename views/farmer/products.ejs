@@ -1,0 +1,46 @@
+<%- include('../partials/head') %>
+<%
+  const tabs = [['all','All','tab.all'],['Approved','Live','prod.live'],['Pending','Pending','status.pending'],['Sold Out','Sold out','status.sold-out'],['Rejected','Rejected','status.rejected']];
+  const norm = s => s === 'Available' ? 'Approved' : s;
+  const cnt = k => k === 'all' ? products.length : products.filter(p => norm(p.p_status) === k).length;
+%>
+<main class="ks-main"><div class="ks-container">
+  <div class="ks-page-head"><div><h1 data-i18n="nav.manage_products">Manage Products</h1><p data-i18n="prod.sub">Add, edit and track your crop listings.</p></div><a href="/farmer/add_product" class="btn btn-success"><i class="bi bi-plus-lg me-1"></i><span data-i18n="nav.add_product">Add New Product</span></a></div>
+  <div class="ks-card ks-filter"><div class="row g-3 align-items-center">
+    <div class="col-lg-4"><div class="input-group"><span class="input-group-text"><i class="bi bi-search"></i></span><input id="q" class="form-control" placeholder="Search product…" data-i18n-ph="f.search"></div></div>
+    <div class="col-lg-3"><select id="cat" class="form-select"><option value="all" data-i18n="f.all_categories">All categories</option><% categories.forEach(c => { %><option value="<%= c.category_name %>"><%= c.category_name %></option><% }) %></select></div>
+    <div class="col-lg-5"><div class="ks-tabs" id="tabs"><% tabs.forEach((t, i) => { %><button type="button" class="<%= i === 0 ? 'active' : '' %>" data-filter="<%= t[0] %>"><span data-i18n="<%= t[2] %>"><%= t[1] %></span><span class="n"><%= cnt(t[0]) %></span></button><% }) %></div></div>
+  </div></div>
+  <div class="ks-card"><div class="table-responsive"><table class="ks-table">
+    <thead><tr><th data-i18n="col.product">Product</th><th data-i18n="col.category">Category</th><th data-i18n="col.price">Price</th><th data-i18n="col.stock">Stock</th><th data-i18n="col.status">Status</th><th data-i18n="col.actions">Actions</th></tr></thead>
+    <tbody>
+    <% products.forEach(p => { const st = norm(p.p_status); %>
+      <tr class="p-row" data-status="<%= st %>" data-cat="<%= p.category_name || '' %>" data-search="<%= p.product_name %> <%= p.category_name %> <%= p.p_location %>">
+        <td><div class="d-flex align-items-center gap-2"><img class="ks-thumb" src="<%= productImg(p) %>" alt="" onerror="this.onerror=null;this.src='<%= placeholderImg %>'"><div><b><%= p.product_name %></b><div class="small text-muted"><%= p.p_location || '' %></div></div></div></td>
+        <td><%= p.category_name || '—' %></td><td><b><%= inr(p.price) %></b> / <%= p.unit %></td>
+        <td><%= num(p.quantity) %> <%= p.unit %></td>
+        <td><%- statusBadge(st === 'Sold Out' ? 'sold-out' : st.toLowerCase()) %></td>
+        <td class="text-nowrap">
+          <a class="btn btn-sm btn-outline-success" href="/farmer/product_edit/<%= p.product_id %>"><i class="bi bi-pencil"></i> <span data-i18n="btn.edit">Edit</span></a>
+          <% if (['Approved','Sold Out'].includes(st)) { %><form method="POST" action="/farmer/products/<%= p.product_id %>/toggle" class="d-inline"><button class="btn btn-sm btn-light" title="Toggle stock"><i class="bi bi-<%= st === 'Sold Out' ? 'arrow-counterclockwise' : 'slash-circle' %>"></i></button></form><% } %>
+          <form method="POST" action="/farmer/products/<%= p.product_id %>/delete" class="d-inline" data-confirm="Delete this product?"><button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button></form>
+        </td>
+      </tr>
+    <% }) %>
+    </tbody></table></div>
+    <div id="empty" class="ks-empty <%= products.length ? 'd-none' : '' %>"><i class="bi bi-boxes"></i><h5 data-i18n="empty.products_farmer">No products found</h5><a href="/farmer/add_product" class="btn btn-success btn-sm mt-2" data-i18n="nav.add_product">Add New Product</a></div>
+  </div>
+</div></main>
+<script>
+  // tabs + search + category all work together
+  const rows = [...document.querySelectorAll('.p-row')], q = document.getElementById('q'), cat = document.getElementById('cat'), tabs = [...document.querySelectorAll('#tabs button')];
+  let tab = 'all';
+  function apply() {
+    const term = q.value.trim().toLowerCase(); let n = 0;
+    rows.forEach(r => { const ok = (!term || r.dataset.search.toLowerCase().includes(term)) && (cat.value === 'all' || r.dataset.cat === cat.value) && (tab === 'all' || r.dataset.status === tab); r.style.display = ok ? '' : 'none'; if (ok) n++; });
+    document.getElementById('empty').classList.toggle('d-none', n !== 0);
+  }
+  q.addEventListener('input', apply); cat.addEventListener('change', apply);
+  tabs.forEach(b => b.addEventListener('click', () => { tabs.forEach(x => x.classList.remove('active')); b.classList.add('active'); tab = b.dataset.filter; apply(); }));
+</script>
+<%- include('../partials/footer') %>

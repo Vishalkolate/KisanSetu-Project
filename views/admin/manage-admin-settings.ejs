@@ -1,0 +1,327 @@
+<%- include("header") %>
+
+
+
+<div class="settings-page">
+
+    <header class="page-header">
+        <div>
+            <h1 data-translate="Profile & Settings"> Settings</h1>
+            <p class="subtitle" data-translate="Manage your account, marketplace and system preferences.">Manage your account, marketplace and system preferences.</p>
+        </div>
+        <div class="header-actions">
+            <span class="admin-status">
+                <span class="status-dot"></span>
+                <span data-translate="Admin Account">Admin Account</span>
+            </span>
+        </div>
+    </header>
+
+    <nav class="settings-nav">
+        <a href="settings.html#general"><i class="bi bi-sliders"></i> <span data-translate="General">General</span></a>
+        <a href="settings.html#notifications"><i class="bi bi-bell"></i> <span data-translate="Notifications">Notifications</span></a>
+        <a href="settings.html#marketplace"><i class="bi bi-shop"></i> <span data-translate="Marketplace">Marketplace</span></a>
+        <a href="settings.html#activity"><i class="bi bi-clock-history"></i> <span data-translate="Activity Log">Activity Log</span></a>
+        <a href="settings.html#backup"><i class="bi bi-database"></i> <span data-translate="Backup">Backup</span></a>
+        <a href="settings.html#email"><i class="bi bi-envelope"></i> <span data-translate="Email & SMS">Email & SMS</span></a>
+        <a href="settings.html#system"><i class="bi bi-pc-display"></i> <span data-translate="System Info">System Info</span></a>
+    </nav>
+
+    <main class="settings-container">
+
+        <!-- 4. GENERAL SETTINGS -->
+        <section class="settings-card" id="general">
+            <div class="section-heading">
+                <div class="section-icon"><i class="bi bi-gear"></i></div>
+                <div>
+                    <h2 data-translate="General Settings">General Settings</h2>
+                    <p data-translate="Configure the website's basic preferences.">Configure the website's basic preferences.</p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="website-name" data-translate="Website Name">Website Name</label>
+                    <input type="text" id="website-name" value="KisanSetu">
+                </div>
+                <div class="form-group">
+                    <label for="site-language" data-translate="Language">Language</label>
+                    <select id="site-language" onchange="changeLanguage(this.value)">
+                        <option value="en">English</option>
+                        <option value="mr">मराठी</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="date-format" data-translate="Date Format">Date Format</label>
+                    <select id="date-format">
+                        <option value="DD-MM-YYYY">DD-MM-YYYY</option>
+                        <option value="MM-DD-YYYY">MM-DD-YYYY</option>
+                        <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="appearance" data-translate="Appearance">Appearance</label>
+                    <select id="appearance">
+                        <option value="light" data-translate="Light Mode">Light Mode</option>
+                        <option value="dark" data-translate="Dark Mode">Dark Mode</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="button" class="btn-primary-custom">
+                <i class="bi bi-save"></i> <span data-translate="Save General Settings">Save General Settings</span>
+            </button>
+        </section>
+
+        <!-- 5. NOTIFICATIONS -->
+        <section class="settings-card" id="notifications">
+            <div class="section-heading">
+                <div class="section-icon"><i class="bi bi-bell"></i></div>
+                <div>
+                    <h2 data-translate="Notification Settings">Notification Settings</h2>
+                    <p data-translate="Choose which marketplace updates you want to receive.">Choose which marketplace updates you want to receive.</p>
+                </div>
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <h3 data-translate="New User Registrations">New User Registrations</h3>
+                    <p data-translate="Receive alerts when a farmer or buyer registers.">Receive alerts when a farmer or buyer registers.</p>
+                </div>
+                <label class="switch"><input type="checkbox" checked><span class="switch-slider"></span></label>
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <h3 data-translate="New Orders">New Orders</h3>
+                    <p data-translate="Get notified about new marketplace orders.">Get notified about new marketplace orders.</p>
+                </div>
+                <label class="switch"><input type="checkbox" checked><span class="switch-slider"></span></label>
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <h3 data-translate="Farmer Complaints">Farmer Complaints</h3>
+                    <p data-translate="Receive alerts for new complaints and updates.">Receive alerts for new complaints and updates.</p>
+                </div>
+                <label class="switch"><input type="checkbox" checked><span class="switch-slider"></span></label>
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <h3 data-translate="Email Notifications">Email Notifications</h3>
+                    <p data-translate="Send supported notifications to the admin email.">Send supported notifications to the admin email.</p>
+                </div>
+                <label class="switch"><input type="checkbox"><span class="switch-slider"></span></label>
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <h3 data-translate="In-App Notifications">In-App Notifications</h3>
+                    <p data-translate="Show notifications inside the Admin Panel.">Show notifications inside the Admin Panel.</p>
+                </div>
+                <label class="switch"><input type="checkbox" checked><span class="switch-slider"></span></label>
+            </div>
+
+            <button type="button" class="btn-primary-custom">
+                <i class="bi bi-save"></i> <span data-translate="Save Notification Settings">Save Notification Settings</span>
+            </button>
+        </section>
+
+        <!-- 6. MARKETPLACE CONFIGURATION -->
+        <section class="settings-card" id="marketplace">
+            <div class="section-heading">
+                <div class="section-icon"><i class="bi bi-shop"></i></div>
+                <div>
+                    <h2 data-translate="Marketplace Configuration">Marketplace Configuration</h2>
+                    <p data-translate="Configure product approval and order preferences.">Configure product approval and order preferences.</p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="commission" data-translate="Platform Commission (%)">Platform Commission (%)</label>
+                    <input type="number" id="commission" min="0" max="100" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="minimum-order" data-translate="Minimum Order Quantity">Minimum Order Quantity</label>
+                    <input type="number" id="minimum-order" min="1" value="1">
+                </div>
+                <div class="form-group">
+                    <label for="product-approval" data-translate="Product Approval">Product Approval</label>
+                    <select id="product-approval">
+                        <option value="manual" data-translate="Manual Admin Approval">Manual Admin Approval</option>
+                        <option value="automatic" data-translate="Automatic Approval">Automatic Approval</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="payment-method" data-translate="Payment Configuration">Payment Configuration</label>
+                    <select id="payment-method">
+                        <option value="cod" data-translate="Cash on Delivery">Cash on Delivery</option>
+                        <option value="online" data-translate="Online Payment">Online Payment</option>
+                        <option value="both" data-translate="Both">Both</option>
+                    </select>
+                </div>
+            </div>
+
+            <p class="info-note">
+                <i class="bi bi-exclamation-circle"></i>
+                <span data-translate="Commission and payment changes can affect transactions. Validate them carefully before enabling live payments.">Commission and payment changes can affect transactions. Validate them carefully before enabling live payments.</span>
+            </p>
+
+            <button type="button" class="btn-primary-custom">
+                <i class="bi bi-save"></i> <span data-translate="Save Marketplace Settings">Save Marketplace Settings</span>
+            </button>
+        </section>
+
+        <!-- 7. ACTIVITY LOG -->
+        <section class="settings-card" id="activity">
+            <div class="section-heading">
+                <div class="section-icon"><i class="bi bi-clock-history"></i></div>
+                <div>
+                    <h2 data-translate="Activity Log">Activity Log</h2>
+                    <p data-translate="Review administrative actions and account activity.">Review administrative actions and account activity.</p>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="settings-table">
+                    <thead>
+                        <tr>
+                            <th data-translate="Activity">Activity</th>
+                            <th data-translate="Performed By">Performed By</th>
+                            <th data-translate="Date & Time">Date & Time</th>
+                            <th data-translate="Status">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-translate="Activity log will appear here">Activity log will appear here</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><span class="badge-pending" data-translate="No records">No records</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p class="info-note" data-translate="Activity records should be generated and stored by the backend.">Activity records should be generated and stored by the backend.</p>
+        </section>
+
+        <!-- 8. BACKUP & RESTORE -->
+        <section class="settings-card" id="backup">
+            <div class="section-heading">
+                <div class="section-icon"><i class="bi bi-database-check"></i></div>
+                <div>
+                    <h2 data-translate="Backup & Restore">Backup & Restore</h2>
+                    <p data-translate="Manage backups of marketplace data.">Manage backups of marketplace data.</p>
+                </div>
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <h3 data-translate="Database Backup">Database Backup</h3>
+                    <p data-translate="Create a secure backup of the database.">Create a secure backup of the database.</p>
+                </div>
+                <button type="button" class="btn-outline-custom">
+                    <i class="bi bi-download"></i> <span data-translate="Create Backup">Create Backup</span>
+                </button>
+            </div>
+
+            <div class="form-group restore-group">
+                <label for="backup-file" data-translate="Select Backup File">Select Backup File</label>
+                <input type="file" id="backup-file" accept=".sql,.zip">
+                <p class="info-note" data-translate="Restore must be implemented securely on the server. Never restore an untrusted file.">Restore must be implemented securely on the server. Never restore an untrusted file.</p>
+                <button type="button" class="btn-danger-custom">
+                    <i class="bi bi-arrow-counterclockwise"></i> <span data-translate="Restore Backup">Restore Backup</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- 9. EMAIL & SMS -->
+        <section class="settings-card" id="email">
+            <div class="section-heading">
+                <div class="section-icon"><i class="bi bi-envelope-paper"></i></div>
+                <div>
+                    <h2 data-translate="Email & SMS Configuration">Email & SMS Configuration</h2>
+                    <p data-translate="Configure notification service details.">Configure notification service details.</p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="sender-email" data-translate="Sender Email">Sender Email</label>
+                    <input type="email" id="sender-email" placeholder="notifications@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="email-provider" data-translate="Email Service">Email Service</label>
+                    <select id="email-provider">
+                        <option value="" data-translate="Select email service">Select email service</option>
+                        <option value="smtp">SMTP</option>
+                        <option value="provider" data-translate="Email API Provider">Email API Provider</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="sms-provider" data-translate="SMS Provider">SMS Provider</label>
+                    <select id="sms-provider">
+                        <option value="" data-translate="Select SMS provider">Select SMS provider</option>
+                        <option value="provider1" data-translate="Provider to be configured">Provider to be configured</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="notification-contact" data-translate="Support Contact Email">Support Contact Email</label>
+                    <input type="email" id="notification-contact" placeholder="support@example.com">
+                </div>
+            </div>
+
+            <p class="info-note">
+                <i class="bi bi-shield-lock"></i>
+                <span data-translate="Store API keys and passwords securely on the server, not in HTML or frontend JavaScript.">Store API keys and passwords securely on the server, not in HTML or frontend JavaScript.</span>
+            </p>
+
+            <button type="button" class="btn-primary-custom">
+                <i class="bi bi-save"></i> <span data-translate="Save Communication Settings">Save Communication Settings</span>
+            </button>
+        </section>
+
+        <!-- 10. SYSTEM INFORMATION -->
+        <section class="settings-card" id="system">
+            <div class="section-heading">
+                <div class="section-icon"><i class="bi bi-pc-display-horizontal"></i></div>
+                <div>
+                    <h2 data-translate="System Information">System Information</h2>
+                    <p data-translate="View basic application and service information.">View basic application and service information.</p>
+                </div>
+            </div>
+
+            <div class="system-grid">
+                <div class="system-item">
+                    <span data-translate="Application">Application</span>
+                    <strong>KisanSetu</strong>
+                </div>
+                <div class="system-item">
+                    <span data-translate="Application Version">Application Version</span>
+                    <strong>1.0.0</strong>
+                </div>
+                <div class="system-item">
+                    <span data-translate="Database Status">Database Status</span>
+                    <strong class="status-unknown" data-translate="Not Connected to Status API">Not Connected to Status API</strong>
+                </div>
+                <div class="system-item">
+                    <span data-translate="Server Status">Server Status</span>
+                    <strong class="status-unknown" data-translate="Not Connected to Status API">Not Connected to Status API</strong>
+                </div>
+            </div>
+
+            <p class="info-note" data-translate="Live system status requires a backend health-check API. The statuses above are placeholders.">Live system status requires a backend health-check API. The statuses above are placeholders.</p>
+        </section>
+
+    </main>
+</div>
+
+<script src="script.js"></script>
+<script src="language.js"></script>
+<script src="settings.js"></script>
+
+
+<%- include("footer") %>

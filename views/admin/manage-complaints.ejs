@@ -1,0 +1,143 @@
+<%- include("header") %>
+
+<div class="complaints-container">
+
+    <header class="page-header">
+        <div>
+            <h1 data-translate="Manage Complaints">Manage Complaints</h1>
+
+            <p data-translate="View and manage complaints submitted by farmers and buyers.">
+                View and manage complaints submitted by farmers and buyers.
+            </p>
+        </div>
+
+        <a href="../views/admin-home.html" class="back-btn">
+            <i class="bi bi-arrow-left"></i>
+            <span data-translate="Back">Back</span>
+        </a>
+    </header>
+
+    <section class="complaint-summary">
+
+        <div class="summary-card">
+            <h3 data-translate="Total Complaints">Total Complaints</h3>
+            <p>120</p>
+        </div>
+
+        <div class="summary-card pending">
+            <h3 data-translate="Pending">Pending</h3>
+            <p>35</p>
+        </div>
+
+        <div class="summary-card resolved">
+            <h3 data-translate="Resolved">Resolved</h3>
+            <p>85</p>
+        </div>
+
+    </section>
+
+    <section class="complaint-list">
+
+        <h2 data-translate="Complaint Records">Complaint Records</h2>
+
+        <div class="table-wrapper">
+            <table>
+
+                <thead>
+                    <tr>
+                        <th data-translate="ID">ID</th>
+                        <th data-translate="User Name">User Name</th>
+                        <th data-translate="User Type">User Type</th>
+                        <th data-translate="Complaint">Complaint</th>
+                        <th data-translate="Date">Date</th>
+                        <th data-translate="Status">Status</th>
+                        <th data-translate="Action">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>101</td>
+                        <td>Rahul Patil</td>
+                        <td data-translate="Farmer">Farmer</td>
+                        <td data-translate="Payment not received">Payment not received</td>
+                        <td>25-10-2026</td>
+
+                        <td>
+                            <span class="status pending-label"
+                                  data-translate="Pending">Pending</span>
+                        </td>
+
+                        <td class="action-buttons">
+                            <button type="button" class="view-btn"
+                                    data-translate="View">View</button>
+
+                            <button type="button" class="reply-btn"
+                                    data-translate="Reply">Reply</button>
+
+                            <button type="button" class="resolve-btn"
+                                    data-translate="Resolve">Resolve</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>102</td>
+                        <td>Priya Shah</td>
+                        <td data-translate="Buyer">Buyer</td>
+                        <td data-translate="Order delivery issue">Order delivery issue</td>
+                        <td>24-10-2026</td>
+
+                        <td>
+                            <span class="status resolved-label"
+                                  data-translate="Resolved">Resolved</span>
+                        </td>
+
+                        <td class="action-buttons">
+                            <button type="button" class="view-btn"
+                                    data-translate="View">View</button>
+
+                            <button type="button" class="reply-btn"
+                                    data-translate="Reply">Reply</button>
+
+                            <button type="button" class="resolve-btn"
+                                    data-translate="Resolve">Resolve</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>103</td>
+                        <td>Ganesh Jadhav</td>
+                        <td data-translate="Farmer">Farmer</td>
+                        <td data-translate="Incorrect product price">Incorrect product price</td>
+                        <td>23-10-2026</td>
+
+                        <td>
+                            <span class="status pending-label"
+                                  data-translate="Pending">Pending</span>
+                        </td>
+
+                        <td class="action-buttons">
+                            <button type="button" class="view-btn"
+                                    data-translate="View">View</button>
+
+                            <button type="button" class="reply-btn"
+                                    data-translate="Reply">Reply</button>
+
+                            <button type="button" class="resolve-btn"
+                                    data-translate="Resolve">Resolve</button>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</div>
+
+<script src="script.js"></script>
+<script src="language.js"></script>
+<script src="complaints.js"></script>
+
+<%- include("footer") %>

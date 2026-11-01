@@ -1,0 +1,311 @@
+<%- include('header.ejs') %>
+
+<!-- Authentication Stylesheet -->
+<link rel="stylesheet" href="/web/css/auth.css">
+
+  <!-- Auth Main Content -->
+  <main class="auth-page-wrapper">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-xl-11 col-lg-12">
+          <div class="auth-card">
+            <div class="row g-0">
+              
+              <!-- Left Visual / Buyer Benefits Showcase -->
+              <div class="col-lg-4 d-none d-lg-flex auth-side-banner">
+                <div class="auth-side-content">
+                  <span class="auth-feature-badge">
+                    <i class="fa-solid fa-building-circle-check text-warning"></i> Bulk Procurement Portal
+                  </span>
+                  <h2 class="h3 fw-bold mb-3 text-white">Source Fresh Harvests Directly at Farm-Gate</h2>
+                  <p class="text-white-50 mb-4 small leading-relaxed">
+                    Access verified agricultural producers across regional Mandis, procure high-grade bulk crops, and benefit from standardized quality inspections.
+                  </p>
+
+                  <div class="feature-list">
+                    <div class="feature-list-item">
+                      <div class="feature-list-icon">
+                        <i class="fa-solid fa-award"></i>
+                      </div>
+                      <div>
+                        <h6 class="mb-0 fw-semibold text-white small">Quality Assured Produce</h6>
+                        <small class="text-white-50">Verified crop grading prior to dispatch from farm clusters.</small>
+                      </div>
+                    </div>
+
+                    <div class="feature-list-item">
+                      <div class="feature-list-icon">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                      </div>
+                      <div>
+                        <h6 class="mb-0 fw-semibold text-white small">Transparent Pricing & Invoicing</h6>
+                        <small class="text-white-50">Automated B2B GST compliance records and transparent Mandi pricing.</small>
+                      </div>
+                    </div>
+
+                    <div class="feature-list-item">
+                      <div class="feature-list-icon">
+                        <i class="fa-solid fa-truck"></i>
+                      </div>
+                      <div>
+                        <h6 class="mb-0 fw-semibold text-white small">Direct Farm-Gate Logistics</h6>
+                        <small class="text-white-50">Seamless transportation from verified farms directly to your delivery warehouse.</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="auth-side-footer text-white-50 pt-4 border-top border-white border-opacity-25 small">
+                  <i class="fa-solid fa-shield-halved me-1 text-warning"></i> B2B Enterprise & Institutional Trade Support
+                </div>
+              </div>
+
+              <!-- Right Form Section -->
+              <div class="col-lg-8">
+                <div class="auth-form-container">
+                  
+                  <!-- Role switch indicator -->
+                  <div class="role-switcher">
+                    <a href="/farmer_register" class="role-switcher-btn">
+                      <i class="fa-solid fa-tractor bi bi-person-badge"></i> Farmer Account
+                    </a>
+                    <a href="/buyer_register" class="role-switcher-btn active" aria-current="page">
+                      <i class="fa-solid fa-cart-shopping bi bi-shop"></i> Buyer / Trader Account
+                    </a>
+                  </div>
+
+                  <div class="mb-4">
+                    <h1 class="auth-title">Create Buyer Account</h1>
+                    <p class="auth-subtitle">Source high-volume fresh crops directly from verified regional farms.</p>
+                  </div>
+
+                  <!-- Alert placeholder for submission response -->
+                  <div id="authAlertPlaceholder"></div>
+
+                  <form id="buyerRegisterForm" novalidate autocomplete="on" method="post" action="/buyer_register_save">
+                    
+                    <!-- Full Name & Mobile -->
+                    <div class="row g-3 mb-3">
+                      <div class="col-md-6">
+                        <label for="buyerFullName" class="form-label">
+                          Full Name <span class="required-star">*</span>
+                        </label>
+                        <div class="input-group">
+                          <span class="input-group-text"><i class="fa-solid fa-user bi bi-person"></i></span>
+                          <input 
+                            type="text" 
+                            class="form-control validate-name" 
+                            id="buyerFullName" 
+                            name="fullName"
+                            placeholder="e.g., Anjali Sharma" 
+                            required 
+                            minlength="3"
+                            maxlength="60"
+                            autocomplete="name">
+                          <div class="invalid-feedback">Please enter your full name (minimum 3 characters).</div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <label for="buyerMobile" class="form-label">
+                          Mobile Number (India) <span class="required-star">*</span>
+                        </label>
+                        <div class="input-group">
+                          <span class="input-group-text fw-semibold text-success">+91</span>
+                          <input 
+                            type="tel" 
+                            class="form-control validate-mobile" 
+                            id="buyerMobile" 
+                            name="mobile"
+                            placeholder="98123 45678" 
+                            required 
+                            maxlength="13"
+                            autocomplete="tel">
+                          <div class="invalid-feedback">Enter a valid 10-digit Indian mobile number.</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Email Address & Buyer Type -->
+                    <div class="row g-3 mb-3">
+                      <div class="col-md-6">
+                        <label for="buyerEmail" class="form-label">
+                          Email Address <span class="required-star">*</span>
+                        </label>
+                        <div class="input-group">
+                          <span class="input-group-text"><i class="fa-solid fa-envelope bi bi-envelope"></i></span>
+                          <input 
+                            type="email" 
+                            class="form-control validate-email" 
+                            id="buyerEmail" 
+                            name="email"
+                            placeholder="buyer@agribusiness.com" 
+                            required
+                            autocomplete="email">
+                          <div class="invalid-feedback">Please enter a valid email address.</div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <label for="buyerType" class="form-label">
+                          Buyer / Business Type <span class="required-star">*</span>
+                        </label>
+                        <div class="input-group">
+                          <span class="input-group-text"><i class="fa-solid fa-briefcase bi bi-briefcase"></i></span>
+                          <select class="form-select" id="buyerType" name="buyerType" required data-err-msg="Please select your buyer category.">
+                            <option value="" selected disabled>Select Buyer Type</option>
+                            <option value="Wholesaler">Wholesale Distributor / Mandi Trader</option>
+                            <option value="Retailer">Retail Store / Supermarket Chain</option>
+                            <option value="FoodProcessor">Food Processing Industry</option>
+                            <option value="Exporter">Agri Products Exporter</option>
+                            <option value="HORECA">Hotel / Restaurant / Catering (HORECA)</option>
+                            <option value="Individual">Direct Consumer / Bulk Household Buyer</option>
+                          </select>
+                          <div class="invalid-feedback">Please select your buyer category.</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Business Name & City / Address -->
+                    <div class="row g-3 mb-3">
+                      <div class="col-md-6">
+                        <label for="businessName" class="form-label">
+                          Business / Company Name <span class="required-star">*</span>
+                        </label>
+                        <div class="input-group">
+                          <span class="input-group-text"><i class="fa-solid fa-building bi bi-buildings"></i></span>
+                          <input 
+                            type="text" 
+                            class="form-control" 
+                            id="businessName" 
+                            name="businessName"
+                            placeholder="e.g., Sharma Agro Traders Pvt Ltd" 
+                            required
+                            data-err-msg="Business name is required.">
+                          <div class="invalid-feedback">Please enter your business or firm name.</div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <label for="buyerCityAddress" class="form-label">
+                          Business Address <span class="required-star">*</span>
+                        </label>
+                        <div class="input-group">
+                          <span class="input-group-text"><i class="fa-solid fa-location-dot bi bi-geo-alt"></i></span>
+                          <input 
+                            type="text" 
+                            class="form-control" 
+                            id="buyerCityAddress" 
+                            name="cityAddress"
+                            placeholder="e.g., APMC Market, Pune, Maharashtra" 
+                            required
+                            data-err-msg="City or delivery address is required.">
+                          <div class="invalid-feedback">Please provide your city and delivery location.</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Password with Strength Meter -->
+                    <div class="row g-3 mb-3">
+                      <div class="col-md-6 password-field-group">
+                        <label for="password" class="form-label">
+                          Password <span class="required-star">*</span>
+                        </label>
+                        <div class="input-group">
+                          <span class="input-group-text"><i class="fa-solid fa-lock bi bi-lock"></i></span>
+                          <input 
+                            type="password" 
+                            class="form-control has-toggle validate-password-create password-meter-input" 
+                            id="password" 
+                            name="password"
+                            placeholder="At least 8 characters" 
+                            required
+                            minlength="8"
+                            maxlength="64"
+                            autocomplete="new-password">
+                          <button 
+                            type="button" 
+                            class="btn btn-password-toggle" 
+                            tabindex="-1"
+                            aria-label="Show password">
+                            <i class="fa-solid fa-eye bi bi-eye"></i>
+                          </button>
+                          <div class="invalid-feedback">Password does not meet complexity requirements.</div>
+                        </div>
+
+                        
+                      </div>
+
+                      <!-- Confirm Password -->
+                      <div class="col-md-6">
+                        <label for="confirmPassword" class="form-label">
+                          Confirm Password <span class="required-star">*</span>
+                        </label>
+                        <div class="input-group">
+                          <span class="input-group-text"><i class="fa-solid fa-shield-halved bi bi-shield-lock"></i></span>
+                          <input 
+                            type="password" 
+                            class="form-control has-toggle validate-confirm-password" 
+                            id="confirmPassword" 
+                            name="confirmPassword"
+                            placeholder="Re-enter password" 
+                            data-match-target="#password"
+                            required
+                            autocomplete="new-password">
+                          <button 
+                            type="button" 
+                            class="btn btn-password-toggle" 
+                            tabindex="-1"
+                            aria-label="Show password">
+                            <i class="fa-solid fa-eye bi bi-eye"></i>
+                          </button>
+                          <div class="invalid-feedback">Passwords do not match.</div>
+                        </div>
+                        <small class="text-muted d-block mt-1">Must match the password entered above.</small>
+                      </div>
+                    </div>
+
+                    <!-- Terms & Conditions Checkbox -->
+                    <div class="form-check mb-4">
+                      <input class="form-check-input" type="checkbox" id="buyerTerms" required data-err-msg="You must accept the terms to create an account.">
+                      <label class="form-check-label text-secondary small" for="buyerTerms">
+                        I accept KisanSetu's <a href="/terms" class="text-success text-decoration-underline fw-semibold">Buyer Procurement Agreement</a>, <a href="/terms" class="text-success text-decoration-underline fw-semibold">Terms of Service</a>, and <a href="/privacy" class="text-success text-decoration-underline fw-semibold">Privacy Policy</a>.
+                      </label>
+                      <div class="invalid-feedback">You must accept the terms to register.</div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="d-grid mb-3">
+                      <button type="submit" class="btn btn-agri btn-lg shadow-sm">
+                        <i class="bi bi-person-plus-fill me-1"></i> <span data-i18n="btn.create_account">Create Account</span>
+                      </button>
+                    </div>
+
+                    <!-- Links to Login and Farmer Registration -->
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center text-center pt-2 gap-2">
+                      <p class="text-muted mb-0 small">
+                        Already registered? 
+                        <a href="/login" class="fw-semibold text-success text-decoration-none">Sign In to Account</a>
+                      </p>
+                      <p class="text-muted mb-0 small">
+                        Are you an agricultural grower? 
+                        <a href="/farmer_register" class="fw-semibold text-success text-decoration-none">Register as Farmer</a>
+                      </p>
+                    </div>
+
+                  </form>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <%- include('footer.ejs') %>
+
+  <!-- Authentication Client-side Script -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="/web/js/auth.js"></script>

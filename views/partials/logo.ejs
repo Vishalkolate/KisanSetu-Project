@@ -1,0 +1,7 @@
+<a class="ks-logo" href="<%= (typeof currentUser !== 'undefined' && currentUser) ? (currentUser.role === 'farmer' ? '/farmer/dashboard' : '/buyer/dashboard') : '/' %>" aria-label="KisanSetu home">
+  <img src="/images/logo.svg" alt="" width="42" height="42">
+  <span class="ks-logo-text">
+    <span class="ks-logo-name">Kisan<b>Setu</b></span>
+    <span class="ks-logo-tag" data-i18n="brand.tagline">Farmer to Buyer Market</span>
+  </span>
+</a>

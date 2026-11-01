@@ -1,0 +1,175 @@
+<%- include("header") %>
+
+
+<div class="settings-page">
+
+    <header class="page-header">
+        <div>
+            <h1 data-translate="Profile & Settings"> Admin Profile </h1>
+            <p class="subtitle" data-translate="Manage your account, marketplace and system preferences.">Manage your account, marketplace and system preferences.</p>
+        </div>
+        <div class="header-actions">
+            <span class="admin-status">
+                <span class="status-dot"></span>
+                <span data-translate="Admin Account">Admin Account</span>
+            </span>
+        </div>
+    </header>
+
+    <nav class="settings-nav">
+        <a href="profile.html"><i class="bi bi-person-circle"></i> <span data-translate="Profile">Profile</span></a>
+        <a href="profile.html#security"><i class="bi bi-shield-lock"></i> <span data-translate="Security">Security</span></a>
+        <a href="profile.html#admin-management"><i class="bi bi-people"></i> <span data-translate="Admins">Admins</span></a>
+    </nav>
+
+    <main class="settings-container">
+
+        <!-- 1. ADMIN PROFILE -->
+        <section class="settings-card" id="profile">
+            <div class="section-heading">
+                <div class="section-icon"><i class="bi bi-person-vcard"></i></div>
+                <div>
+                    <h2 data-translate="Admin Profile">Admin Profile</h2>
+                    <p data-translate="Manage your personal account information.">Manage your personal account information.</p>
+                </div>
+            </div>
+
+            <div class="profile-preview">
+                <div class="profile-avatar"><i class="bi bi-person-fill"></i></div>
+                <div>
+                    <h3 data-translate="Administrator">Administrator</h3>
+                    <p data-translate="Super Admin">Super Admin</p>
+                    <label class="upload-label" for="profile-photo">
+                        <i class="bi bi-camera"></i>
+                        <span data-translate="Choose Profile Photo">Choose Profile Photo</span>
+                    </label>
+                    <input type="file" id="profile-photo" accept="image/*">
+                </div>
+            </div>
+
+            <form>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="admin-name" data-translate="Full Name">Full Name</label>
+                        <input type="text" id="admin-name" placeholder="Enter admin name" data-translate-placeholder="Enter admin name">
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-email" data-translate="Email Address">Email Address</label>
+                        <input type="email" id="admin-email" placeholder="admin@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-mobile" data-translate="Mobile Number">Mobile Number</label>
+                        <input type="tel" id="admin-mobile" placeholder="Enter mobile number" data-translate-placeholder="Enter mobile number">
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-role" data-translate="Role">Role</label>
+                        <input type="text" id="admin-role" value="Super Admin" readonly>
+                    </div>
+                </div>
+                <button type="button" class="btn-primary-custom">
+                    <i class="bi bi-check2-circle"></i> <span data-translate="Save Profile">Save Profile</span>
+                </button>
+            </form>
+        </section>
+
+        <!-- 2. SECURITY -->
+        <section class="settings-card" id="security">
+            <div class="section-heading">
+                <div class="section-icon"><i class="bi bi-shield-lock"></i></div>
+                <div>
+                    <h2 data-translate="Security Settings">Security Settings</h2>
+                    <p data-translate="Manage password and account protection.">Manage password and account protection.</p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="current-password" data-translate="Current Password">Current Password</label>
+                    <input type="password" id="current-password" placeholder="Enter current password" data-translate-placeholder="Enter current password">
+                </div>
+                <div class="form-group">
+                    <label for="new-password" data-translate="New Password">New Password</label>
+                    <input type="password" id="new-password" placeholder="Enter new password" data-translate-placeholder="Enter new password">
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password" data-translate="Confirm New Password">Confirm New Password</label>
+                    <input type="password" id="confirm-password" placeholder="Confirm new password" data-translate-placeholder="Confirm new password">
+                </div>
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <h3 data-translate="Two-Factor Authentication">Two-Factor Authentication</h3>
+                    <p data-translate="Require an additional verification step at login.">Require an additional verification step at login.</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="two-factor">
+                    <span class="switch-slider"></span>
+                </label>
+            </div>
+
+            <button type="button" class="btn-primary-custom">
+                <i class="bi bi-key"></i> <span data-translate="Change Password">Change Password</span>
+            </button>
+            <button type="button" class="btn-danger-custom">
+                <i class="bi bi-box-arrow-right"></i> <span data-translate="Logout">Logout</span>
+            </button>
+        </section>
+
+        <!-- 3. ADMIN MANAGEMENT -->
+        <section class="settings-card" id="admin-management">
+            <div class="section-heading">
+                <div class="section-icon"><i class="bi bi-people"></i></div>
+                <div>
+                    <h2 data-translate="Admin Management">Admin Management</h2>
+                    <p data-translate="Manage admin accounts and access permissions.">Manage admin accounts and access permissions.</p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="new-admin-name" data-translate="Admin Name">Admin Name</label>
+                    <input type="text" id="new-admin-name" placeholder="Enter admin name" data-translate-placeholder="Enter admin name">
+                </div>
+                <div class="form-group">
+                    <label for="new-admin-email" data-translate="Admin Email">Admin Email</label>
+                    <input type="email" id="new-admin-email" placeholder="Enter email address" data-translate-placeholder="Enter email address">
+                </div>
+                <div class="form-group">
+                    <label for="new-admin-role" data-translate="Assign Role">Assign Role</label>
+                    <select id="new-admin-role">
+                        <option value="" data-translate="Select role">Select role</option>
+                        <option data-translate="Super Admin">Super Admin</option>
+                        <option data-translate="Admin">Admin</option>
+                        <option data-translate="Support Admin">Support Admin</option>
+                        <option data-translate="Report Viewer">Report Viewer</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="admin-access" data-translate="Account Status">Account Status</label>
+                    <select id="admin-access">
+                        <option data-translate="Active">Active</option>
+                        <option data-translate="Inactive">Inactive</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="button" class="btn-primary-custom">
+                <i class="bi bi-person-plus"></i> <span data-translate="Add Admin">Add Admin</span>
+            </button>
+
+            <p class="info-note">
+                <i class="bi bi-info-circle"></i>
+                <span data-translate="Role restrictions must also be enforced on the server.">Role restrictions must also be enforced on the server.</span>
+            </p>
+        </section>
+
+    </main>
+</div>
+
+<script src="script.js"></script>
+<script src="profile.js"></script>
+<script src="language.js"></script>
+
+
+<%- include("footer") %>

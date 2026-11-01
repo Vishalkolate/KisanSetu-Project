@@ -1,0 +1,114 @@
+<%
+  const _panel = typeof panel !== 'undefined' ? panel : 'web';
+  const _u = (typeof currentUser !== 'undefined') ? currentUser : null;
+  const _p = (typeof currentPath !== 'undefined') ? currentPath.replace(/\/+$/, '') || '/' : '/';
+  const on = (...paths) => paths.some(x => x === '/' ? _p === '/' || _p === '/home' : (_p === x || _p.startsWith(x + '/'))) ? 'active' : '';
+  const initial = _u && _u.name ? _u.name.trim().charAt(0).toUpperCase() : 'U';
+  const firstName = _u && _u.name ? _u.name.trim().split(' ')[0] : '';
+  const _lang = typeof lang !== 'undefined' ? lang : 'en';
+  const langNames = { en: 'English', hi: 'हिन्दी', mr: 'मराठी' };
+%>
+<header class="ks-nav">
+  <nav class="navbar navbar-expand-xl">
+    <div class="container-fluid px-3 px-lg-4" style="max-width:1400px">
+      <%- include('logo') %>
+      <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#ksNav" aria-controls="ksNav" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="bi bi-list fs-2"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="ksNav">
+        <ul class="navbar-nav mx-auto gap-xl-1 align-items-xl-center">
+        <% if (_panel === 'buyer') { %>
+          <li class="nav-item"><a class="nav-link <%= on('/buyer/dashboard', '/buyer/home') || (_p === '/buyer' ? 'active' : '') %>" href="/buyer/dashboard"><i class="bi bi-speedometer2"></i><span data-i18n="nav.dashboard">Dashboard</span></a></li>
+          <li class="nav-item"><a class="nav-link <%= on('/buyer/browse', '/buyer/browse-products', '/buyer/product') %>" href="/buyer/browse"><i class="bi bi-basket3"></i><span data-i18n="nav.browse">Browse Crops</span></a></li>
+          <li class="nav-item"><a class="nav-link <%= on('/buyer/orders', '/buyer/my-orders') %>" href="/buyer/orders"><i class="bi bi-box-seam"></i><span data-i18n="nav.orders">My Orders</span></a></li>
+          <li class="nav-item"><a class="nav-link <%= on('/buyer/enquiries', '/buyer/send-enquiry') %>" href="/buyer/enquiries"><i class="bi bi-chat-dots"></i><span data-i18n="nav.enquiries">Enquiries</span></a></li>
+          <li class="nav-item"><a class="nav-link <%= on('/buyer/wishlist') %>" href="/buyer/wishlist"><i class="bi bi-heart"></i><span data-i18n="nav.wishlist">Wishlist</span></a></li>
+          <li class="nav-item"><a class="nav-link <%= on('/buyer/support', '/buyer/farmer-contact') %>" href="/buyer/support"><i class="bi bi-headset"></i><span data-i18n="nav.support">Support</span></a></li>
+        <% } else if (_panel === 'farmer') { %>
+          <li class="nav-item"><a class="nav-link <%= on('/farmer/dashboard', '/farmer/home') || (_p === '/farmer' ? 'active' : '') %>" href="/farmer/dashboard"><i class="bi bi-speedometer2"></i><span data-i18n="nav.dashboard">Dashboard</span></a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle <%= on('/farmer/products', '/farmer/add_product', '/farmer/product_edit') %>" href="#" data-bs-toggle="dropdown"><i class="bi bi-boxes"></i><span data-i18n="nav.products">My Produce</span></a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/farmer/add_product"><i class="bi bi-plus-circle"></i><span data-i18n="nav.add_product">Add New Product</span></a></li>
+              <li><a class="dropdown-item" href="/farmer/products"><i class="bi bi-list-ul"></i><span data-i18n="nav.manage_products">Manage Products</span></a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link <%= on('/farmer/orders', '/farmer/order_history') %>" href="/farmer/orders"><i class="bi bi-cart-check"></i><span data-i18n="nav.orders_farmer">Orders</span></a></li>
+          <li class="nav-item"><a class="nav-link <%= on('/farmer/enquiry', '/farmer/enquiries') %>" href="/farmer/enquiry"><i class="bi bi-chat-dots"></i><span data-i18n="nav.enquiries">Enquiries</span></a></li>
+          <li class="nav-item"><a class="nav-link <%= on('/farmer/sales_report') %>" href="/farmer/sales_report"><i class="bi bi-bar-chart-line"></i><span data-i18n="nav.reports">Reports</span></a></li>
+        <% } else { %>
+          <li class="nav-item"><a class="nav-link <%= on('/') %>" href="/"><i class="bi bi-house-door"></i><span data-i18n="nav.home">Home</span></a></li>
+          <li class="nav-item"><a class="nav-link <%= on('/products') %>" href="/products"><i class="bi bi-basket3"></i><span data-i18n="nav.crops">Crops</span></a></li>
+          <li class="nav-item"><a class="nav-link <%= on('/about') %>" href="/about"><span data-i18n="nav.about">About Us</span></a></li>
+          <li class="nav-item"><a class="nav-link <%= on('/contact') %>" href="/contact"><span data-i18n="nav.contact">Contact Us</span></a></li>
+        <% } %>
+        </ul>
+
+        <div class="d-flex flex-column flex-xl-row align-items-xl-center gap-2 mt-3 mt-xl-0">
+          <!-- Language (same switcher on every page) -->
+          <div class="dropdown">
+            <button class="ks-lang-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Language">
+              <i class="bi bi-translate text-success"></i><span id="current-lang"><%= langNames[_lang] %></span><i class="bi bi-chevron-down small"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" style="min-width:170px">
+              <% Object.keys(langNames).forEach(code => { %>
+                <li><a class="dropdown-item lang-option <%= code === _lang ? 'active' : '' %>" href="/lang/<%= code %>" data-lang="<%= code %>"><%= langNames[code] %><% if (code === _lang) { %><i class="bi bi-check2 ms-auto"></i><% } %></a></li>
+              <% }) %>
+            </ul>
+          </div>
+
+          <% if (_u) { %>
+            <% if (_u.role === 'buyer' || _u.role === 'farmer') { %>
+              <a class="ks-icon-btn" href="/<%= _u.role %>/notifications" title="Notifications" aria-label="Notifications" data-i18n-title="nav.notifications">
+                <i class="bi bi-bell"></i><span class="ks-dot" id="ks-notif-dot"></span>
+              </a>
+            <% } %>
+            <% if (_panel === 'web') { %>
+              <a class="btn btn-success btn-sm" href="/<%= _u.role %>/dashboard"><i class="bi bi-speedometer2 me-1"></i><span data-i18n="nav.dashboard">Dashboard</span></a>
+            <% } %>
+            <div class="dropdown">
+              <button class="ks-pill-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="ks-avatar"><%= initial %></span><span class="d-none d-sm-inline"><%= firstName %></span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li class="px-3 py-2 border-bottom mb-1"><div class="fw-bold"><%= _u.name %></div><div class="small text-muted text-capitalize" data-i18n="role.<%= _u.role %>"><%= _u.role %></div></li>
+                <li><a class="dropdown-item" href="/<%= _u.role %>/dashboard"><i class="bi bi-speedometer2"></i><span data-i18n="nav.dashboard">Dashboard</span></a></li>
+                <li><a class="dropdown-item" href="/<%= _u.role %>/profile"><i class="bi bi-person-circle"></i><span data-i18n="nav.profile">My Profile</span></a></li>
+                <% if (_u.role === 'buyer') { %>
+                  <li><a class="dropdown-item" href="/buyer/orders"><i class="bi bi-box-seam"></i><span data-i18n="nav.orders">My Orders</span></a></li>
+                  <li><a class="dropdown-item" href="/buyer/support"><i class="bi bi-headset"></i><span data-i18n="nav.support">Support</span></a></li>
+                <% } else { %>
+                  <li><a class="dropdown-item" href="/farmer/kyc_docs"><i class="bi bi-patch-check"></i><span data-i18n="nav.kyc">KYC Documents</span></a></li>
+                <% } %>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="/logout"><i class="bi bi-box-arrow-right"></i><span data-i18n="nav.logout">Logout</span></a></li>
+              </ul>
+            </div>
+          <% } else { %>
+            <!-- Logged-out: Login + Register dropdowns -->
+            <div class="dropdown">
+              <button class="btn btn-outline-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-box-arrow-in-right me-1"></i><span data-i18n="nav.login">Login</span></button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="/login/farmer"><i class="bi bi-person-workspace"></i><span data-i18n="nav.login_farmer">Farmer Login</span></a></li>
+                <li><a class="dropdown-item" href="/login/buyer"><i class="bi bi-bag-check"></i><span data-i18n="nav.login_buyer">Buyer Login</span></a></li>
+              </ul>
+            </div>
+            <div class="dropdown">
+              <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="registerBtn"><i class="bi bi-person-plus me-1"></i><span data-i18n="nav.register">Register</span></button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="/farmer_register"><i class="bi bi-person-workspace"></i><span data-i18n="nav.register_farmer">Register as Farmer</span></a></li>
+                <li><a class="dropdown-item" href="/buyer_register"><i class="bi bi-bag-check"></i><span data-i18n="nav.register_buyer">Register as Buyer</span></a></li>
+              </ul>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<% if (typeof flash !== 'undefined' && flash) { %>
+<div class="ks-flash"><div class="alert alert-<%= flash.type || 'info' %> d-flex align-items-start gap-2 alert-dismissible fade show" role="alert">
+  <i class="bi <%= flash.type === 'success' ? 'bi-check-circle-fill' : (flash.type === 'danger' ? 'bi-exclamation-octagon-fill' : 'bi-info-circle-fill') %> mt-1"></i>
+  <div><%= flash.msg %></div><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div></div>
+<% } %>

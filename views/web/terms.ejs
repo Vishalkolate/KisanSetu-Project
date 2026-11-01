@@ -1,0 +1,93 @@
+<%- include('header.ejs') %>
+
+<main class="legal-page">
+  <section class="py-5 bg-light-green border-bottom">
+    <div class="container py-3">
+      <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill fw-semibold mb-3">KisanSetu Marketplace</span>
+      <h1 class="display-5 fw-bold text-dark mb-2">Terms of Trade</h1>
+      <p class="lead text-muted mb-0">Read these terms before using KisanSetu's agricultural marketplace pages.</p>
+    </div>
+  </section>
+
+  <section class="py-5">
+    <div class="container">
+      <article class="bg-white p-4 p-md-5 rounded-4 shadow-sm border legal-content">
+        <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-4">
+          <p class="text-muted mb-0"><strong>Last updated:</strong> October 24, 2026</p>
+          <p class="text-muted mb-0">Applies to visitors using the KisanSetu website.</p>
+        </div>
+
+        <div class="p-3 p-md-4 mb-4 rounded-3 border border-success-subtle bg-success-subtle">
+          <h2 class="h5 fw-bold text-success mb-2">Current project status</h2>
+          <p class="mb-0">The current project provides public, server-rendered website pages and sample crop content. The code does not currently implement farmer or buyer account workflows, user-submitted crop listings, verification, buyer enquiries, or order processing. Prices and quantities shown in sample content should not be treated as live offers or confirmed availability.</p>
+        </div>
+
+        <nav class="p-3 p-md-4 mb-5 rounded-3 border bg-light" aria-label="Terms sections">
+          <h2 class="h6 fw-bold mb-3">On this page</h2>
+          <ul class="row row-cols-1 row-cols-md-2 g-2 mb-0 ps-3">
+            <li><a href="#site-use">Website use</a></li>
+            <li><a href="#listings">Crop listings, prices, and quantities</a></li>
+            <li><a href="#enquiries-orders">Enquiries and order requests</a></li>
+            <li><a href="#verification">Verification</a></li>
+            <li><a href="#responsibilities">User responsibilities</a></li>
+            <li><a href="#changes-contact">Changes and contact</a></li>
+          </ul>
+        </nav>
+
+        <section id="site-use" class="mb-4">
+          <h2 class="h4 fw-bold text-dark">1. Website use</h2>
+          <p class="text-muted mb-0">KisanSetu is intended to help farmers and buyers discover information about agricultural produce. You may use the public pages for lawful, personal or business purposes. Do not attempt to disrupt the website, gain unauthorized access, impersonate another person, or submit unlawful, deceptive, or harmful material through any feature that may become available.</p>
+        </section>
+
+        <section id="listings" class="mb-4">
+          <h2 class="h4 fw-bold text-dark">2. Crop listings, prices, and quantities</h2>
+          <p class="text-muted mb-0">The crop cards and details currently present in the project are sample page content, not live farmer-submitted listings. Their crop descriptions, prices, quantities, locations, quality, and availability have not been confirmed as current offers. If user listings are introduced, farmers will be responsible for providing accurate information and updating or withdrawing a listing when its details change. Buyers should confirm all details directly with a seller before making a decision.</p>
+        </section>
+
+        <section id="enquiries-orders" class="mb-4">
+          <h2 class="h4 fw-bold text-dark">3. Enquiries and order requests</h2>
+          <p class="text-muted mb-0">The project currently has no implemented buyer-enquiry or order-request processing workflow. Links or explanatory text describing those activities do not confirm that an enquiry is delivered or an order is created. If these functions are added, an enquiry should be treated as a request for information only; an order would require clear acceptance by the relevant parties and agreement on price, quantity, quality, payment, delivery or collection, and timing.</p>
+        </section>
+
+        <section id="verification" class="mb-4">
+          <h2 class="h4 fw-bold text-dark">4. Verification</h2>
+          <p class="text-muted mb-0">The project code reviewed for this page does not implement a farmer identity or crop verification workflow. References to verification elsewhere on the website are informational and do not confirm that a person, document, listing, or produce has been checked or approved by KisanSetu.</p>
+        </section>
+
+        <section id="responsibilities" class="mb-4">
+          <h2 class="h4 fw-bold text-dark">5. User responsibilities</h2>
+          <p class="text-muted mb-0">Visitors are responsible for evaluating information before relying on it. If account, listing, enquiry, or trade features are added later, users must provide truthful information, protect their credentials, respect other users, and comply with applicable laws and any terms shown for those features. Users should keep their own records of any transaction they arrange.</p>
+        </section>
+
+        <section id="changes-contact">
+          <h2 class="h4 fw-bold text-dark">6. Changes and contact</h2>
+          <p class="text-muted mb-0">These terms may be revised as the project changes. The updated version and date will be posted here. For questions about these terms, contact <a href="mailto:support@kisansetu.in">support@kisansetu.in</a>.</p>
+        </section>
+      </article>
+    </div>
+  </section>
+  <!-- Done Button -->
+  <div class="container py-3">
+  <div class="row g-3">
+
+    <div class="col-12 col-md-6 text-center">
+      <a href="/farmer_register"
+         class="btn btn-success px-4 py-3 rounded-pill fw-semibold shadow-sm">
+        <i class="bi bi-check-circle me-2"></i>
+        Done Reading Go To Farmer Registration
+      </a>
+    </div>
+
+    <div class="col-12 col-md-6 text-center">
+      <a href="/buyer_register"
+         class="btn btn-success px-4 py-3 rounded-pill fw-semibold shadow-sm">
+        <i class="bi bi-check-circle me-2"></i>
+        Done Reading Go To Buyer Registration
+      </a>
+    </div>
+
+  </div>
+</div>
+</main>
+
+<%- include('footer.ejs') %>

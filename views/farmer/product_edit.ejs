@@ -1,0 +1,6 @@
+<%- include('../partials/head') %>
+<main class="ks-main"><div class="ks-container">
+  <div class="ks-page-head"><div><h1 data-i18n="pf.edit">Edit Product</h1><p><%= product.product_name %> · <%- statusBadge(product.p_status === 'Available' ? 'approved' : product.p_status.toLowerCase().replace(' ', '-')) %></p></div><a href="/farmer/products" class="btn btn-light"><i class="bi bi-arrow-left me-1"></i><span data-i18n="btn.back">Back</span></a></div>
+  <%- include('_product_form') %>
+</div></main>
+<%- include('../partials/footer') %>

@@ -1,0 +1,43 @@
+<%- include('../partials/head') %>
+<%
+  const maxRev = Math.max(1, ...data.revenue);
+  const total = Math.max(1, data.totalOrders);
+%>
+<main class="ks-main"><div class="ks-container">
+  <div class="ks-page-head"><div><h1 data-i18n="nav.reports">Sales Report</h1><p data-i18n="rep.sub">Revenue is counted from <b>delivered</b> orders only.</p></div>
+    <div class="ks-tabs"><% [3, 6, 12].forEach(m => { %><a class="btn btn-sm <%= months === m ? 'btn-success' : 'btn-light' %>" href="?months=<%= m %>"><%= m %> <span data-i18n="rep.months">months</span></a><% }) %></div></div>
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3"><div class="ks-stat"><span class="ks-stat-ico ico-green"><i class="bi bi-currency-rupee"></i></span><div><p class="ks-stat-label" data-i18n="rep.revenue">Delivered revenue</p><p class="ks-stat-value" id="s-rev"><%= inr(data.totalRevenue) %></p></div></div></div>
+    <div class="col-6 col-lg-3"><div class="ks-stat"><span class="ks-stat-ico ico-blue"><i class="bi bi-patch-check"></i></span><div><p class="ks-stat-label" data-i18n="stat.delivered">Delivered orders</p><p class="ks-stat-value" id="s-del"><%= data.deliveredOrders %></p><span class="ks-stat-sub">of <%= data.totalOrders %></span></div></div></div>
+    <div class="col-6 col-lg-3"><div class="ks-stat"><span class="ks-stat-ico ico-violet"><i class="bi bi-graph-up"></i></span><div><p class="ks-stat-label" data-i18n="rep.avg">Avg. order value</p><p class="ks-stat-value"><%= inr(data.avgOrder) %></p></div></div></div>
+    <div class="col-6 col-lg-3"><div class="ks-stat"><span class="ks-stat-ico ico-amber"><i class="bi bi-hourglass-split"></i></span><div><p class="ks-stat-label" data-i18n="stat.pipeline">In pipeline</p><p class="ks-stat-value"><%= inr(data.pipeline) %></p></div></div></div>
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-8"><div class="ks-card ks-card-pad">
+      <h5 class="fw-bold mb-3" data-i18n="rep.monthly">Monthly revenue (delivered)</h5>
+      <div class="d-flex align-items-end gap-2" style="height:240px">
+        <% data.labels.forEach((l, i) => { const h = Math.max(data.revenue[i] > 0 ? 4 : 0, Math.round(data.revenue[i] / maxRev * 200)); %>
+          <div class="flex-fill text-center" title="<%= l %>: <%= inr(data.revenue[i]) %> (<%= data.count[i] %> orders)">
+            <div class="small fw-semibold mb-1" style="min-height:20px"><%= data.revenue[i] ? inr(data.revenue[i]) : '' %></div>
+            <div style="height:<%= h %>px;background:linear-gradient(180deg,var(--g-500),var(--g-700));border-radius:8px 8px 3px 3px;min-width:14px"></div>
+            <div class="small text-muted mt-1"><%= l %></div><div class="small"><b><%= data.count[i] %></b></div>
+          </div>
+        <% }) %>
+      </div>
+    </div></div>
+    <div class="col-lg-4"><div class="ks-card ks-card-pad h-100">
+      <h5 class="fw-bold mb-3" data-i18n="rep.status">Orders by status</h5>
+      <% Object.keys(data.statusCounts).forEach(s => { const c = data.statusCounts[s]; %>
+        <div class="mb-3"><div class="d-flex justify-content-between small"><span><%- statusBadge(s) %></span><b><%= c %></b></div>
+        <div class="progress mt-1" style="height:7px"><div class="progress-bar bg-success" style="width:<%= Math.round(c / total * 100) %>%"></div></div></div>
+      <% }) %>
+    </div></div>
+    <div class="col-12"><div class="ks-card"><div class="ks-card-head"><h5 data-i18n="rep.top">Top selling crops</h5></div>
+      <div class="table-responsive"><table class="ks-table"><thead><tr><th data-i18n="col.product">Crop</th><th data-i18n="col.orders">Orders</th><th data-i18n="col.qty">Qty sold</th><th data-i18n="rep.revenue">Revenue</th></tr></thead><tbody>
+        <% data.topProducts.forEach(p => { %><tr><td><b><%= p.name %></b></td><td><%= p.orders %></td><td><%= num(p.qty) %> <%= p.unit || '' %></td><td><b><%= inr(p.revenue) %></b></td></tr><% }) %>
+        <% if (!data.topProducts.length) { %><tr><td colspan="4"><div class="ks-empty py-4"><i class="bi bi-bar-chart"></i><span data-i18n="rep.none">No delivered orders yet. Mark orders as delivered to see them here.</span></div></td></tr><% } %>
+      </tbody></table></div></div></div>
+  </div>
+</div></main>
+<script>KS.onSummary(d => { if (d.stats.deliveredOrders !== <%= data.deliveredOrders %>) location.reload(); });</script>
+<%- include('../partials/footer') %>

@@ -1,0 +1,63 @@
+<%- include('../partials/head') %>
+<%
+  const tabs = [['all','All','tab.all'],['pending','Pending','status.pending'],['accepted','Accepted','status.accepted'],['shipped','Shipped','status.shipped'],['delivered','Delivered','status.delivered'],['cancelled','Cancelled','status.cancelled'],['rejected','Rejected','status.rejected']];
+  const cnt = k => k === 'all' ? orders.length : orders.filter(o => o.status === k).length;
+  const NEXT = { pending: [['accepted','Accept','bi-check2-circle','success'],['rejected','Reject','bi-x-circle','outline-danger']], accepted: [['shipped','Mark shipped','bi-truck','success'],['cancelled','Cancel','bi-x-circle','outline-danger']], shipped: [['delivered','Mark delivered','bi-patch-check','success']] };
+%>
+<main class="ks-main"><div class="ks-container">
+  <div class="ks-page-head"><div><h1 data-i18n="orders.received">Received Orders</h1><p data-i18n="orders.farmer_sub">Accept, ship and deliver orders from buyers.</p></div><a href="/farmer/order_history" class="btn btn-light"><i class="bi bi-clock-history me-1"></i><span data-i18n="nav.history">Order History</span></a></div>
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3"><div class="ks-stat"><span class="ks-stat-ico ico-blue"><i class="bi bi-cart-check"></i></span><div><p class="ks-stat-label" data-i18n="stat.total_orders">Total Orders</p><p class="ks-stat-value" data-stat="totalOrders"><%= stats.totalOrders %></p></div></div></div>
+    <div class="col-6 col-md-3"><div class="ks-stat"><span class="ks-stat-ico ico-amber"><i class="bi bi-hourglass-split"></i></span><div><p class="ks-stat-label" data-i18n="status.pending">Pending</p><p class="ks-stat-value" data-stat="pendingOrders"><%= stats.pendingOrders %></p></div></div></div>
+    <div class="col-6 col-md-3"><div class="ks-stat"><span class="ks-stat-ico ico-violet"><i class="bi bi-truck"></i></span><div><p class="ks-stat-label" data-i18n="stat.in_progress">In progress</p><p class="ks-stat-value"><span data-stat="acceptedOrders"><%= stats.acceptedOrders %></span>+<span data-stat="shippedOrders"><%= stats.shippedOrders %></span></p></div></div></div>
+    <div class="col-6 col-md-3"><div class="ks-stat"><span class="ks-stat-ico ico-green"><i class="bi bi-patch-check"></i></span><div><p class="ks-stat-label" data-i18n="stat.delivered">Delivered</p><p class="ks-stat-value" data-stat="deliveredOrders"><%= stats.deliveredOrders %></p></div></div></div>
+  </div>
+  <div class="ks-card ks-filter"><div class="row g-3 align-items-center">
+    <div class="col-lg-4"><div class="input-group"><span class="input-group-text"><i class="bi bi-search"></i></span><input id="q" class="form-control" placeholder="Order ID, buyer, product…" data-i18n-ph="f.search_orders"></div></div>
+    <div class="col-lg-8"><div class="ks-tabs" id="tabs"><% tabs.forEach((t, i) => { %><button type="button" class="<%= i === 0 ? 'active' : '' %>" data-filter="<%= t[0] %>" data-tab="<%= t[0] %>"><span data-i18n="<%= t[2] %>"><%= t[1] %></span><span class="n" data-n="<%= t[0] %>"><%= cnt(t[0]) %></span></button><% }) %></div></div>
+  </div></div>
+  <div class="ks-card"><div class="table-responsive"><table class="ks-table">
+    <thead><tr><th data-i18n="col.order">Order</th><th data-i18n="col.buyer">Buyer</th><th data-i18n="col.product">Crop</th><th data-i18n="col.qty">Qty</th><th data-i18n="col.amount">Amount</th><th data-i18n="col.status">Status</th><th data-i18n="col.actions">Action</th></tr></thead>
+    <tbody>
+    <% orders.forEach(o => { %>
+      <tr class="o-row" data-id="<%= o.order_id %>" data-status="<%= o.status %>" data-search="#KS-<%= o.order_id %> <%= o.buyer_name %> <%= o.product_name %>">
+        <td><b>#KS-<%= o.order_id %></b><div class="small text-muted"><%= fdate(o.created_at) %></div></td>
+        <td><b><%= o.buyer_name || 'Buyer' %></b><div class="small"><% if (o.buyer_mobile) { %><a href="tel:<%= o.buyer_mobile %>"><i class="bi bi-telephone"></i> <%= o.buyer_mobile %></a><% } %></div></td>
+        <td><div class="d-flex align-items-center gap-2"><img class="ks-thumb" src="<%= o.p_img1 || placeholderImg %>" alt="" onerror="this.onerror=null;this.src='<%= placeholderImg %>'"><%= o.product_name %></div></td>
+        <td><%= num(o.quantity) %> <%= o.unit %></td>
+        <td><b><%= inr(o.total_amount) %></b></td>
+        <td class="st-cell"><%- statusBadge(o.status) %></td>
+        <td class="act-cell text-nowrap"><% (NEXT[o.status] || []).forEach(a => { %><button class="btn btn-sm btn-<%= a[3] %>" data-act="<%= a[0] %>" data-id="<%= o.order_id %>"><i class="bi <%= a[2] %>"></i> <span data-i18n="act.<%= a[0] %>"><%= a[1] %></span></button> <% }) %><a class="btn btn-sm btn-outline-success" href="/farmer/orders/<%= o.order_id %>/invoice"><i class="bi bi-receipt"></i></a></td>
+      </tr>
+    <% }) %>
+    </tbody></table></div>
+    <div id="empty" class="ks-empty <%= orders.length ? 'd-none' : '' %>"><i class="bi bi-bag"></i><h5 data-i18n="empty.farmer_orders">No orders found</h5></div>
+  </div>
+</div></main>
+<script>
+  const NEXT = { pending: [['accepted','Accept','bi-check2-circle','success'],['rejected','Reject','bi-x-circle','outline-danger']], accepted: [['shipped','Mark shipped','bi-truck','success'],['cancelled','Cancel','bi-x-circle','outline-danger']], shipped: [['delivered','Mark delivered','bi-patch-check','success']] };
+  const run = KS.filterList({ rows: '.o-row', search: '#q', tabs: '#tabs button', empty: '#empty' });
+  function recount() {
+    const rows = [...document.querySelectorAll('.o-row')];
+    document.querySelectorAll('[data-n]').forEach(n => { const k = n.dataset.n; n.textContent = k === 'all' ? rows.length : rows.filter(r => r.dataset.status === k).length; });
+  }
+  document.addEventListener('click', async e => {
+    const b = e.target.closest('[data-act]'); if (!b) return;
+    const to = b.dataset.act;
+    if (['rejected', 'cancelled'].includes(to) && !confirm(KS.t('confirm.sure', 'Are you sure?'))) return;
+    b.disabled = true; const old = b.innerHTML; b.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+    const r = await KS.post('/farmer/orders/' + b.dataset.id + '/status', { status: to });
+    if (!r.ok) { b.disabled = false; b.innerHTML = old; return KS.toast(r.message || 'Failed', 'danger'); }
+    const row = b.closest('tr'); row.dataset.status = r.status;                    // update row instantly – no refresh
+    row.querySelector('.st-cell').innerHTML = KS.badge(r.status);
+    const inv = row.querySelector('a[href$="/invoice"]').outerHTML;
+    row.querySelector('.act-cell').innerHTML = (NEXT[r.status] || []).map(a => '<button class="btn btn-sm btn-' + a[3] + '" data-act="' + a[0] + '" data-id="' + row.dataset.id + '"><i class="bi ' + a[2] + '"></i> <span data-i18n="act.' + a[0] + '">' + a[1] + '</span></button> ').join('') + inv;
+    KS.toast(r.message); recount(); run(); KS.refreshNow(); if (window.KS_I18N) KS_I18N.apply(document.documentElement.lang);
+  });
+  // live: new orders from buyers show up without refreshing
+  KS.onSummary(d => {
+    Object.keys(d.stats).forEach(k => KS.setStat(k, d.stats[k]));
+    if (d.stats.totalOrders !== document.querySelectorAll('.o-row').length) { KS.toast(KS.t('orders.new', 'New order received')); setTimeout(() => location.reload(), 1200); }
+  });
+</script>
+<%- include('../partials/footer') %>

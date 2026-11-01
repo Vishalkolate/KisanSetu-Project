@@ -1,0 +1,286 @@
+
+
+<%- include("header.ejs") %>
+
+<link rel="stylesheet" href="/admin/style.css">
+
+<div class="manage-orders-page container-fluid py-4">
+
+    <!-- Page Header -->
+    <div class="orders-page-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <span class="orders-eyebrow" data-translate="Order Management">
+                Order Management
+            </span>
+            <h2 class="orders-page-title" data-translate="Manage Orders">
+                Manage Orders
+            </h2>
+            <p class="orders-page-subtitle mb-0"
+               data-translate="Track, review and manage marketplace orders.">
+                Track, review and manage marketplace orders.
+            </p>
+        </div>
+
+        <button type="button" class="btn btn-export-orders" id="exportOrdersBtn">
+            <i class="fa-solid fa-file-csv me-2"></i>
+            <span data-translate="Export Orders">Export Orders</span>
+        </button>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="order-stat-card">
+                <div class="order-stat-top">
+                    <div>
+                        <p data-translate="Total Orders">Total Orders</p>
+                        <h3 id="totalOrdersCount">8</h3>
+                    </div>
+                    <div class="order-stat-icon icon-total">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                    </div>
+                </div>
+                <span class="order-stat-note" data-translate="All marketplace orders">
+                    All marketplace orders
+                </span>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="order-stat-card">
+                <div class="order-stat-top">
+                    <div>
+                        <p data-translate="Pending Orders">Pending Orders</p>
+                        <h3 id="pendingOrdersCount">2</h3>
+                    </div>
+                    <div class="order-stat-icon icon-pending">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+                </div>
+                <span class="order-stat-note" data-translate="Awaiting confirmation">
+                    Awaiting confirmation
+                </span>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="order-stat-card">
+                <div class="order-stat-top">
+                    <div>
+                        <p data-translate="Processing Orders">Processing Orders</p>
+                        <h3 id="processingOrdersCount">2</h3>
+                    </div>
+                    <div class="order-stat-icon icon-processing">
+                        <i class="fa-solid fa-truck-fast"></i>
+                    </div>
+                </div>
+                <span class="order-stat-note" data-translate="Being prepared or shipped">
+                    Being prepared or shipped
+                </span>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="order-stat-card">
+                <div class="order-stat-top">
+                    <div>
+                        <p data-translate="Completed Orders">Completed Orders</p>
+                        <h3 id="completedOrdersCount">2</h3>
+                    </div>
+                    <div class="order-stat-icon icon-completed">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                </div>
+                <span class="order-stat-note" data-translate="Successfully delivered">
+                    Successfully delivered
+                </span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Orders Table -->
+    <div class="orders-panel">
+
+        <div class="orders-panel-header">
+            <div>
+                <h4 data-translate="Orders List">Orders List</h4>
+                <p data-translate="View and update customer order information.">
+                    View and update customer order information.
+                </p>
+            </div>
+
+            <span class="orders-record-badge">
+                <i class="fa-solid fa-list-check me-1"></i>
+                <span id="ordersVisibleCount">8</span>
+                <span data-translate="Records">Records</span>
+            </span>
+        </div>
+
+        <!-- Search and Filters -->
+        <div class="orders-toolbar">
+            <div class="orders-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input
+                    type="search"
+                    id="ordersSearchInput"
+                    class="form-control"
+                    placeholder="Search order, buyer or product..."
+                    data-translate-placeholder="Search order, buyer or product..."
+                    aria-label="Search orders">
+            </div>
+
+            <select id="ordersStatusFilter" class="form-select" aria-label="Filter by status">
+                <option value="all" data-translate="All Statuses">All Statuses</option>
+                <option value="pending" data-translate="Pending">Pending</option>
+                <option value="accepted" data-translate="Confirmed">Confirmed</option>
+                <option value="processing" data-translate="Processing">Processing</option>
+                <option value="shipped" data-translate="Shipped">Shipped</option>
+                <option value="delivered" data-translate="Delivered">Delivered</option>
+                <option value="cancelled" data-translate="Cancelled">Cancelled</option>
+            </select>
+
+            <button type="button" class="btn btn-reset-orders" id="resetOrdersFiltersBtn">
+                <i class="fa-solid fa-rotate-left me-1"></i>
+                <span data-translate="Reset">Reset</span>
+            </button>
+        </div>
+
+        <!-- Responsive Table -->
+        <div class="table-responsive orders-table-wrapper">
+            <table class="table orders-table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th data-translate="Order ID">Order ID</th>
+                        <th data-translate="Buyer">Buyer</th>
+                        <th data-translate="Product">Product</th>
+                        <th data-translate="Quantity">Quantity</th>
+                        <th data-translate="Total Amount">Total Amount</th>
+                        <th data-translate="Order Date">Order Date</th>
+                        <th data-translate="Status">Status</th>
+                        <th data-translate="Actions">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="manageOrdersTableBody">
+        <% if (typeof orders !== 'undefined' && orders.length > 0) { %>
+            <% orders.forEach(order => { %>
+                <tr data-status="<%= (order.status || 'pending').toLowerCase() %>">
+                    <td><span class="order-id">#KS<%= order.order_id %></span></td>
+                    <td>
+                        <div class="order-person">
+                            <span class="order-avatar"><%= (order.buyer_name || 'B').substring(0, 2).toUpperCase() %></span>
+                            <div>
+                                <strong><%= order.buyer_name || 'Buyer' %></strong>
+                                <small><%= order.buyer_mobile || '' %></small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="order-product">
+                            <strong><%= order.product_name || 'Product' %></strong>
+                            <small>Farmer: <%= order.farmer_name || 'Farmer' %></small>
+                        </div>
+                    </td>
+                    <td><%= Number(order.quantity) %></td>
+                    <td class="order-amount">₹<%= Number(order.total_amount).toLocaleString('en-IN') %></td>
+                    <td><%= order.created_at ? new Date(order.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—' %></td>
+                    <td>
+                        <span class="order-status status-<%= (order.status || 'pending').toLowerCase() %>">
+                            <%= order.status %>
+                        </span>
+                    </td>
+                    <td>
+                        <form method="POST" action="/admin/orders/status/<%= order.order_id %>" class="d-inline-flex gap-1 align-items-center">
+                            <select name="status" class="form-select form-select-sm" onchange="this.form.submit()" style="width: auto;">
+                                <option value="pending" <%= order.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                                <option value="accepted" <%= order.status === 'accepted' ? 'selected' : '' %>>Confirmed</option>
+                                <option value="shipped" <%= order.status === 'shipped' ? 'selected' : '' %>>Shipped</option>
+                                <option value="delivered" <%= order.status === 'delivered' ? 'selected' : '' %>>Delivered</option>
+                                <option value="cancelled" <%= order.status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
+                            </select>
+                        </form>
+                    </td>
+                </tr>
+            <% }); %>
+        <% } else { %>
+            <tr><td colspan="8" class="text-center py-4 text-muted">No orders found.</td></tr>
+        <% } %>
+    </tbody>
+            </table>
+        </div>
+
+        <!-- Empty State -->
+        <div id="ordersEmptyState" class="orders-empty-state d-none">
+            <div class="empty-state-icon"><i class="fa-solid fa-box-open"></i></div>
+            <h5 data-translate="No orders found">No orders found</h5>
+            <p data-translate="Try changing your search or filters.">
+                Try changing your search or filters.
+            </p>
+        </div>
+
+        <div class="orders-table-footer">
+            <span id="ordersPaginationInfo">Showing 8 orders</span>
+            <span data-translate="Sample records for frontend demonstration">
+                Sample records for frontend demonstration
+            </span>
+        </div>
+    </div>
+</div>
+
+<!-- Order Details Modal -->
+<div class="modal fade" id="manageOrderDetailsModal" tabindex="-1"
+     aria-labelledby="manageOrderDetailsTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content order-details-modal">
+
+            <div class="modal-header">
+                <div>
+                    <span class="modal-eyebrow" data-translate="Order Details">Order Details</span>
+                    <h5 class="modal-title" id="manageOrderDetailsTitle">#KS1001</h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="order-detail-highlight">
+                    <div class="detail-product-icon"><i class="fa-solid fa-seedling"></i></div>
+                    <div>
+                        <span data-translate="Product">Product</span>
+                        <h5 id="detailOrderProduct">Fresh Tomatoes</h5>
+                        <small id="detailOrderFarmer">Farmer: Suresh Patil</small>
+                    </div>
+                </div>
+
+                <div class="order-details-grid">
+                    <div class="order-detail-item"><span data-translate="Buyer">Buyer</span><strong id="detailOrderBuyer">Rahul Kulkarni</strong></div>
+                    <div class="order-detail-item"><span data-translate="Email">Email</span><strong id="detailOrderEmail">rahul@example.com</strong></div>
+                    <div class="order-detail-item"><span data-translate="Phone">Phone</span><strong id="detailOrderPhone">9876543210</strong></div>
+                    <div class="order-detail-item"><span data-translate="Quantity">Quantity</span><strong id="detailOrderQuantity">100 Kg</strong></div>
+                    <div class="order-detail-item"><span data-translate="Order Date">Order Date</span><strong id="detailOrderDate">24 Oct 2026</strong></div>
+                    <div class="order-detail-item"><span data-translate="Status">Status</span><strong id="detailOrderStatus">Pending</strong></div>
+                    <div class="order-detail-item detail-address"><span data-translate="Delivery Location">Delivery Location</span><strong id="detailOrderAddress">Akola, Maharashtra</strong></div>
+                </div>
+
+                <div class="order-total-box">
+                    <span data-translate="Total Amount">Total Amount</span>
+                    <strong id="detailOrderAmount">₹3,500</strong>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-modal-close" data-bs-dismiss="modal"
+                        data-translate="Close">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // Manage Orders page-specific functionality is in the shared scripts.js file.
+</script>
+
+<%- include("footer.ejs") %>

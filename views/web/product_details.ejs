@@ -1,0 +1,53 @@
+<%- include('header.ejs', { title: (typeof product !== 'undefined' && product) ? product.product_name : 'Crop not found' }) %>
+<main class="ks-main"><div class="ks-container">
+<% if (!product) { %>
+  <div class="ks-card ks-empty"><i class="bi bi-exclamation-circle"></i><h5 data-i18n="pd.notfound">Crop not found</h5><a href="/products" class="btn btn-success mt-2" data-i18n="nav.crops">Crops</a></div>
+<% } else {
+  const imgs = [product.p_img1, product.p_img2, product.p_img3].filter(Boolean);
+  const live = ['Available', 'Approved'].includes(product.p_status) && Number(product.quantity) > 0;
+  const nextUrl = '/buyer/product/' + product.product_id;
+%>
+  <nav class="small mb-3"><a href="/products" class="text-muted text-decoration-none" data-i18n="nav.crops">Crops</a> <i class="bi bi-chevron-right small"></i> <%= product.product_name %></nav>
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div class="ks-card overflow-hidden mb-3"><img id="mainImg" src="<%= imgs[0] || placeholderImg %>" class="w-100" style="max-height:440px;object-fit:cover" alt="<%= product.product_name %>" onerror="this.onerror=null;this.src='<%= placeholderImg %>'"></div>
+      <% if (imgs.length > 1) { %><div class="d-flex gap-2 mb-3"><% imgs.forEach(i => { %><img src="<%= i %>" class="ks-thumb" style="width:76px;height:76px;cursor:pointer" onclick="document.getElementById('mainImg').src=this.src" alt=""><% }) %></div><% } %>
+      <div class="ks-card ks-card-pad"><h5 class="fw-bold mb-3" data-i18n="pd.details">Crop details</h5>
+        <div class="row g-3 small">
+          <div class="col-6 col-md-4"><div class="text-muted" data-i18n="pd.category">Category</div><b><%= product.category_name || '—' %></b></div>
+          <div class="col-6 col-md-4"><div class="text-muted" data-i18n="pd.stock">Available stock</div><b><%= num(product.quantity) %> <%= product.unit %></b></div>
+          <div class="col-6 col-md-4"><div class="text-muted" data-i18n="pd.min">Minimum order</div><b><%= num(product.min_order || 1) %> <%= product.unit %></b></div>
+          <div class="col-6 col-md-4"><div class="text-muted" data-i18n="pd.location">Location</div><b><%= product.p_location || product.district || '—' %></b></div>
+          <div class="col-6 col-md-4"><div class="text-muted" data-i18n="pd.listed">Listed on</div><b><%= fdate(product.created_at) %></b></div>
+          <div class="col-6 col-md-4"><div class="text-muted" data-i18n="col.farmer">Farmer</div><b><%= product.farmer_name %></b></div>
+        </div><hr><p class="mb-0 text-muted" style="white-space:pre-line"><%= product.description && product.description.trim() ? product.description : 'Direct farm harvest, verified by KisanSetu.' %></p></div>
+    </div>
+    <div class="col-lg-5"><div class="ks-card ks-card-pad position-sticky" style="top:90px">
+      <span class="ks-badge st-approved mb-2"><%= product.category_name || 'Crop' %></span>
+      <h3 class="fw-bold"><%= product.product_name %></h3>
+      <div class="fs-2 fw-bold text-success"><%= inr(product.price) %> <small class="fs-6 text-muted">/ <%= product.unit %></small></div>
+      <div class="small text-muted my-3 d-grid gap-1"><div><i class="bi bi-box text-success me-2"></i><%= num(product.quantity) %> <%= product.unit %> <span data-i18n="pd.in_stock">in stock</span></div><div><i class="bi bi-person text-success me-2"></i><%= product.farmer_name %></div><div><i class="bi bi-shield-check text-success me-2"></i><span data-i18n="pd.verified">KisanSetu verified listing</span></div></div>
+
+      <% if (isOwner) { %>
+        <div class="alert alert-info"><i class="bi bi-info-circle me-1"></i><span data-i18n="pd.own">This is your own listing – you cannot order it.</span></div>
+        <a class="btn btn-success w-100" href="/farmer/product_edit/<%= product.product_id %>"><i class="bi bi-pencil me-1"></i><span data-i18n="btn.edit">Edit</span></a>
+      <% } else if (isFarmer) { %>
+        <div class="alert alert-secondary mb-0"><i class="bi bi-person-workspace me-1"></i><span data-i18n="pd.farmer_note">You are logged in as a farmer. Only buyers can place orders.</span></div>
+      <% } else if (!live) { %>
+        <div class="alert alert-warning mb-0" data-i18n="pd.unavailable">This crop is currently not available for ordering.</div>
+      <% } else if (isBuyer) { %>
+        <a class="btn btn-success w-100 btn-lg mb-2" href="/buyer/product/<%= product.product_id %>#order"><i class="bi bi-cart-check me-1"></i><span data-i18n="btn.place_order">Place Order</span></a>
+        <a class="btn btn-outline-success w-100 mb-2" href="/buyer/product/<%= product.product_id %>#enquiry"><i class="bi bi-chat-dots me-1"></i><span data-i18n="btn.send_enquiry">Send Enquiry</span></a>
+      <% } else { %>
+        <a class="btn btn-success w-100 btn-lg mb-2" href="/login/buyer" onclick="fetch('/set-return?to=<%= encodeURIComponent(nextUrl) %>')"><i class="bi bi-box-arrow-in-right me-1"></i><span data-i18n="pd.login_order">Login as buyer to order</span></a>
+        <a class="btn btn-outline-success w-100" href="/buyer_register"><i class="bi bi-person-plus me-1"></i><span data-i18n="nav.register_buyer">Register as Buyer</span></a>
+      <% } %>
+    </div></div>
+  </div>
+  <% if (relatedProducts.length) { %>
+  <h5 class="fw-bold mt-5 mb-3"><span data-i18n="pd.more">More in</span> <%= product.category_name %></h5>
+  <div class="row g-3"><% relatedProducts.forEach(p => { %><div class="col-md-4"><div class="ks-product"><a class="img" href="/products/<%= p.product_id %>"><img src="<%= productImg(p) %>" alt="" loading="lazy" onerror="this.onerror=null;this.src='<%= placeholderImg %>'"></a><div class="body"><h5><%= p.product_name %></h5><div class="price"><%= inr(p.price) %> <small>/ <%= p.unit %></small></div><a href="/products/<%= p.product_id %>" class="btn btn-outline-success btn-sm mt-auto" data-i18n="btn.view_details">View details</a></div></div></div><% }) %></div>
+  <% } %>
+<% } %>
+</div></main>
+<%- include('footer.ejs') %>

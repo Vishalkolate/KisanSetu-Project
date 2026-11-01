@@ -1,0 +1,259 @@
+ <%- include("header") %>
+
+<div class="verify-kyc-page">
+
+    <!-- Page Heading -->
+    <div class="admin-page-heading">
+        <div>
+            <h1 data-translate="Verify KYC">Verify KYC</h1>
+            <p data-translate="Review farmer identity documents and manage KYC verification applications.">Review farmer identity documents and manage KYC verification applications.</p>
+        </div>
+
+        <button type="button" class="btn btn-success" id="exportKycBtn">
+            <i class="fas fa-file-export me-2"></i><span data-translate="Export Applications">Export Applications</span>
+        </button>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="kyc-summary-grid">
+
+        <div class="kyc-summary-card">
+            <div class="kyc-summary-icon kyc-icon-blue">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <div>
+                <p data-translate="Total Applications">Total Applications</p>
+                <h3 id="kycTotalCount">8</h3>
+                <span data-translate="All KYC applications">All KYC applications</span>
+            </div>
+        </div>
+
+        <div class="kyc-summary-card">
+            <div class="kyc-summary-icon kyc-icon-orange">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div>
+                <p data-translate="Pending Review">Pending Review</p>
+                <h3 id="kycPendingCount">4</h3>
+                <span data-translate="Waiting for verification">Waiting for verification</span>
+            </div>
+        </div>
+
+        <div class="kyc-summary-card">
+            <div class="kyc-summary-icon kyc-icon-green">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div>
+                <p data-translate="Verified">Verified</p>
+                <h3 id="kycVerifiedCount">3</h3>
+                <span data-translate="Successfully approved">Successfully approved</span>
+            </div>
+        </div>
+
+        <div class="kyc-summary-card">
+            <div class="kyc-summary-icon kyc-icon-red">
+                <i class="fas fa-times-circle"></i>
+            </div>
+            <div>
+                <p data-translate="Rejected">Rejected</p>
+                <h3 id="kycRejectedCount">1</h3>
+                <span data-translate="Applications rejected">Applications rejected</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Information Notice -->
+    <div class="kyc-notice">
+        <i class="fas fa-shield-alt"></i>
+        <div>
+            <strong data-translate="Identity verification reminder">Identity verification reminder</strong>
+            <p data-translate="Check the submitted documents carefully before approving an application. Only approve documents that meet your verification requirements.">Check the submitted documents carefully before approving an application. Only approve documents that meet your verification requirements.</p>
+        </div>
+    </div>
+
+    <!-- Applications Table -->
+    <div class="kyc-table-panel">
+
+        <div class="kyc-panel-heading">
+            <div>
+                <h5 data-translate="KYC Applications">KYC Applications</h5>
+                <p data-translate="Review and manage farmer identity verification requests.">Review and manage farmer identity verification requests.</p>
+            </div>
+            <span class="kyc-live-label">
+                <span></span><span data-translate="Application Management">Application Management</span>
+            </span>
+        </div>
+
+        <!-- Search and Filters -->
+        <div class="kyc-toolbar">
+
+            <div class="kyc-search-box">
+                <i class="fas fa-search"></i>
+                <input
+                    type="text"
+                    id="kycSearchInput"
+                    placeholder="Search name, application ID or mobile..."
+                    data-translate-placeholder="Search name, application ID or mobile..."
+                    aria-label="Search KYC applications"
+                >
+            </div>
+
+            <select id="kycStatusFilter" class="form-select" aria-label="Filter by KYC status">
+                <option value="all" data-translate="All Statuses">All Statuses</option>
+                <option value="pending" data-translate="Pending">Pending</option>
+                <option value="verified" data-translate="Verified">Verified</option>
+                <option value="rejected" data-translate="Rejected">Rejected</option>
+            </select>
+
+            <select id="kycDocumentFilter" class="form-select" aria-label="Filter by document type">
+                <option value="all" data-translate="All Documents">All Documents</option>
+                <option value="aadhaar" data-translate="Aadhaar Card">Aadhaar Card</option>
+                <option value="pan" data-translate="PAN Card">PAN Card</option>
+                <option value="voter" data-translate="Voter ID">Voter ID</option>
+            </select>
+
+            <button type="button" class="btn btn-outline-secondary" id="resetKycFiltersBtn">
+                <i class="fas fa-undo me-1"></i><span data-translate="Reset">Reset</span>
+            </button>
+
+        </div>
+
+        <!-- Table -->
+        <div class="table-responsive">
+            <table class="table kyc-table align-middle">
+                <thead>
+                    <tr>
+                        <th data-translate="Application ID">Application ID</th>
+                        <th data-translate="Farmer Details">Farmer Details</th>
+                        <th data-translate="Document Type">Document Type</th>
+                        <th data-translate="Submitted On">Submitted On</th>
+                        <th data-translate="KYC Status">KYC Status</th>
+                        <th class="text-center" data-translate="Actions">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="kycTableBody">
+        <% if (typeof kycDocs !== 'undefined' && kycDocs.length > 0) { %>
+            <% kycDocs.forEach(doc => { %>
+                <tr data-status="<%= doc.verification_status || 'pending' %>">
+                    <td><span class="kyc-application-id">KYC-<%= doc.kyc_id %></span></td>
+                    <td>
+                        <div class="kyc-farmer-cell">
+                            <div class="kyc-avatar"><%= (doc.farmer_name || 'F').substring(0, 2).toUpperCase() %></div>
+                            <div>
+                                <strong><%= doc.farmer_name %></strong>
+                                <small><%= doc.mobile || '' %></small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="kyc-document-type"><i class="fas fa-id-card"></i> <%= doc.document_type || 'ID Card' %> (<%= doc.document_number || '' %>)</span>
+                    </td>
+                    <td><%= doc.submitted_at ? new Date(doc.submitted_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—' %></td>
+                    <td><span class="kyc-status <%= doc.verification_status || 'pending' %>"><%= doc.verification_status || 'pending' %></span></td>
+                    <td>
+                        <div class="d-flex justify-content-center gap-1">
+                            <form method="POST" action="/admin/kyc/approve/<%= doc.kyc_id %>" style="display:inline;">
+                                <button type="submit" class="btn btn-sm btn-outline-success" title="Approve KYC">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            </form>
+                            <form method="POST" action="/admin/kyc/reject/<%= doc.kyc_id %>" style="display:inline;">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Reject KYC">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            <% }); %>
+        <% } else { %>
+            <tr><td colspan="6" class="text-center py-4 text-muted">No KYC applications found.</td></tr>
+        <% } %>
+    </tbody>
+            </table>
+        </div>
+
+        <!-- Empty State -->
+        <div id="kycEmptyState" class="kyc-empty-state" style="display: none;">
+            <i class="fas fa-folder-open"></i>
+            <h5 data-translate="No applications found">No applications found</h5>
+            <p data-translate="Try changing your search term or filters.">Try changing your search term or filters.</p>
+        </div>
+
+        <!-- Table Footer -->
+        <div class="kyc-table-footer">
+            <span id="kycRecordCount" data-translate="Showing 8 applications">Showing 8 applications</span>
+            <span data-translate="Sample records for frontend demonstration">Sample records for frontend demonstration</span>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- KYC Details Modal -->
+<div class="modal fade" id="kycDetailsModal" tabindex="-1" aria-labelledby="kycDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content kyc-details-modal">
+
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title" id="kycDetailsModalLabel" data-translate="KYC Application Details">KYC Application Details</h5>
+                    <p class="mb-0" data-translate="Review the application information below.">Review the application information below.</p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" title="Close" data-translate-title="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="kyc-modal-profile">
+                    <div class="kyc-avatar kyc-modal-avatar" id="modalKycAvatar">SP</div>
+                    <div>
+                        <h5 id="modalKycName">Farmer Name</h5>
+                        <span id="modalKycApplicationId">KYC-1001</span>
+                    </div>
+                </div>
+
+                <div class="kyc-detail-list">
+                    <div>
+                        <span data-translate="Mobile Number">Mobile Number</span>
+                        <strong id="modalKycMobile">-</strong>
+                    </div>
+                    <div>
+                        <span data-translate="Location">Location</span>
+                        <strong id="modalKycLocation">-</strong>
+                    </div>
+                    <div>
+                        <span data-translate="Document Type">Document Type</span>
+                        <strong id="modalKycDocument">-</strong>
+                    </div>
+                    <div>
+                        <span data-translate="Submitted On">Submitted On</span>
+                        <strong id="modalKycDate">-</strong>
+                    </div>
+                    <div>
+                        <span data-translate="Current Status">Current Status</span>
+                        <strong id="modalKycStatus">-</strong>
+                    </div>
+                    <div>
+                        <span data-translate="Review Remarks">Review Remarks</span>
+                        <strong id="modalKycNote">-</strong>
+                    </div>
+                </div>
+
+                <div class="kyc-document-placeholder">
+                    <i class="fas fa-file-shield"></i>
+                    <strong data-translate="Document preview unavailable">Document preview unavailable</strong>
+                    <p data-translate="Connect the uploaded document URL from your database to display the actual document here.">Connect the uploaded document URL from your database to display the actual document here.</p>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal" data-translate="Close">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<%- include("footer") %>

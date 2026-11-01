@@ -1,0 +1,243 @@
+<%- include("header") %>
+
+<div class="manage-buyers-page">
+
+    <!-- Page Heading -->
+    <div class="admin-page-heading">
+        <div>
+            <h1 data-translate="Manage Buyers">Manage Buyers</h1>
+            <p data-translate="View and manage buyer accounts registered on KisanSetu.">View and manage buyer accounts registered on KisanSetu.</p>
+        </div>
+
+        <button type="button" class="btn btn-success" id="exportBuyersBtn">
+            <i class="fa-solid fa-download me-2"></i><span data-translate="Export Buyers">Export Buyers</span>
+        </button>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="buyers-summary-grid">
+        <div class="buyers-summary-card">
+            <div class="buyers-summary-icon buyers-icon-green"><i class="fa-solid fa-users"></i></div>
+            <div>
+                <p data-translate="Total Buyers">Total Buyers</p>
+                <h3 id="totalBuyersCount"><%= (typeof buyers !== 'undefined') ? buyers.length : 0 %></h3>
+                <span data-translate="Registered accounts">Registered accounts</span>
+            </div>
+        </div>
+        <div class="buyers-summary-card">
+            <div class="buyers-summary-icon buyers-icon-blue"><i class="fa-solid fa-user-check"></i></div>
+            <div>
+                <p data-translate="Active Buyers">Active Buyers</p>
+                <h3 id="activeBuyersCount"><%= (typeof buyers !== 'undefined') ? buyers.filter(b => b.status === 'active').length : 0 %></h3>
+                <span data-translate="Currently active">Currently active</span>
+            </div>
+        </div>
+        <div class="buyers-summary-card">
+            <div class="buyers-summary-icon buyers-icon-orange"><i class="fa-solid fa-user-clock"></i></div>
+            <div>
+                <p data-translate="Pending Verification">Pending Verification</p>
+                <h3 id="pendingBuyersCount"><%= (typeof buyers !== 'undefined') ? buyers.filter(b => b.status === 'pending').length : 0 %></h3>
+                <span data-translate="Awaiting verification">Awaiting verification</span>
+            </div>
+        </div>
+        <div class="buyers-summary-card">
+            <div class="buyers-summary-icon buyers-icon-red"><i class="fa-solid fa-user-slash"></i></div>
+            <div>
+                <p data-translate="Suspended Buyers">Suspended Buyers</p>
+                <h3 id="suspendedBuyersCount"><%= (typeof buyers !== 'undefined') ? buyers.filter(b => b.status === 'blocked').length : 0 %></h3>
+                <span data-translate="Accounts suspended">Accounts suspended</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Buyers Table Panel -->
+    <div class="buyers-table-panel">
+
+        <div class="buyers-panel-heading">
+            <div>
+                <h2 data-translate="Buyer Directory">Buyer Directory</h2>
+                <p data-translate="Review buyer details and account status.">Review buyer details and account status.</p>
+            </div>
+
+            <span class="buyers-record-count">
+                <i class="fa-solid fa-list me-2"></i>
+                <span id="buyersRecordCount">8</span>
+                <span data-translate="sample records">sample records</span>
+            </span>
+        </div>
+
+        <!-- Search and Filters -->
+        <div class="buyers-toolbar">
+
+            <div class="buyers-search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input
+                    type="search"
+                    id="buyerSearchInput"
+                    placeholder="Search by name, email or mobile..."
+                    data-translate-placeholder="Search by name, email or mobile..."
+                    aria-label="Search buyers"
+                >
+            </div>
+
+            <select id="buyerStatusFilter" class="form-select buyers-status-filter"
+                    aria-label="Filter by buyer status">
+                <option value="all" data-translate="All Statuses">All Statuses</option>
+                <option value="active" data-translate="Active">Active</option>
+                <option value="pending" data-translate="Pending">Pending</option>
+                <option value="suspended" data-translate="Suspended">Suspended</option>
+            </select>
+
+            <button type="button" class="btn btn-outline-secondary"
+                    id="resetBuyerFiltersBtn">
+                <i class="fa-solid fa-rotate-left me-2"></i><span data-translate="Reset">Reset</span>
+            </button>
+
+        </div>
+
+        <!-- Buyers Table -->
+        <div class="table-responsive buyers-table-wrapper">
+            <table class="table buyers-table align-middle">
+
+                <thead>
+                    <tr>
+                        <th data-translate="Buyer">Buyer</th>
+                        <th data-translate="Mobile Number">Mobile Number</th>
+                        <th data-translate="Registered On">Registered On</th>
+                        <th data-translate="Total Orders">Total Orders</th>
+                        <th data-translate="Status">Status</th>
+                        <th class="text-center" data-translate="Actions">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="buyersTableBody">
+        <% if (typeof buyers !== 'undefined' && buyers.length > 0) { %>
+            <% buyers.forEach(buyer => { %>
+                <tr data-status="<%= buyer.status || 'active' %>">
+                    <td>
+                        <div class="buyer-info">
+                            <div class="buyer-avatar buyer-avatar-blue">
+                                <%= (buyer.full_name || 'B').substring(0, 2).toUpperCase() %>
+                            </div>
+                            <div>
+                                <h6><%= buyer.full_name %></h6>
+                                <span><%= buyer.email %></span>
+                            </div>
+                        </div>
+                    </td>
+                    <td><%= buyer.mobile %></td>
+                    <td><%= buyer.created_at ? new Date(buyer.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—' %></td>
+                    <td><%= buyer.b_name || 'Business' %> (<%= buyer.b_type || 'Buyer' %>)</td>
+                    <td>
+                        <span class="buyer-status <%= buyer.status === 'active' ? 'status-active' : 'status-suspended' %>">
+                            <%= buyer.status === 'active' ? 'Active' : 'Blocked' %>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="buyer-action-buttons">
+                            <form method="POST" action="/admin/buyers/toggle-status/<%= buyer.id %>" style="display:inline;">
+                                <button type="submit" class="buyer-action-btn edit-buyer-btn" title="<%= buyer.status === 'blocked' ? 'Unblock Buyer' : 'Block Buyer' %>">
+                                    <i class="fa-solid <%= buyer.status === 'blocked' ? 'fa-check text-success' : 'fa-ban text-danger' %>"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            <% }); %>
+        <% } else { %>
+            <tr><td colspan="6" class="text-center py-4 text-muted">No registered buyers found.</td></tr>
+        <% } %>
+    </tbody>
+
+            </table>
+
+            <div id="buyersEmptyState" class="buyers-empty-state d-none">
+                <i class="fa-solid fa-users-slash"></i>
+                <h5 data-translate="No buyers found">No buyers found</h5>
+                <p data-translate="Try changing your search or status filter.">Try changing your search or status filter.</p>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="buyers-pagination">
+            <span id="buyersPaginationInfo" data-translate="Showing 1–8 of 8 sample records">Showing 1–8 of 8 sample records</span>
+
+            <div class="buyers-pagination-buttons">
+                <button type="button" class="buyers-page-btn" id="buyersPrevPageBtn"
+                        disabled aria-label="Previous page" title="Previous page"
+                        data-translate-title="Previous page">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <button type="button" class="buyers-page-btn current-page"
+                        aria-current="page">1</button>
+                <button type="button" class="buyers-page-btn" id="buyersNextPageBtn"
+                        disabled aria-label="Next page" title="Next page"
+                        data-translate-title="Next page">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Buyer Details Modal -->
+<div class="modal fade" id="buyerDetailsModal" tabindex="-1"
+     aria-labelledby="buyerDetailsModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content buyer-details-modal">
+
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title" id="buyerDetailsModalLabel" data-translate="Buyer Details">
+                        Buyer Details
+                    </h5>
+                    <p class="mb-0 small text-muted" data-translate="Buyer account information">Buyer account information</p>
+                </div>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close" title="Close" data-translate-title="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="buyer-modal-profile">
+                    <div class="buyer-avatar buyer-avatar-green" id="modalBuyerAvatar">--</div>
+                    <div>
+                        <h5 id="modalBuyerName">Buyer Name</h5>
+                        <span id="modalBuyerStatus" class="buyer-status status-active">Active</span>
+                    </div>
+                </div>
+
+                <div class="buyer-detail-row">
+                    <span><i class="fa-solid fa-envelope"></i> <span data-translate="Email">Email</span></span>
+                    <strong id="modalBuyerEmail">--</strong>
+                </div>
+
+                <div class="buyer-detail-row">
+                    <span><i class="fa-solid fa-phone"></i> <span data-translate="Mobile">Mobile</span></span>
+                    <strong id="modalBuyerMobile">--</strong>
+                </div>
+
+                <div class="buyer-detail-row">
+                    <span><i class="fa-solid fa-calendar"></i> <span data-translate="Registered On">Registered On</span></span>
+                    <strong id="modalBuyerDate">--</strong>
+                </div>
+
+                <div class="buyer-detail-row">
+                    <span><i class="fa-solid fa-box"></i> <span data-translate="Total Orders">Total Orders</span></span>
+                    <strong id="modalBuyerOrders">--</strong>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal" data-translate="Close">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<%- include("footer") %>

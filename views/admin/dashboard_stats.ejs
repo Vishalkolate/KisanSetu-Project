@@ -1,0 +1,306 @@
+<%- include("header") %>
+
+<!-- Statistics Page -->
+<section class="stats-page">
+
+    <!-- Page Heading -->
+    <div class="stats-page-heading d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h2 class="stats-title" data-translate="Marketplace Statistics">Marketplace Statistics</h2>
+            <p class="stats-subtitle" data-translate="Monitor users, products, orders and marketplace performance.">
+                Monitor users, products, orders and marketplace performance.
+            </p>
+        </div>
+
+        <button type="button" class="btn btn-outline-success rounded-pill px-4"
+                id="refreshStatsBtn">
+            <i class="fa-solid fa-rotate-right me-2"></i>
+            <span data-translate="Refresh Statistics">Refresh Statistics</span>
+        </button>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-3 mb-4">
+
+        <!-- Total Farmers -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="stats-card">
+                <div class="stats-card-top">
+                    <div class="stats-icon stats-icon-green">
+                        <i class="fa-solid fa-tractor"></i>
+                    </div>
+                    <span class="stats-label" data-translate="Farmers">Farmers</span>
+                </div>
+
+                <h3 class="stats-number" id="totalFarmers">—</h3>
+                <p class="stats-description" data-translate="Registered farmers">Registered farmers</p>
+
+                <a href="/admin/farmers" class="stats-card-link">
+                    <span data-translate="View Farmers">View Farmers</span>
+                    <i class="fa-solid fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Total Buyers -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="stats-card">
+                <div class="stats-card-top">
+                    <div class="stats-icon stats-icon-blue">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <span class="stats-label" data-translate="Buyers">Buyers</span>
+                </div>
+
+                <h3 class="stats-number" id="totalBuyers">—</h3>
+                <p class="stats-description" data-translate="Registered buyers">Registered buyers</p>
+
+                <a href="/admin/buyers" class="stats-card-link">
+                    <span data-translate="View Buyers">View Buyers</span>
+                    <i class="fa-solid fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Total Products -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="stats-card">
+                <div class="stats-card-top">
+                    <div class="stats-icon stats-icon-orange">
+                        <i class="fa-solid fa-wheat-awn"></i>
+                    </div>
+                    <span class="stats-label" data-translate="Products">Products</span>
+                </div>
+
+                <h3 class="stats-number" id="totalProducts">—</h3>
+                <p class="stats-description" data-translate="Listed marketplace products">Listed marketplace products</p>
+
+                <a href="/admin/products" class="stats-card-link">
+                    <span data-translate="View Products">View Products</span>
+                    <i class="fa-solid fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Total Orders -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="stats-card">
+                <div class="stats-card-top">
+                    <div class="stats-icon stats-icon-purple">
+                        <i class="fa-solid fa-box"></i>
+                    </div>
+                    <span class="stats-label" data-translate="Orders">Orders</span>
+                </div>
+
+                <h3 class="stats-number" id="totalOrders">—</h3>
+                <p class="stats-description" data-translate="Total marketplace orders">Total marketplace orders</p>
+
+                <a href="/admin/orders" class="stats-card-link">
+                    <span data-translate="View Orders">View Orders</span>
+                    <i class="fa-solid fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Pending Items -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-md-4">
+            <div class="stats-mini-card">
+                <div class="stats-mini-icon">
+                    <i class="fa-solid fa-id-card"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <p class="stats-mini-label" data-translate="Pending KYC">Pending KYC</p>
+                    <h4 id="pendingKyc">—</h4>
+                    <a href="/admin/kyc" data-translate="Review documents">Review documents</a>
+                </div>
+                <i class="fa-solid fa-chevron-right text-secondary"></i>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="stats-mini-card">
+                <div class="stats-mini-icon">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <p class="stats-mini-label" data-translate="Pending Products">Pending Products</p>
+                    <h4 id="pendingProducts">—</h4>
+                    <a href="/admin/products" data-translate="Review products">Review products</a>
+                </div>
+                <i class="fa-solid fa-chevron-right text-secondary"></i>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="stats-mini-card">
+                <div class="stats-mini-icon">
+                    <i class="fa-solid fa-headset"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <p class="stats-mini-label" data-translate="Open Complaints">Open Complaints</p>
+                    <h4 id="openComplaints">—</h4>
+                    <a href="/admin/complaints" data-translate="Review complaints">Review complaints</a>
+                </div>
+                <i class="fa-solid fa-chevron-right text-secondary"></i>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Charts -->
+    <div class="row g-4 mb-4">
+
+        <!-- User Distribution -->
+        <div class="col-12 col-xl-5">
+            <div class="stats-panel h-100">
+                <div class="stats-panel-heading">
+                    <div>
+                        <h5 data-translate="User Distribution">User Distribution</h5>
+                        <p data-translate="Farmers compared with buyers">Farmers compared with buyers</p>
+                    </div>
+                    <span class="stats-panel-icon">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </span>
+                </div>
+
+                <div class="stats-chart-container stats-doughnut-container">
+                    <canvas id="userDistributionChart"
+                            aria-label="User distribution chart"></canvas>
+                </div>
+
+                <div class="stats-chart-note">
+                    <span class="stats-status-dot"></span>
+                    <span data-translate="User registration overview">User registration overview</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Marketplace Overview -->
+        <div class="col-12 col-xl-7">
+            <div class="stats-panel h-100">
+                <div class="stats-panel-heading">
+                    <div>
+                        <h5 data-translate="Marketplace Overview">Marketplace Overview</h5>
+                        <p data-translate="Product approval and order status">Product approval and order status</p>
+                    </div>
+                    <span class="stats-panel-icon">
+                        <i class="fa-solid fa-chart-column"></i>
+                    </span>
+                </div>
+
+                <div class="stats-chart-container">
+                    <canvas id="marketplaceChart"
+                            aria-label="Marketplace statistics chart"></canvas>
+                </div>
+
+                <div class="stats-chart-note">
+                    <span class="stats-status-dot"></span>
+                    <span data-translate="Current marketplace summary">Current marketplace summary</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Reports and System Summary -->
+    <div class="row g-4">
+
+        <div class="col-12 col-xl-7">
+            <div class="stats-panel h-100">
+                <div class="stats-panel-heading">
+                    <div>
+                        <h5 data-translate="Quick Reports">Quick Reports</h5>
+                        <p data-translate="Access important marketplace records">Access important marketplace records</p>
+                    </div>
+                </div>
+
+                <div class="stats-report-list">
+
+                    <a href="/admin/reports" class="stats-report-item">
+                        <div class="stats-report-icon">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <strong data-translate="Sales and User Reports">Sales and User Reports</strong>
+                            <small data-translate="Review sales and registration data">Review sales and registration data</small>
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+
+                    <a href="/admin/orders" class="stats-report-item">
+                        <div class="stats-report-icon">
+                            <i class="fa-solid fa-receipt"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <strong data-translate="Order Reports">Order Reports</strong>
+                            <small data-translate="Review marketplace transactions">Review marketplace transactions</small>
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+
+                    <a href="/admin/locations" class="stats-report-item">
+                        <div class="stats-report-icon">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <strong data-translate="Location Management">Location Management</strong>
+                            <small data-translate="Manage districts and talukas">Manage districts and talukas</small>
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Information -->
+        <div class="col-12 col-xl-5">
+            <div class="stats-panel h-100">
+                <div class="stats-panel-heading">
+                    <div>
+                        <h5 data-translate="Statistics Summary">Statistics Summary</h5>
+                        <p data-translate="Overview of the platform">Overview of the platform</p>
+                    </div>
+                </div>
+
+                <div class="stats-summary-list">
+                    <div class="stats-summary-item">
+                        <span data-translate="Marketplace Users">Marketplace Users</span>
+                        <strong id="summaryUsers">—</strong>
+                    </div>
+
+                    <div class="stats-summary-item">
+                        <span data-translate="Approved Products">Approved Products</span>
+                        <strong id="approvedProducts">—</strong>
+                    </div>
+
+                    <div class="stats-summary-item">
+                        <span data-translate="Completed Orders">Completed Orders</span>
+                        <strong id="completedOrders">—</strong>
+                    </div>
+
+                    <div class="stats-summary-item">
+                        <span data-translate="Report Generated">Report Generated</span>
+                        <strong id="reportGeneratedAt">—</strong>
+                    </div>
+                </div>
+
+                <div class="stats-information">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span data-translate="Statistics will display live database figures after the admin statistics API is connected.">
+                        Statistics will display live database figures
+                        after the admin statistics API is connected.
+                    </span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<%- include("footer") %>

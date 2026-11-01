@@ -1,0 +1,50 @@
+<%- include('../partials/head') %>
+<main class="ks-main"><div class="ks-container">
+  <section class="ks-hero mb-4"><div class="d-flex flex-wrap justify-content-between align-items-center gap-3 position-relative" style="z-index:1">
+    <div><h1><span data-i18n="greet.hello">Hello</span>, <%= (farmer.full_name || currentUser.name).split(' ')[0] %> 🌾</h1><p><%= farmer.farm_name || '' %> · <%= farmer.district %>, <%= farmer.state %></p></div>
+    <div class="d-flex gap-2 flex-wrap"><a href="/farmer/add_product" class="btn btn-light"><i class="bi bi-plus-circle me-1"></i><span data-i18n="nav.add_product">Add New Product</span></a><a href="/farmer/orders" class="btn btn-outline-light"><i class="bi bi-cart-check me-1"></i><span data-i18n="nav.orders_farmer">Orders</span></a></div>
+  </div></section>
+  <% if (farmer.kyc_status !== 'verified') { %><div class="alert alert-warning d-flex align-items-center gap-2"><i class="bi bi-shield-exclamation"></i><div class="flex-fill"><b data-i18n="kyc.pending_title">KYC not verified.</b> <span data-i18n="kyc.pending_text">Complete KYC so buyers trust your listings.</span></div><a href="/farmer/kyc_docs" class="btn btn-sm btn-amber" data-i18n="btn.complete_kyc">Complete KYC</a></div><% } %>
+
+  <div class="d-flex justify-content-between align-items-center mb-2"><h5 class="fw-bold m-0" data-i18n="dash.overview">Overview</h5><span class="ks-live" data-i18n="live.badge">Live</span></div>
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-4 col-xl-2"><a class="ks-stat" href="/farmer/products"><span class="ks-stat-ico ico-green"><i class="bi bi-boxes"></i></span><div><p class="ks-stat-label" data-i18n="stat.products">Products</p><p class="ks-stat-value" data-stat="totalProducts"><%= stats.totalProducts %></p><span class="ks-stat-sub"><b data-stat="pendingProducts"><%= stats.pendingProducts %></b> <span data-i18n="stat.awaiting">awaiting approval</span></span></div></a></div>
+    <div class="col-6 col-lg-4 col-xl-2"><a class="ks-stat" href="/farmer/orders"><span class="ks-stat-ico ico-blue"><i class="bi bi-cart-check"></i></span><div><p class="ks-stat-label" data-i18n="stat.total_orders">Total Orders</p><p class="ks-stat-value" data-stat="totalOrders"><%= stats.totalOrders %></p></div></a></div>
+    <div class="col-6 col-lg-4 col-xl-2"><a class="ks-stat" href="/farmer/orders"><span class="ks-stat-ico ico-amber"><i class="bi bi-hourglass-split"></i></span><div><p class="ks-stat-label" data-i18n="stat.pending_orders">New / Pending</p><p class="ks-stat-value" data-stat="pendingOrders"><%= stats.pendingOrders %></p></div></a></div>
+    <div class="col-6 col-lg-4 col-xl-2"><a class="ks-stat" href="/farmer/order_history"><span class="ks-stat-ico ico-green"><i class="bi bi-patch-check"></i></span><div><p class="ks-stat-label" data-i18n="stat.delivered">Delivered</p><p class="ks-stat-value" data-stat="deliveredOrders"><%= stats.deliveredOrders %></p></div></a></div>
+    <div class="col-6 col-lg-4 col-xl-2"><a class="ks-stat" href="/farmer/sales_report"><span class="ks-stat-ico ico-violet"><i class="bi bi-currency-rupee"></i></span><div><p class="ks-stat-label" data-i18n="stat.earnings">Earnings</p><p class="ks-stat-value" data-stat="totalEarnings"><%= inr(stats.totalEarnings) %></p><span class="ks-stat-sub"><span data-i18n="stat.pipeline">In pipeline</span> <b data-stat="pipelineValue"><%= inr(stats.pipelineValue) %></b></span></div></a></div>
+    <div class="col-6 col-lg-4 col-xl-2"><a class="ks-stat" href="/farmer/enquiry"><span class="ks-stat-ico ico-red"><i class="bi bi-chat-dots"></i></span><div><p class="ks-stat-label" data-i18n="stat.open_enq">Open Enquiries</p><p class="ks-stat-value" data-stat="pendingEnquiries"><%= stats.pendingEnquiries %></p></div></a></div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-xl-7"><div class="ks-card">
+      <div class="ks-card-head"><h5><i class="bi bi-cart-check text-success me-2"></i><span data-i18n="dash.recent_orders">Recent Orders</span></h5><a href="/farmer/orders" class="btn btn-sm btn-outline-success" data-i18n="btn.view_all">View all</a></div>
+      <div class="table-responsive"><table class="ks-table"><thead><tr><th data-i18n="col.order">Order</th><th data-i18n="col.product">Crop</th><th data-i18n="col.buyer">Buyer</th><th data-i18n="col.amount">Amount</th><th data-i18n="col.status">Status</th></tr></thead>
+      <tbody id="dash-orders">
+        <% recentOrders.forEach(o => { %><tr><td><b>#KS-<%= o.order_id %></b></td><td><%= o.product_name %></td><td><%= o.buyer_name %></td><td><b><%= inr(o.total_amount) %></b></td><td><%- statusBadge(o.status) %></td></tr><% }) %>
+        <% if (!recentOrders.length) { %><tr><td colspan="5"><div class="ks-empty"><i class="bi bi-bag"></i><span data-i18n="empty.farmer_orders">No orders received yet</span></div></td></tr><% } %>
+      </tbody></table></div>
+    </div></div>
+    <div class="col-xl-5"><div class="ks-card">
+      <div class="ks-card-head"><h5><i class="bi bi-chat-dots text-success me-2"></i><span data-i18n="dash.inquiries">Latest Enquiries</span></h5><a href="/farmer/enquiry" class="btn btn-sm btn-outline-success" data-i18n="btn.view_all">View all</a></div>
+      <div class="p-3 d-grid gap-2" id="dash-enq">
+        <% recentEnquiries.forEach(e => { %><div class="border rounded-3 p-3"><div class="d-flex justify-content-between"><b><%= e.buyer_name %></b><%- statusBadge(e.status) %></div><div class="small text-muted"><%= e.product_name %></div><div class="small mt-1"><%= e.message.slice(0, 90) %></div></div><% }) %>
+        <% if (!recentEnquiries.length) { %><div class="ks-empty py-4"><i class="bi bi-chat-square-text"></i><span data-i18n="empty.enquiries">No enquiries yet</span></div><% } %>
+      </div>
+    </div></div>
+  </div>
+</div></main>
+<script>
+(function () {
+  const E = KS.esc; let last = '';
+  KS.onSummary(function (d) {
+    Object.keys(d.stats).forEach(k => KS.setStat(k, d.stats[k], ['totalEarnings', 'pipelineValue'].includes(k) ? KS.inr : null));
+    const sig = JSON.stringify([d.orders.map(o => [o.order_id, o.status]), d.enquiries.map(e => [e.enquiry_id, e.status])]);
+    if (sig === last) return; last = sig;
+    document.getElementById('dash-orders').innerHTML = d.orders.length ? d.orders.map(o => '<tr><td><b>#KS-' + o.order_id + '</b></td><td>' + E(o.product_name) + '</td><td>' + E(o.buyer_name) + '</td><td><b>' + KS.inr(o.total_amount) + '</b></td><td>' + KS.badge(o.status) + '</td></tr>').join('') : '<tr><td colspan="5"><div class="ks-empty"><i class="bi bi-bag"></i></div></td></tr>';
+    document.getElementById('dash-enq').innerHTML = d.enquiries.length ? d.enquiries.map(e => '<div class="border rounded-3 p-3"><div class="d-flex justify-content-between"><b>' + E(e.buyer_name) + '</b>' + KS.badge(e.status) + '</div><div class="small text-muted">' + E(e.product_name) + '</div><div class="small mt-1">' + E(String(e.message).slice(0, 90)) + '</div></div>').join('') : '';
+    if (window.KS_I18N) KS_I18N.apply(document.documentElement.lang);
+  });
+})();
+</script>
+<%- include('../partials/footer') %>

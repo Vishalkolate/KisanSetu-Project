@@ -1,0 +1,29 @@
+<%- include('header.ejs', { title: 'Crops & Products' }) %>
+<main class="ks-main"><div class="ks-container">
+  <section class="ks-hero mb-4"><div class="position-relative" style="z-index:1"><h1 data-i18n="crops.title">Fresh crops from verified farmers</h1><p data-i18n="crops.sub">Search, filter and contact farmers directly – no middlemen.</p></div></section>
+  <form class="ks-card ks-filter" method="GET" action="/products" id="filterForm">
+    <div class="row g-3 align-items-end">
+      <div class="col-lg-3"><label class="form-label" data-i18n="f.search">Search</label><div class="input-group"><span class="input-group-text"><i class="bi bi-search"></i></span><input class="form-control" name="search" value="<%= searchKeyword %>" placeholder="Onion, wheat…" data-i18n-ph="f.search_ph"></div></div>
+      <div class="col-6 col-lg-2"><label class="form-label" data-i18n="f.category">Category</label><select class="form-select" name="category"><option value="all" data-i18n="f.all">All</option><% categories.forEach(c => { %><option value="<%= c.category_id %>" <%= String(selectedCategory) === String(c.category_id) || String(selectedCategory).toLowerCase() === c.category_name.toLowerCase() ? 'selected' : '' %>><%= c.category_name %></option><% }) %></select></div>
+      <div class="col-6 col-lg-2"><label class="form-label" data-i18n="f.district">District</label><input class="form-control" name="district" value="<%= selectedDistrict %>" placeholder="Nashik"></div>
+      <div class="col-6 col-lg-1"><label class="form-label" data-i18n="f.min">Min ₹</label><input type="number" min="0" class="form-control" name="min" value="<%= filters.min %>"></div>
+      <div class="col-6 col-lg-1"><label class="form-label" data-i18n="f.max">Max ₹</label><input type="number" min="0" class="form-control" name="max" value="<%= filters.max %>"></div>
+      <div class="col-6 col-lg-2"><label class="form-label" data-i18n="f.sort">Sort by</label><select class="form-select" name="sort"><% [['new','Newest','sort.new'],['low','Price: low to high','sort.low'],['high','Price: high to low','sort.high'],['name','Name A–Z','sort.name']].forEach(s => { %><option value="<%= s[0] %>" <%= filters.sort === s[0] ? 'selected' : '' %> data-i18n="<%= s[2] %>"><%= s[1] %></option><% }) %></select></div>
+      <div class="col-6 col-lg-1 d-flex gap-2"><button class="btn btn-success flex-fill" type="submit"><i class="bi bi-funnel"></i></button><a class="btn btn-light" href="/products"><i class="bi bi-x-lg"></i></a></div>
+    </div>
+  </form>
+  <div class="mb-3 text-muted"><b><%= products.length %></b> <span data-i18n="browse.found">crops found</span></div>
+  <div class="row g-3">
+    <% products.forEach(p => { %>
+    <div class="col-sm-6 col-lg-4 col-xl-3"><div class="ks-product">
+      <a class="img" href="/products/<%= p.product_id %>"><img src="<%= productImg(p) %>" alt="<%= p.product_name %>" loading="lazy" onerror="this.onerror=null;this.src='<%= placeholderImg %>'"><span class="cat"><%= p.category_name || '' %></span></a>
+      <div class="body"><h5><%= p.product_name %></h5><div class="price"><%= inr(p.price) %> <small>/ <%= p.unit %></small></div>
+        <div class="meta"><span><i class="bi bi-box"></i> <%= num(p.quantity) %> <%= p.unit %></span><span><i class="bi bi-geo-alt"></i> <%= p.district || p.p_location || '—' %></span></div>
+        <a href="/products/<%= p.product_id %>" class="btn btn-outline-success btn-sm mt-auto" data-i18n="btn.view_details">View details</a></div>
+    </div></div>
+    <% }) %>
+  </div>
+  <% if (!products.length) { %><div class="ks-card ks-empty"><i class="bi bi-search"></i><h5 data-i18n="empty.no_match">No crops match your filters</h5><a href="/products" class="btn btn-success btn-sm mt-2" data-i18n="btn.reset">Reset filters</a></div><% } %>
+</div></main>
+<script>document.querySelectorAll('#filterForm select').forEach(s => s.addEventListener('change', () => s.form.submit()));</script>
+<%- include('footer.ejs') %>

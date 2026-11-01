@@ -1,0 +1,208 @@
+<%- include("header") %>
+
+
+<main class="district-container">
+
+    <header class="district-header">
+        <div>
+            <h1>
+                <i class="bi bi-geo-alt"></i>
+                <span data-translate="Manage Locations">Manage Locations</span>
+            </h1>
+
+            <p data-translate="Manage districts, talukas and villages.">
+                Manage districts, talukas and villages.
+            </p>
+        </div>
+
+        <div class="district-header-actions">
+            <a href="banners.html" class="district-back-btn">
+                <i class="bi bi-arrow-left"></i>
+                <span data-translate="Back">Back</span>
+            </a>
+        </div>
+    </header>
+
+    <section class="district-form">
+
+        <h2>
+            <i class="bi bi-geo-alt"></i>
+            <span data-translate="Add Location">Add Location</span>
+        </h2>
+
+        <form>
+
+            <div class="district-form-group">
+                <label for="location-state" data-translate="Select State">
+                    Select State
+                </label>
+
+                <select id="location-state" name="state" required>
+                    <option value="Maharashtra" data-translate="Maharashtra">Maharashtra</option>
+                    <option value="Madhya Pradesh" data-translate="Madhya Pradesh">Madhya Pradesh</option>
+                    <option value="Manipur" data-translate="Manipur">Manipur</option>
+                    <option value="Meghalaya" data-translate="Meghalaya">Meghalaya</option>
+                    <option value="Mizoram" data-translate="Mizoram">Mizoram</option>
+                    <option value="Goa" data-translate="Goa">Goa</option>
+                </select>
+            </div>
+
+            <div class="district-form-group">
+                <label for="location-district" data-translate="Select District">
+                    Select District
+                </label>
+
+                <select id="location-district" name="district" required>
+                    <option value="" data-translate="Select District">Select District</option>
+                    <option value="Ahilyanagar" data-translate="Ahilyanagar">Ahilyanagar</option>
+                    <option value="Akola" data-translate="Akola">Akola</option>
+                    <option value="Amravati" data-translate="Amravati">Amravati</option>
+                    <option value="Beed" data-translate="Beed">Beed</option>
+                    <option value="Bhandara" data-translate="Bhandara">Bhandara</option>
+                    <option value="Buldhana" data-translate="Buldhana">Buldhana</option>
+                    <option value="Chandrapur" data-translate="Chandrapur">Chandrapur</option>
+                    <option value="Chhatrapati Sambhajinagar" data-translate="Chhatrapati Sambhajinagar">Chhatrapati Sambhajinagar</option>
+                    <option value="Dharashiv" data-translate="Dharashiv">Dharashiv</option>
+                    <option value="Dhule" data-translate="Dhule">Dhule</option>
+                    <option value="Gadchiroli" data-translate="Gadchiroli">Gadchiroli</option>
+                    <option value="Gondia" data-translate="Gondia">Gondia</option>
+                    <option value="Hingoli" data-translate="Hingoli">Hingoli</option>
+                    <option value="Jalgaon" data-translate="Jalgaon">Jalgaon</option>
+                    <option value="Jalna" data-translate="Jalna">Jalna</option>
+                    <option value="Kolhapur" data-translate="Kolhapur">Kolhapur</option>
+                    <option value="Latur" data-translate="Latur">Latur</option>
+                    <option value="Mumbai City" data-translate="Mumbai City">Mumbai City</option>
+                    <option value="Mumbai Suburban" data-translate="Mumbai Suburban">Mumbai Suburban</option>
+                    <option value="Nagpur" data-translate="Nagpur">Nagpur</option>
+                    <option value="Nanded" data-translate="Nanded">Nanded</option>
+                    <option value="Nandurbar" data-translate="Nandurbar">Nandurbar</option>
+                    <option value="Nashik" data-translate="Nashik">Nashik</option>
+                    <option value="Palghar" data-translate="Palghar">Palghar</option>
+                    <option value="Parbhani" data-translate="Parbhani">Parbhani</option>
+                    <option value="Pune" data-translate="Pune">Pune</option>
+                    <option value="Raigad" data-translate="Raigad">Raigad</option>
+                    <option value="Ratnagiri" data-translate="Ratnagiri">Ratnagiri</option>
+                    <option value="Sangli" data-translate="Sangli">Sangli</option>
+                    <option value="Satara" data-translate="Satara">Satara</option>
+                    <option value="Sindhudurg" data-translate="Sindhudurg">Sindhudurg</option>
+                    <option value="Solapur" data-translate="Solapur">Solapur</option>
+                    <option value="Thane" data-translate="Thane">Thane</option>
+                    <option value="Wardha" data-translate="Wardha">Wardha</option>
+                    <option value="Washim" data-translate="Washim">Washim</option>
+                    <option value="Yavatmal" data-translate="Yavatmal">Yavatmal</option>
+                </select>
+            </div>
+
+            <div class="district-form-group">
+                <label for="location-taluka" data-translate="Select Taluka">
+                    Select Taluka
+                </label>
+
+                <select id="location-taluka" name="taluka" required>
+                    <option value="" data-translate="Select Taluka">Select Taluka</option>
+
+                    <optgroup label="Ahilyanagar">
+                        <option value="Rahuri" data-translate="Rahuri">Rahuri</option>
+                        <option value="Rahata" data-translate="Rahata">Rahata</option>
+                        <option value="Shrirampur" data-translate="Shrirampur">Shrirampur</option>
+                        <option value="Sangamner" data-translate="Sangamner">Sangamner</option>
+                    </optgroup>
+
+                    <optgroup label="Pune">
+                        <option value="Haveli" data-translate="Haveli">Haveli</option>
+                        <option value="Baramati" data-translate="Baramati">Baramati</option>
+                        <option value="Junnar" data-translate="Junnar">Junnar</option>
+                    </optgroup>
+
+                    <optgroup label="Nashik">
+                        <option value="Niphad" data-translate="Niphad">Niphad</option>
+                        <option value="Sinnar" data-translate="Sinnar">Sinnar</option>
+                        <option value="Yeola" data-translate="Yeola">Yeola</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <div class="district-form-group">
+                <label for="location-village" data-translate="Select Village">
+                    Select Village
+                </label>
+
+                <select id="location-village" name="village" required>
+                    <option value="" data-translate="Select Village">Select Village</option>
+                    <option value="Sample Village" data-translate="Sample Village">Sample Village</option>
+                    <option value="Savedi" data-translate="Savedi">Savedi</option>
+                    <option value="Kedgaon" data-translate="Kedgaon">Kedgaon</option>
+                    <option value="Burudgaon" data-translate="Burudgaon">Burudgaon</option>
+                </select>
+            </div>
+
+            <button type="button" class="district-add-btn">
+                <i class="bi bi-plus-lg"></i>
+                <span data-translate="Add Location">Add Location</span>
+            </button>
+
+        </form>
+    </section>
+
+    <section class="district-list">
+
+        <h2>
+            <i class="bi bi-list-ul"></i>
+            <span data-translate="Location List">Location List</span>
+        </h2>
+
+        <div class="district-table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th data-translate="Sr. No.">Sr. No.</th>
+                        <th data-translate="District">District</th>
+                        <th data-translate="Taluka">Taluka</th>
+                        <th data-translate="Village">Village</th>
+                        <th data-translate="Status">Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td data-translate="Ahilyanagar">Ahilyanagar</td>
+                        <td data-translate="Rahuri">Rahuri</td>
+                        <td data-translate="Rahuri">Rahuri</td>
+                        <td>
+                            <span class="district-active" data-translate="Active">Active</span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>2</td>
+                        <td data-translate="Pune">Pune</td>
+                        <td data-translate="Haveli">Haveli</td>
+                        <td data-translate="Sample Village">Sample Village</td>
+                        <td>
+                            <span class="district-active" data-translate="Active">Active</span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>3</td>
+                        <td data-translate="Nashik">Nashik</td>
+                        <td data-translate="Niphad">Niphad</td>
+                        <td data-translate="Sample Village">Sample Village</td>
+                        <td>
+                            <span class="district-inactive" data-translate="Inactive">Inactive</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</main>
+
+<script src="script.js"></script>
+<script src="language.js"></script>
+<script src="districts-talukas.js"></script>
+
+
+<%- include("footer") %>

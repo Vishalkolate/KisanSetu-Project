@@ -1,0 +1,46 @@
+<%- include('../partials/head') %>
+<main class="ks-main"><div class="ks-container">
+  <div class="ks-page-head">
+    <div><h1 data-i18n="nav.browse">Browse Crops</h1><p data-i18n="browse.sub">Fresh produce directly from verified farmers.</p></div>
+    <span class="ks-live"><span><%= products.length %></span>&nbsp;<span data-i18n="browse.found">crops found</span></span>
+  </div>
+
+  <form class="ks-card ks-filter" method="GET" action="/buyer/browse" id="filterForm">
+    <div class="row g-3 align-items-end">
+      <div class="col-lg-3"><label class="form-label" data-i18n="f.search">Search</label>
+        <div class="input-group"><span class="input-group-text"><i class="bi bi-search"></i></span><input class="form-control" name="q" value="<%= filters.q %>" placeholder="Onion, wheat, farmer…" data-i18n-ph="f.search_ph"></div></div>
+      <div class="col-6 col-lg-2"><label class="form-label" data-i18n="f.category">Category</label>
+        <select class="form-select" name="category"><option value="" data-i18n="f.all">All</option><% categories.forEach(c => { %><option value="<%= c.category_id %>" <%= String(filters.category) === String(c.category_id) ? 'selected' : '' %>><%= c.category_name %></option><% }) %></select></div>
+      <div class="col-6 col-lg-2"><label class="form-label" data-i18n="f.district">District</label><input class="form-control" name="district" value="<%= filters.district %>" placeholder="Nashik"></div>
+      <div class="col-6 col-lg-1"><label class="form-label" data-i18n="f.min">Min ₹</label><input type="number" min="0" class="form-control" name="min" value="<%= filters.min %>"></div>
+      <div class="col-6 col-lg-1"><label class="form-label" data-i18n="f.max">Max ₹</label><input type="number" min="0" class="form-control" name="max" value="<%= filters.max %>"></div>
+      <div class="col-6 col-lg-2"><label class="form-label" data-i18n="f.sort">Sort by</label>
+        <select class="form-select" name="sort">
+          <% [['new','Newest','sort.new'],['low','Price: low to high','sort.low'],['high','Price: high to low','sort.high'],['name','Name A–Z','sort.name']].forEach(s => { %><option value="<%= s[0] %>" <%= filters.sort === s[0] ? 'selected' : '' %> data-i18n="<%= s[2] %>"><%= s[1] %></option><% }) %>
+        </select></div>
+      <div class="col-6 col-lg-1 d-flex gap-2"><button class="btn btn-success flex-fill" type="submit"><i class="bi bi-funnel"></i></button><a class="btn btn-light" href="/buyer/browse" title="Reset"><i class="bi bi-x-lg"></i></a></div>
+    </div>
+  </form>
+
+  <div class="row g-3">
+    <% products.forEach(p => { %>
+    <div class="col-sm-6 col-lg-4 col-xl-3"><div class="ks-product">
+      <button class="ks-wish <%= wished.includes(p.product_id) ? 'on' : '' %>" data-wish="<%= p.product_id %>" aria-label="Wishlist"><i class="bi <%= wished.includes(p.product_id) ? 'bi-heart-fill' : 'bi-heart' %>"></i></button>
+      <a class="img" href="/buyer/product/<%= p.product_id %>"><img src="<%= productImg(p) %>" alt="<%= p.product_name %>" loading="lazy" onerror="this.onerror=null;this.src='<%= placeholderImg %>'"><span class="cat"><%= p.category_name || '' %></span></a>
+      <div class="body">
+        <h5><%= p.product_name %></h5>
+        <div class="price"><%= inr(p.price) %> <small>/ <%= p.unit %></small></div>
+        <div class="meta"><span><i class="bi bi-box"></i> <%= num(p.quantity) %> <%= p.unit %></span><span><i class="bi bi-geo-alt"></i> <%= p.district || p.p_location || '—' %></span></div>
+        <div class="small text-muted"><i class="bi bi-person"></i> <%= p.farmer_name || '' %></div>
+        <div class="d-flex gap-2 mt-auto pt-2">
+          <a href="/buyer/product/<%= p.product_id %>#order" class="btn btn-success btn-sm flex-fill" data-i18n="btn.buy_now">Buy now</a>
+          <a href="/buyer/enquiries?product_id=<%= p.product_id %>" class="btn btn-outline-success btn-sm" title="Enquiry"><i class="bi bi-chat-dots"></i></a>
+        </div>
+      </div>
+    </div></div>
+    <% }) %>
+  </div>
+  <% if (!products.length) { %><div class="ks-card ks-empty mt-3"><i class="bi bi-search"></i><h5 data-i18n="empty.no_match">No crops match your filters</h5><a href="/buyer/browse" class="btn btn-success btn-sm mt-2" data-i18n="btn.reset">Reset filters</a></div><% } %>
+</div></main>
+<script>document.querySelectorAll('#filterForm select').forEach(s => s.addEventListener('change', () => s.form.submit()));</script>
+<%- include('../partials/footer') %>

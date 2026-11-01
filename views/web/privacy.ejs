@@ -1,0 +1,94 @@
+<%- include('header.ejs') %>
+
+<main class="legal-page">
+  <section class="py-5 bg-light-green border-bottom">
+    <div class="container py-3">
+      <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill fw-semibold mb-3">KisanSetu Marketplace</span>
+      <h1 class="display-5 fw-bold text-dark mb-2">Privacy Policy</h1>
+      <p class="lead text-muted mb-0">This policy explains what the current KisanSetu project does with information when you visit its website.</p>
+    </div>
+  </section>
+
+  <section class="py-5">
+    <div class="container">
+      <article class="bg-white p-4 p-md-5 rounded-4 shadow-sm border legal-content">
+        <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-4">
+          <p class="text-muted mb-0"><strong>Last updated:</strong> October 24, 2026</p>
+          <p class="text-muted mb-0">Applies to the current KisanSetu website.</p>
+        </div>
+
+        <div class="p-3 p-md-4 mb-4 rounded-3 border border-success-subtle bg-success-subtle">
+          <h2 class="h5 fw-bold text-success mb-2">What the current code supports</h2>
+          <p class="mb-0">The project currently serves public pages and sample crop content. It does not implement user accounts, submitted crop listings, verification uploads, buyer enquiry or order processing, or a database. The Contact form validates a submission but returns an unavailable response and does not save or forward the message.</p>
+        </div>
+
+        <nav class="p-3 p-md-4 mb-5 rounded-3 border bg-light" aria-label="Privacy policy sections">
+          <h2 class="h6 fw-bold mb-3">On this page</h2>
+          <ul class="row row-cols-1 row-cols-md-2 g-2 mb-0 ps-3">
+            <li><a href="#information">Information handled now</a></li>
+            <li><a href="#contact-form">Contact form</a></li>
+            <li><a href="#sharing">Sharing and planned features</a></li>
+            <li><a href="#retention">Storage and retention</a></li>
+            <li><a href="#choices">Your choices</a></li>
+            <li><a href="#contact">Questions and updates</a></li>
+          </ul>
+        </nav>
+
+        <section id="information" class="mb-4">
+          <h2 class="h4 fw-bold text-dark">1. Information handled by the current site</h2>
+          <p class="text-muted">The language selector stores your selected language code in your browser's local storage under <code>marketplace_lang</code>. This preference stays in that browser until it is cleared. The current pages also load Bootstrap, Font Awesome, and jQuery assets from third-party CDNs; when your browser requests those assets, the CDN provider may receive technical request information under its own practices.</p>
+          <p class="text-muted mb-0">The reviewed application code does not connect to a database or implement account, crop-listing, verification-upload, enquiry, or order data storage. The hosting environment and any server or CDN logs are outside the project code reviewed for this page, so this policy does not make claims about their retention or use.</p>
+        </section>
+
+        <section id="contact-form" class="mb-4">
+          <h2 class="h4 fw-bold text-dark">2. Contact form</h2>
+          <p class="text-muted mb-0">The Contact page asks for a name, mobile number, optional email, user type, subject, and message. The current server handler validates these fields and responds that submission is unavailable; it does not save the inquiry to a database or forward it through an email service. Information entered into the form is sent to the application in the request, but this project code does not retain it. Avoid submitting sensitive information through the form. Server or hosting logs are not covered by that code-level behavior.</p>
+        </section>
+
+        <section id="sharing" class="mb-4">
+          <h2 class="h4 fw-bold text-dark">3. Sharing and planned marketplace features</h2>
+          <p class="text-muted mb-0">The current project does not support user-submitted listings, buyer enquiries, or order requests, so it does not currently share those records between farmers and buyers. If these features are implemented later, listing information such as crop, price, quantity, and location may be shown to other users to support marketplace activity. The project should explain any new collection, use, sharing, and visibility before those features go live.</p>
+        </section>
+
+        <section id="retention" class="mb-4">
+          <h2 class="h4 fw-bold text-dark">4. Storage and retention</h2>
+          <p class="text-muted mb-0">The language preference is stored locally in your browser and can be removed by clearing the site's browser storage. The application code reviewed here has no database-backed retention for account or marketplace information. This does not describe storage or retention that may occur in the hosting environment or through third-party CDN requests.</p>
+        </section>
+
+        <section id="choices" class="mb-4">
+          <h2 class="h4 fw-bold text-dark">5. Your choices</h2>
+          <p class="text-muted mb-0">You can clear the language preference through your browser's site-data or storage settings. Do not include unnecessary personal or confidential information in public-facing content. If the project adds accounts or data-submission features, the available ways to review, correct, or request removal of that information should be described here.</p>
+        </section>
+
+        <section id="contact">
+          <h2 class="h4 fw-bold text-dark">6. Questions and updates</h2>
+          <p class="text-muted mb-0">This policy may be updated when the project changes. For questions about this policy, contact <a href="mailto:support@kisansetu.in">support@kisansetu.in</a>. The Contact form is not currently able to deliver inquiries.</p>
+        </section>
+      </article>
+    </div>
+  </section>
+    <!-- Done Button -->
+  <div class="container py-3">
+  <div class="row g-3">
+
+    <div class="col-12 col-md-6 text-center">
+      <a href="/farmer_register"
+         class="btn btn-success px-4 py-3 rounded-pill fw-semibold shadow-sm">
+        <i class="bi bi-check-circle me-2"></i>
+        Done Reading Go To Farmer Registration
+      </a>
+    </div>
+
+    <div class="col-12 col-md-6 text-center">
+      <a href="/buyer_register"
+         class="btn btn-success px-4 py-3 rounded-pill fw-semibold shadow-sm">
+        <i class="bi bi-check-circle me-2"></i>
+        Done Reading Go To Buyer Registration
+      </a>
+    </div>
+
+  </div>
+</div>
+</main>
+
+<%- include('footer.ejs') %>

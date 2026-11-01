@@ -1,0 +1,60 @@
+<%- include('../partials/head') %>
+<%
+  const tabs = [['all','All','tab.all'],['pending','Waiting','enq.waiting'],['responded','Replied','status.responded'],['closed','Closed','status.closed']];
+  const cnt = k => k === 'all' ? enquiries.length : enquiries.filter(o => o.status === k).length;
+%>
+<main class="ks-main"><div class="ks-container">
+  <div class="ks-page-head"><div><h1 data-i18n="nav.enquiries">My Enquiries</h1><p data-i18n="enq.sub">Ask farmers about price, quality and delivery. Replies appear here.</p></div></div>
+  <div class="row g-4">
+    <div class="col-lg-4">
+      <div class="ks-card ks-card-pad position-sticky" style="top:90px" id="new">
+        <h5 class="fw-bold mb-3"><i class="bi bi-send text-success me-2"></i><span data-i18n="btn.new_enquiry">New Enquiry</span></h5>
+        <form method="POST" action="/buyer/enquiries" class="d-grid gap-3">
+          <input type="hidden" name="return_to" value="/buyer/enquiries">
+          <div id="productPick">
+            <label class="form-label" data-i18n="col.product">Crop</label>
+            <% if (preselect) { %>
+              <input type="hidden" name="product_id" value="<%= preselect.product_id %>">
+              <div class="d-flex align-items-center gap-2 p-2 border rounded-3"><img class="ks-thumb" src="<%= productImg(preselect) %>" alt=""><div><b><%= preselect.product_name %></b><div class="small text-muted"><%= preselect.farmer_name %> · <%= inr(preselect.price) %>/<%= preselect.unit %></div></div><a href="/buyer/enquiries" class="btn btn-sm btn-light ms-auto" title="Change"><i class="bi bi-x"></i></a></div>
+            <% } else { %>
+              <select name="product_id" class="form-select" required id="prodSel"><option value="" data-i18n="enq.choose">Choose a crop…</option></select>
+            <% } %>
+          </div>
+          <div><label class="form-label" data-i18n="enq.qty">Quantity needed (optional)</label><input type="number" min="0" step="any" name="requested_quantity" class="form-control"></div>
+          <div><label class="form-label" data-i18n="enq.message">Your question</label><textarea name="message" rows="4" minlength="5" required class="form-control" placeholder="E.g. What is the best price for 200 kg?" data-i18n-ph="enq.msg_ph"></textarea></div>
+          <button class="btn btn-success" type="submit" data-loading="Sending…"><i class="bi bi-send me-1"></i><span data-i18n="btn.send_enquiry">Send Enquiry</span></button>
+        </form>
+      </div>
+    </div>
+    <div class="col-lg-8">
+      <div class="ks-card ks-filter"><div class="row g-3 align-items-center"><div class="col-md-5"><div class="input-group"><span class="input-group-text"><i class="bi bi-search"></i></span><input id="q" class="form-control" placeholder="Search…" data-i18n-ph="f.search"></div></div><div class="col-md-7"><div class="ks-tabs" id="tabs"><% tabs.forEach((t, i) => { %><button type="button" class="<%= i === 0 ? 'active' : '' %>" data-filter="<%= t[0] %>"><span data-i18n="<%= t[2] %>"><%= t[1] %></span><span class="n"><%= cnt(t[0]) %></span></button><% }) %></div></div></div></div>
+      <div class="d-grid gap-3">
+        <% enquiries.forEach(e => { %>
+        <div class="ks-card ks-card-pad e-row" data-status="<%= e.status %>" data-search="<%= e.product_name %> <%= e.farmer_name %> <%= e.message %>">
+          <div class="d-flex justify-content-between flex-wrap gap-2"><div><b><%= e.product_name || 'Crop' %></b><div class="small text-muted"><i class="bi bi-person"></i> <%= e.farmer_name || '' %> · <%= fdate(e.created_at) %><% if (e.requested_quantity) { %> · <%= num(e.requested_quantity) %> <%= e.unit || '' %><% } %></div></div><%- statusBadge(e.status) %></div>
+          <div class="ks-chat mt-2"><b class="small d-block text-muted" data-i18n="enq.you">You</b><%= e.message %></div>
+          <% if (e.reply_message) { %><div class="ks-chat reply mt-2"><b class="small d-block" data-i18n="enq.farmer_reply">Farmer's reply</b><%= e.reply_message %></div>
+          <% } else if (e.status === 'pending') { %><div class="small text-muted mt-2"><i class="bi bi-hourglass-split"></i> <span data-i18n="enq.waiting_hint">Waiting for the farmer to reply…</span></div><% } %>
+          <div class="d-flex gap-2 mt-3 flex-wrap">
+            <a class="btn btn-sm btn-outline-success" href="/buyer/product/<%= e.product_id %>#order"><i class="bi bi-cart-check me-1"></i><span data-i18n="btn.place_order">Place Order</span></a>
+            <% if (e.farmer_mobile) { %><a class="btn btn-sm btn-light" href="tel:<%= e.farmer_mobile %>"><i class="bi bi-telephone me-1"></i><span data-i18n="btn.call">Call</span></a><% } %>
+            <% if (e.status !== 'closed') { %><form method="POST" action="/buyer/enquiries/<%= e.enquiry_id %>/close" class="ms-auto"><button class="btn btn-sm btn-light text-muted" type="submit"><i class="bi bi-x-circle me-1"></i><span data-i18n="btn.close">Close</span></button></form><% } %>
+          </div>
+        </div>
+        <% }) %>
+        <div id="empty" class="ks-card ks-empty <%= enquiries.length ? 'd-none' : '' %>"><i class="bi bi-chat-square-text"></i><h5 data-i18n="empty.enquiries">No enquiries yet</h5><p data-i18n="empty.enquiries_hint">Ask a farmer about price, quality or delivery.</p></div>
+      </div>
+    </div>
+  </div>
+</div></main>
+<script>
+  KS.filterList({ rows: '.e-row', search: '#q', tabs: '#tabs button', empty: '#empty' });
+  const sel = document.getElementById('prodSel');
+  if (sel) fetch('/buyer/api/products', { credentials: 'same-origin' }).then(r => r.json()).then(d => {
+    d.products.forEach(p => { const o = document.createElement('option'); o.value = p.product_id; o.textContent = p.product_name + ' — ' + p.farmer_name + ' (' + KS.inr(p.price) + '/' + p.unit + ')'; sel.appendChild(o); });
+  });
+  // live: when a farmer replies, refresh the list
+  let known = <%= enquiries.filter(e => e.status === 'responded').length %>;
+  KS.onSummary(d => { if (d.stats.repliedEnquiries !== known) { KS.toast(KS.t('enq.new_reply', 'A farmer replied to your enquiry')); setTimeout(() => location.reload(), 1200); known = d.stats.repliedEnquiries; } });
+</script>
+<%- include('../partials/footer') %>

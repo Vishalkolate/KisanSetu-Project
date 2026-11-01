@@ -1,0 +1,10 @@
+<%- include('../partials/head') %>
+<main class="ks-main"><div class="ks-container" style="max-width:860px">
+  <div class="ks-page-head"><div><h1 data-i18n="nav.notifications">Notifications</h1></div>
+    <% if (notifications.some(n => !n.is_read)) { %><form method="POST" action="/buyer/notifications/read"><button class="btn btn-outline-success btn-sm"><i class="bi bi-check2-all me-1"></i><span data-i18n="btn.mark_read">Mark all as read</span></button></form><% } %></div>
+  <div class="ks-card">
+    <% notifications.forEach(n => { %><div class="d-flex gap-3 p-3 border-bottom <%= n.is_read ? '' : 'bg-light' %>"><span class="ks-stat-ico ico-green" style="width:42px;height:42px;font-size:1.1rem"><i class="bi bi-bell"></i></span><div class="flex-fill"><div class="d-flex justify-content-between"><b><%= n.title %></b><small class="text-muted"><%= fdate(n.created_at) %></small></div><div class="text-muted small"><%= n.message %></div></div><% if (!n.is_read) { %><span class="badge bg-success align-self-start">New</span><% } %></div><% }) %>
+    <% if (!notifications.length) { %><div class="ks-empty"><i class="bi bi-bell-slash"></i><h5 data-i18n="empty.notifs">No notifications</h5></div><% } %>
+  </div>
+</div></main>
+<%- include('../partials/footer') %>

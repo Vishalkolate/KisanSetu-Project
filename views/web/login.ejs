@@ -1,0 +1,192 @@
+<%- include('header.ejs') %>
+
+<!-- Authentication Stylesheet -->
+<link rel="stylesheet" href="/web/css/auth.css">
+
+<!-- Auth Main Content Section -->
+<main class="auth-page-wrapper">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-xl-9 col-lg-10">
+        <div class="auth-card">
+          <div class="row g-0">
+            
+            <!-- Left Visual Panel / KisanSetu Showcase -->
+            <div class="col-md-5 d-none d-md-flex auth-side-banner">
+              <div class="auth-side-content">
+                <span class="auth-feature-badge">
+                  <i class="fa-solid fa-shield-halved text-warning"></i> Verified Agri Portal
+                </span>
+                <h2 class="h3 fw-bold mb-3 text-white">Welcome Back to KisanSetu</h2>
+                <p class="text-white-50 mb-4 small leading-relaxed">
+                  Connecting verified farmers directly with wholesale buyers and commercial traders across Maharashtra and India.
+                </p>
+
+                <div class="feature-list">
+                  <div class="feature-list-item">
+                    <div class="feature-list-icon">
+                      <i class="fa-solid fa-wheat-awn"></i>
+                    </div>
+                    <div>
+                      <h6 class="mb-0 fw-semibold text-white small">Direct APMC Market Trade</h6>
+                      <small class="text-white-50">Zero middlemen commission on direct harvest transactions.</small>
+                    </div>
+                  </div>
+
+                  <div class="feature-list-item">
+                    <div class="feature-list-icon">
+                      <i class="fa-solid fa-truck-fast"></i>
+                    </div>
+                    <div>
+                      <h6 class="mb-0 fw-semibold text-white small">Doorstep Logistics & Mandi Rates</h6>
+                      <small class="text-white-50">Real-time market price discovery and pickup coordination.</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="auth-side-footer text-white-50 pt-3 border-top border-white border-opacity-25 small">
+                <i class="fa-solid fa-headset me-1 text-warning"></i> Kisan Helpline: <strong>1800-266-3276</strong>
+              </div>
+            </div>
+
+            <!-- Right Form Section -->
+            <div class="col-md-7">
+              <div class="auth-form-container">
+<!-- Role Switcher -->
+<div class="role-switcher mb-4">
+    <a href="/login/farmer"
+       class="role-switcher-btn <%= (typeof role !== 'undefined' && role === 'farmer') ? 'active' : '' %>">
+        <i class="fa-solid fa-tractor me-1"></i> Farmer Login
+    </a>
+
+    <a href="/login/buyer"
+       class="role-switcher-btn <%= (typeof role !== 'undefined' && role === 'buyer') ? 'active' : '' %>">
+        <i class="fa-solid fa-cart-shopping me-1"></i> Buyer Login
+    </a>
+</div>
+
+
+                <!-- Form Header -->
+                <div class="mb-4">
+                  <span class="badge bg-light text-success fw-bold px-3 py-1 rounded-pill mb-2 border border-success-subtle">
+                    <i class="fa-solid fa-lock me-1"></i> Secure Authentication
+                  </span>
+                  <h1 class="auth-title">
+                    <%= (typeof role !== 'undefined' && role === 'buyer') ? 'Buyer Sign In' : 'Farmer Sign In' %>
+                  </h1>
+                  <p class="auth-subtitle">
+                    <%= (typeof role !== 'undefined' && role === 'buyer') 
+                        ? 'Access your commercial buyer dashboard & live farm procurements' 
+                        : 'Access your farmer portal, mandi listings & direct payments' %>
+                  </p>
+                </div>
+
+                <!-- Alert placeholder for submission response -->
+                <div id="authAlertPlaceholder"><% if (typeof error !== 'undefined' && error) { %><div class="alert alert-danger d-flex align-items-center gap-2" role="alert"><i class="bi bi-exclamation-octagon-fill"></i><%= error %></div><% } %></div>
+
+                <form id="loginForm" method="POST" action="/login/<%= (typeof role !== 'undefined' && role === 'farmer') ? 'farmer' : 'buyer' %>" novalidate autocomplete="on">
+                  
+                  <!-- Email Address -->
+                  <div class="mb-3">
+                    <label for="loginEmail" class="form-label">
+                      Email Address <span class="required-star">*</span>
+                    </label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+                      <input 
+                        type="email" 
+                        class="form-control validate-email" 
+                        id="loginEmail" 
+                        name="email"
+                        placeholder="name@example.com" 
+                        required
+                        autocomplete="email">
+                      <div class="invalid-feedback">Please enter a valid email address.</div>
+                    </div>
+                  </div>
+
+                  <!-- Password with Show/Hide Toggle -->
+                  <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                      <label for="loginPassword" class="form-label mb-0">
+                        Password <span class="required-star">*</span>
+                      </label>
+                      <a href="/forgot-password" class="small text-success text-decoration-none fw-semibold">
+                        Forgot Password?
+                      </a>
+                    </div>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                      <input 
+                        type="password" 
+                        class="form-control has-toggle validate-password-login" 
+                        id="loginPassword" 
+                        name="password"
+                        placeholder="Enter your password" 
+                        required
+                        autocomplete="current-password">
+                      <button 
+                        type="button" 
+                        class="btn btn-password-toggle" 
+                        tabindex="-1"
+                        aria-label="Show password">
+                        <i class="fa-solid fa-eye"></i>
+                      </button>
+                      <div class="invalid-feedback">Please enter your password.</div>
+                    </div>
+                  </div>
+
+                  <!-- Remember Me Checkbox -->
+                  <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" id="rememberMe" name="rememberMe">
+                    <label class="form-check-label text-secondary small" for="rememberMe">
+                      Keep me signed in on this device
+                    </label>
+                  </div>
+
+                  <!-- Submit Button -->
+                  <div class="d-grid mb-4">
+                    <button type="submit" class="btn btn-agri btn-lg shadow-sm">
+                      <i class="fa-solid fa-right-to-bracket me-1"></i> Sign In to Account
+                    </button>
+                  </div>
+
+                  <!-- Divider -->
+                  <div class="text-center position-relative my-4">
+                    <hr class="text-muted opacity-25">
+                    <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small fw-semibold">
+                      New to KisanSetu?
+                    </span>
+                  </div>
+
+                  <!-- Links to Registrations -->
+                  <div class="row g-2">
+                    <div class="col-sm-6">
+                      <a href="/farmer_register" class="btn btn-agri-outline w-100 text-center btn-sm py-2">
+                        <i class="fa-solid fa-tractor me-1"></i> Register as Farmer
+                      </a>
+                    </div>
+                    <div class="col-sm-6">
+                      <a href="/buyer_register" class="btn btn-agri-outline w-100 text-center btn-sm py-2">
+                        <i class="fa-solid fa-cart-shopping me-1"></i> Register as Buyer
+                      </a>
+                    </div>
+                  </div>
+
+                </form>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<%- include('footer.ejs') %>
+
+<!-- Authentication Client-side Script -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="/web/js/auth.js"></script>

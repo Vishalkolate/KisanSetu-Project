@@ -1,0 +1,21 @@
+<%- include('../partials/head') %>
+<main class="ks-main"><div class="ks-container" style="max-width:900px">
+  <div class="ks-page-head"><div><h1 data-i18n="nav.kyc">KYC Documents</h1><p data-i18n="kyc.sub">Verified farmers earn more trust from buyers.</p></div><span class="ks-badge st-<%= kycStatus %>"><%= kycStatus %></span></div>
+  <form method="POST" action="/farmer/kyc/submit" enctype="multipart/form-data" class="ks-card ks-card-pad mb-4">
+    <div class="row g-3">
+      <div class="col-md-6"><label class="form-label" data-i18n="kyc.aadhaar">Aadhaar number</label><input class="form-control" name="aadharNumber" required pattern="[0-9 ]{12,14}" maxlength="14" placeholder="1234 5678 9012"></div>
+      <div class="col-md-6"></div>
+      <div class="col-md-4"><label class="form-label" data-i18n="kyc.front">Aadhaar – front *</label><input type="file" class="form-control kyc-file" name="aadharFront" accept="image/*,application/pdf" required></div>
+      <div class="col-md-4"><label class="form-label" data-i18n="kyc.back">Aadhaar – back</label><input type="file" class="form-control kyc-file" name="aadharBack" accept="image/*,application/pdf"></div>
+      <div class="col-md-4"><label class="form-label" data-i18n="kyc.land">Land record (7/12)</label><input type="file" class="form-control kyc-file" name="landRecord" accept="image/*,application/pdf"></div>
+    </div>
+    <p class="small text-muted mt-2 mb-3"><i class="bi bi-info-circle"></i> PDF / JPG / PNG · max 3 MB each</p>
+    <button class="btn btn-success" type="submit" data-loading="Uploading…"><i class="bi bi-upload me-1"></i><span data-i18n="btn.submit">Submit</span></button>
+  </form>
+  <div class="ks-card"><div class="ks-card-head"><h5 data-i18n="kyc.submitted">Submitted documents</h5></div><div class="p-3 d-grid gap-2">
+    <% docs.forEach(d => { %><div class="d-flex justify-content-between align-items-center border rounded-3 p-3"><div><b><%= d.document_type %></b><div class="small text-muted"><%= fdate(d.submitted_at) %></div><% if (d.rejection_reason) { %><div class="small text-danger"><%= d.rejection_reason %></div><% } %></div><%- statusBadge(d.verification_status) %></div><% }) %>
+    <% if (!docs.length) { %><div class="ks-empty py-4"><i class="bi bi-file-earmark"></i><span data-i18n="empty.docs">Nothing submitted yet</span></div><% } %>
+  </div></div>
+</div></main>
+<script>document.querySelectorAll('.kyc-file').forEach(i => i.addEventListener('change', () => { const f = i.files[0]; if (f && f.size > 3 * 1048576) { const m = 'File too large (' + (f.size / 1048576).toFixed(1) + ' MB). Maximum 3 MB.'; i.value = ''; KS.toast(m, 'danger'); alert(m); } }));</script>
+<%- include('../partials/footer') %>

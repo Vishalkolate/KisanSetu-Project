@@ -1,0 +1,17 @@
+<%- include('../partials/head') %>
+<main class="ks-main"><div class="ks-container">
+  <div class="ks-page-head"><div><h1 data-i18n="nav.wishlist">Wishlist</h1><p data-i18n="wish.sub">Crops you saved for later.</p></div></div>
+  <div class="row g-3">
+    <% items.forEach(p => { const live = ['Available','Approved'].includes(p.p_status) && Number(p.quantity) > 0; %>
+    <div class="col-sm-6 col-lg-4 col-xl-3"><div class="ks-product">
+      <button class="ks-wish on" data-wish="<%= p.product_id %>" data-remove-row=".col-sm-6" aria-label="Remove"><i class="bi bi-heart-fill"></i></button>
+      <a class="img" href="/buyer/product/<%= p.product_id %>"><img src="<%= productImg(p) %>" alt="" loading="lazy" onerror="this.onerror=null;this.src='<%= placeholderImg %>'"></a>
+      <div class="body"><h5><%= p.product_name %></h5><div class="price"><%= inr(p.price) %> <small>/ <%= p.unit %></small></div>
+        <div class="small text-muted"><i class="bi bi-person"></i> <%= p.farmer_name %> · <i class="bi bi-geo-alt"></i> <%= p.p_location || '—' %></div>
+        <a class="btn btn-<%= live ? 'success' : 'light disabled' %> btn-sm mt-auto" href="/buyer/product/<%= p.product_id %>#order"><%= live ? 'Buy now' : 'Unavailable' %></a></div>
+    </div></div>
+    <% }) %>
+  </div>
+  <% if (!items.length) { %><div class="ks-card ks-empty"><i class="bi bi-heart"></i><h5 data-i18n="empty.wishlist">Your wishlist is empty</h5><a href="/buyer/browse" class="btn btn-success btn-sm mt-2" data-i18n="nav.browse">Browse Crops</a></div><% } %>
+</div></main>
+<%- include('../partials/footer') %>

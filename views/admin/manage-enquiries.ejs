@@ -1,0 +1,299 @@
+
+<%- include("header.ejs") %>
+
+<link rel="stylesheet" href="/admin/style.css">
+
+<div class="manage-enquiries-page container-fluid py-4">
+
+    <!-- Page Header -->
+    <div class="enquiry-page-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <span class="enquiry-eyebrow" data-translate="Enquiry Management">
+                Enquiry Management
+            </span>
+            <h2 class="enquiry-page-title" data-translate="Manage Enquiries">
+                Manage Enquiries
+            </h2>
+            <p class="enquiry-page-subtitle mb-0"
+               data-translate="Review and manage buyer enquiries submitted for farmer products.">
+                Review and manage buyer enquiries submitted for farmer products.
+            </p>
+        </div>
+
+        <button type="button" class="btn btn-export-enquiries" id="exportEnquiriesBtn">
+            <i class="fa-solid fa-file-csv me-2"></i>
+            <span data-translate="Export Enquiries">Export Enquiries</span>
+        </button>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="enquiry-stat-card">
+                <div class="enquiry-stat-top">
+                    <div>
+                        <p data-translate="Total Enquiries">Total Enquiries</p>
+                        <h3 id="totalEnquiriesCount">8</h3>
+                    </div>
+                    <div class="enquiry-stat-icon enquiry-icon-total">
+                        <i class="fa-solid fa-envelope-open-text"></i>
+                    </div>
+                </div>
+                <span data-translate="All submitted enquiries">All submitted enquiries</span>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="enquiry-stat-card">
+                <div class="enquiry-stat-top">
+                    <div>
+                        <p data-translate="Pending Enquiries">Pending Enquiries</p>
+                        <h3 id="pendingEnquiriesCount">3</h3>
+                    </div>
+                    <div class="enquiry-stat-icon enquiry-icon-pending">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+                </div>
+                <span data-translate="Waiting for review">Waiting for review</span>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="enquiry-stat-card">
+                <div class="enquiry-stat-top">
+                    <div>
+                        <p data-translate="Accepted Enquiries">Accepted Enquiries</p>
+                        <h3 id="acceptedEnquiriesCount">3</h3>
+                    </div>
+                    <div class="enquiry-stat-icon enquiry-icon-accepted">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                </div>
+                <span data-translate="Approved by farmers">Approved by farmers</span>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="enquiry-stat-card">
+                <div class="enquiry-stat-top">
+                    <div>
+                        <p data-translate="Rejected Enquiries">Rejected Enquiries</p>
+                        <h3 id="rejectedEnquiriesCount">2</h3>
+                    </div>
+                    <div class="enquiry-stat-icon enquiry-icon-rejected">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                    </div>
+                </div>
+                <span data-translate="Declined enquiries">Declined enquiries</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Enquiries Table Panel -->
+    <div class="enquiries-panel">
+
+        <div class="enquiries-panel-header">
+            <div>
+                <h4 data-translate="Enquiry List">Enquiry List</h4>
+                <p data-translate="Review buyer requests and track their current status.">
+                    Review buyer requests and track their current status.
+                </p>
+            </div>
+
+            <span class="enquiry-record-badge">
+                <i class="fa-solid fa-list-check me-1"></i>
+                <span id="enquiriesVisibleCount">8</span>
+                <span data-translate="Records">Records</span>
+            </span>
+        </div>
+
+        <!-- Search and Filters -->
+        <div class="enquiries-toolbar">
+            <div class="enquiries-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input
+                    type="search"
+                    id="enquiriesSearchInput"
+                    class="form-control"
+                    placeholder="Search buyer, product or enquiry ID..."
+                    data-translate-placeholder="Search buyer, product or enquiry ID..."
+                    aria-label="Search enquiries">
+            </div>
+
+            <select id="enquiriesStatusFilter" class="form-select" aria-label="Filter by status">
+                <option value="all" data-translate="All Statuses">All Statuses</option>
+                <option value="pending" data-translate="Pending">Pending</option>
+                <option value="accepted" data-translate="Accepted">Accepted</option>
+                <option value="rejected" data-translate="Rejected">Rejected</option>
+            </select>
+
+            <select id="enquiriesCategoryFilter" class="form-select" aria-label="Filter by category">
+                <option value="all" data-translate="All Categories">All Categories</option>
+                <option value="vegetables" data-translate="Vegetables">Vegetables</option>
+                <option value="fruits" data-translate="Fruits">Fruits</option>
+                <option value="grains" data-translate="Grains">Grains</option>
+                <option value="pulses" data-translate="Pulses">Pulses</option>
+            </select>
+
+            <button type="button" class="btn btn-reset-enquiries" id="resetEnquiriesFiltersBtn">
+                <i class="fa-solid fa-rotate-left me-1"></i>
+                <span data-translate="Reset">Reset</span>
+            </button>
+        </div>
+
+        <!-- Enquiries Table -->
+        <div class="table-responsive enquiries-table-wrapper">
+            <table class="table enquiries-table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th data-translate="Enquiry ID">Enquiry ID</th>
+                        <th data-translate="Buyer">Buyer</th>
+                        <th data-translate="Product">Product</th>
+                        <th data-translate="Farmer">Farmer</th>
+                        <th data-translate="Requested Quantity">Requested Quantity</th>
+                        <th data-translate="Offered Price">Offered Price</th>
+                        <th data-translate="Date">Date</th>
+                        <th data-translate="Status">Status</th>
+                        <th data-translate="Actions">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="manageEnquiriesTableBody">
+        <% if (typeof enquiries !== 'undefined' && enquiries.length > 0) { %>
+            <% enquiries.forEach(enquiry => { %>
+                <tr data-status="<%= (enquiry.status || 'pending').toLowerCase() %>">
+                    <td><span class="enquiry-id">#ENQ<%= enquiry.enquiry_id %></span></td>
+                    <td>
+                        <div class="enquiry-person">
+                            <span class="enquiry-avatar"><%= (enquiry.buyer_name || 'B').substring(0, 2).toUpperCase() %></span>
+                            <div><strong><%= enquiry.buyer_name || 'Buyer' %></strong></div>
+                        </div>
+                    </td>
+                    <td><div class="order-product"><strong><%= enquiry.product_name || 'Produce' %></strong></div></td>
+                    <td><%= enquiry.farmer_name || 'Farmer' %></td>
+                    <td><%= Number(enquiry.requested_quantity || 0) %></td>
+                    <td class="enquiry-price"><%= enquiry.message || '—' %></td>
+                    <td><%= enquiry.created_at ? new Date(enquiry.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—' %></td>
+                    <td><span class="enquiry-status status-<%= (enquiry.status || 'pending').toLowerCase() %>"><%= enquiry.status %></span></td>
+                    <td>
+                        <form method="POST" action="/admin/enquiries/close/<%= enquiry.enquiry_id %>" style="display:inline;">
+                            <button class="btn btn-sm btn-outline-secondary" type="submit" title="Close Enquiry">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            <% }); %>
+        <% } else { %>
+            <tr><td colspan="9" class="text-center py-4 text-muted">No enquiries found.</td></tr>
+        <% } %>
+    </tbody>
+            </table>
+        </div>
+
+        <!-- Empty State -->
+        <div id="enquiriesEmptyState" class="enquiries-empty-state d-none">
+            <div class="enquiry-empty-icon">
+                <i class="fa-solid fa-envelope-open"></i>
+            </div>
+            <h5 data-translate="No enquiries found">No enquiries found</h5>
+            <p data-translate="Try changing your search or filters.">
+                Try changing your search or filters.
+            </p>
+        </div>
+
+        <div class="enquiries-table-footer">
+            <span id="enquiriesPaginationInfo">Showing 8 enquiries</span>
+            <span data-translate="Sample records for frontend demonstration">
+                Sample records for frontend demonstration
+            </span>
+        </div>
+    </div>
+</div>
+
+<!-- Enquiry Details Modal -->
+<div class="modal fade" id="enquiryDetailsModal" tabindex="-1"
+     aria-labelledby="enquiryDetailsModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content enquiry-details-modal">
+
+            <div class="modal-header">
+                <div>
+                    <span class="enquiry-modal-eyebrow" data-translate="Enquiry Details">
+                        Enquiry Details
+                    </span>
+                    <h5 class="modal-title" id="enquiryDetailsModalTitle">#ENQ1001</h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="enquiry-detail-highlight">
+                    <div class="enquiry-detail-product-icon">
+                        <i class="fa-solid fa-seedling"></i>
+                    </div>
+                    <div>
+                        <span data-translate="Product">Product</span>
+                        <h5 id="detailEnquiryProduct">Fresh Tomatoes</h5>
+                        <small id="detailEnquiryCategory">Vegetables</small>
+                    </div>
+                    <span id="detailEnquiryStatus" class="enquiry-status status-pending">
+                        Pending
+                    </span>
+                </div>
+
+                <div class="enquiry-details-grid">
+                    <div class="enquiry-detail-item">
+                        <span data-translate="Buyer">Buyer</span>
+                        <strong id="detailEnquiryBuyer">Rajesh Traders</strong>
+                    </div>
+                    <div class="enquiry-detail-item">
+                        <span data-translate="Email">Email</span>
+                        <strong id="detailEnquiryEmail">rajesh@example.com</strong>
+                    </div>
+                    <div class="enquiry-detail-item">
+                        <span data-translate="Phone">Phone</span>
+                        <strong id="detailEnquiryPhone">9876543210</strong>
+                    </div>
+                    <div class="enquiry-detail-item">
+                        <span data-translate="Farmer">Farmer</span>
+                        <strong id="detailEnquiryFarmer">Suresh Patil</strong>
+                    </div>
+                    <div class="enquiry-detail-item">
+                        <span data-translate="Requested Quantity">Requested Quantity</span>
+                        <strong id="detailEnquiryQuantity">500 Kg</strong>
+                    </div>
+                    <div class="enquiry-detail-item">
+                        <span data-translate="Offered Price">Offered Price</span>
+                        <strong id="detailEnquiryPrice">₹35 / Kg</strong>
+                    </div>
+                    <div class="enquiry-detail-item">
+                        <span data-translate="Date">Date</span>
+                        <strong id="detailEnquiryDate">24 Oct 2026</strong>
+                    </div>
+                    <div class="enquiry-detail-item">
+                        <span data-translate="Location">Location</span>
+                        <strong id="detailEnquiryLocation">Akola, Maharashtra</strong>
+                    </div>
+                </div>
+
+                <div class="enquiry-message-box">
+                    <span data-translate="Buyer Message">Buyer Message</span>
+                    <p id="detailEnquiryMessage">We need fresh tomatoes for our wholesale market. Please confirm availability.</p>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-modal-close" data-bs-dismiss="modal"
+                        data-translate="Close">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("footer.ejs") %>

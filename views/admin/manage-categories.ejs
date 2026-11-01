@@ -1,0 +1,262 @@
+
+<%- include("header.ejs") %>
+
+<link rel="stylesheet" href="/admin/style.css">
+
+<div class="manage-categories-page container-fluid py-4">
+
+    <!-- Page Header -->
+    <div class="categories-page-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <span class="categories-eyebrow" data-translate="Category Management">Category Management</span>
+            <h2 class="categories-page-title" data-translate="Manage Categories">Manage Categories</h2>
+            <p class="categories-page-subtitle mb-0"
+               data-translate="Organize and manage marketplace product categories.">
+                Organize and manage marketplace product categories.
+            </p>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+            <button type="button" class="btn btn-export-categories" id="exportCategoriesBtn">
+                <i class="fa-solid fa-file-csv me-2"></i>
+                <span data-translate="Export Categories">Export Categories</span>
+            </button>
+
+            <button type="button" class="btn btn-add-category" id="openAddCategoryBtn">
+                <i class="fa-solid fa-plus me-2"></i>
+                <span data-translate="Add Category">Add Category</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="category-stat-card">
+                <div class="category-stat-top">
+                    <div>
+                        <p data-translate="Total Categories">Total Categories</p>
+                        <h3 id="totalCategoriesCount">8</h3>
+                    </div>
+                    <div class="category-stat-icon category-icon-total">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </div>
+                </div>
+                <span data-translate="All marketplace categories">All marketplace categories</span>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="category-stat-card">
+                <div class="category-stat-top">
+                    <div>
+                        <p data-translate="Active Categories">Active Categories</p>
+                        <h3 id="activeCategoriesCount">7</h3>
+                    </div>
+                    <div class="category-stat-icon category-icon-active">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                </div>
+                <span data-translate="Visible in marketplace">Visible in marketplace</span>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="category-stat-card">
+                <div class="category-stat-top">
+                    <div>
+                        <p data-translate="Inactive Categories">Inactive Categories</p>
+                        <h3 id="inactiveCategoriesCount">1</h3>
+                    </div>
+                    <div class="category-stat-icon category-icon-inactive">
+                        <i class="fa-solid fa-circle-pause"></i>
+                    </div>
+                </div>
+                <span data-translate="Hidden from marketplace">Hidden from marketplace</span>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="category-stat-card">
+                <div class="category-stat-top">
+                    <div>
+                        <p data-translate="Product Types">Product Types</p>
+                        <h3 id="categoryTypesCount">8</h3>
+                    </div>
+                    <div class="category-stat-icon category-icon-types">
+                        <i class="fa-solid fa-seedling"></i>
+                    </div>
+                </div>
+                <span data-translate="Unique categories listed">Unique categories listed</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Category Management Panel -->
+    <div class="categories-panel">
+
+        <div class="categories-panel-header">
+            <div>
+                <h4 data-translate="Category List">Category List</h4>
+                <p data-translate="Create, update and control marketplace categories.">
+                    Create, update and control marketplace categories.
+                </p>
+            </div>
+
+            <span class="category-record-badge">
+                <i class="fa-solid fa-list me-1"></i>
+                <span id="categoriesVisibleCount">8</span>
+                <span data-translate="Records">Records</span>
+            </span>
+        </div>
+
+        <!-- Search and Filters -->
+        <div class="categories-toolbar">
+            <div class="categories-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input
+                    type="search"
+                    id="categoriesSearchInput"
+                    class="form-control"
+                    placeholder="Search category name or description..."
+                    data-translate-placeholder="Search category name or description..."
+                    aria-label="Search categories">
+            </div>
+
+            <select id="categoriesStatusFilter" class="form-select" aria-label="Filter by status">
+                <option value="all" data-translate="All Statuses">All Statuses</option>
+                <option value="active" data-translate="Active">Active</option>
+                <option value="inactive" data-translate="Inactive">Inactive</option>
+            </select>
+
+            <button type="button" class="btn btn-reset-categories" id="resetCategoriesFiltersBtn">
+                <i class="fa-solid fa-rotate-left me-1"></i>
+                <span data-translate="Reset">Reset</span>
+            </button>
+        </div>
+
+        <!-- Categories Table -->
+        <div class="table-responsive categories-table-wrapper">
+            <table class="table categories-table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th data-translate="Category">Category</th>
+                        <th data-translate="Description">Description</th>
+                        <th data-translate="Slug">Slug</th>
+                        <th data-translate="Products">Products</th>
+                        <th data-translate="Created Date">Created Date</th>
+                        <th data-translate="Status">Status</th>
+                        <th data-translate="Actions">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="manageCategoriesTableBody">
+        <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
+            <% categories.forEach(category => { %>
+                <tr data-status="<%= category.status || 'active' %>">
+                    <td>
+                        <div class="category-name-cell">
+                            <span class="category-image-icon category-vegetables"><i class="fa-solid fa-leaf text-success"></i></span>
+                            <div><strong class="category-name"><%= category.category_name %></strong></div>
+                        </div>
+                    </td>
+                    <td class="category-description"><%= category.description || 'Agricultural produce category' %></td>
+                    <td><span class="category-slug"><%= (category.category_name || '').toLowerCase().replace(/\s+/g, '-') %></span></td>
+                    <td><span class="category-product-count"><%= category.product_count || 0 %></span></td>
+                    <td><%= category.created_at ? new Date(category.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—' %></td>
+                    <td><span class="category-status <%= category.status === 'active' ? 'status-active' : 'status-inactive' %>"><%= category.status === 'active' ? 'Active' : 'Inactive' %></span></td>
+                    <td>
+                        <form method="POST" action="/admin/categories/delete/<%= category.category_id %>" onsubmit="return confirm('Are you sure you want to delete this category?');" style="display:inline;">
+                            <button class="category-action-btn delete-category-btn" type="submit" title="Delete">
+                                <i class="fa-solid fa-trash text-danger"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            <% }); %>
+        <% } else { %>
+            <tr><td colspan="7" class="text-center py-4 text-muted">No categories found.</td></tr>
+        <% } %>
+    </tbody>
+            </table>
+        </div>
+
+        <!-- Empty State -->
+        <div id="categoriesEmptyState" class="categories-empty-state d-none">
+            <div class="category-empty-icon"><i class="fa-solid fa-layer-group"></i></div>
+            <h5 data-translate="No categories found">No categories found</h5>
+            <p data-translate="Try changing your search or filters.">Try changing your search or filters.</p>
+        </div>
+
+        <div class="categories-table-footer">
+            <span id="categoriesPaginationInfo">Showing 8 categories</span>
+            <span data-translate="Sample records for frontend demonstration">Sample records for frontend demonstration</span>
+        </div>
+    </div>
+</div>
+
+<!-- Add / Edit Category Modal -->
+<div class="modal fade" id="categoryFormModal" tabindex="-1" aria-labelledby="categoryFormModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content category-modal-content">
+            <form id="categoryForm">
+                <div class="modal-header">
+                    <div>
+                        <span class="category-modal-eyebrow" data-translate="Category Settings">Category Settings</span>
+                        <h5 class="modal-title" id="categoryFormModalTitle" data-translate="Add New Category">Add New Category</h5>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" id="categoryEditOriginalName">
+
+                    <div class="mb-3">
+                        <label for="categoryNameInput" class="form-label" data-translate="Category Name">Category Name</label>
+                        <input type="text" id="categoryNameInput" class="form-control"
+                               placeholder="Enter category name" required maxlength="60">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="categoryDescriptionInput" class="form-label" data-translate="Description">Description</label>
+                        <textarea id="categoryDescriptionInput" class="form-control" rows="3"
+                                  placeholder="Enter category description" required maxlength="250"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="categoryIconInput" class="form-label" data-translate="Icon">Icon</label>
+                        <select id="categoryIconInput" class="form-select">
+                            <option value="fa-seedling">Seedling</option>
+                            <option value="fa-carrot">Carrot</option>
+                            <option value="fa-apple-whole">Apple</option>
+                            <option value="fa-wheat-awn">Wheat</option>
+                            <option value="fa-droplet">Oilseeds</option>
+                            <option value="fa-pepper-hot">Spices</option>
+                            <option value="fa-cow">Dairy</option>
+                            <option value="fa-box-open">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="category-form-note">
+                        <i class="fa-solid fa-circle-info me-2"></i>
+                        <span data-translate="The category slug is generated automatically from its name.">
+                            The category slug is generated automatically from its name.
+                        </span>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-category-cancel" data-bs-dismiss="modal" data-translate="Cancel">Cancel</button>
+                    <button type="submit" class="btn btn-category-save" id="saveCategoryBtn">
+                        <i class="fa-solid fa-check me-2"></i>
+                        <span data-translate="Save Category">Save Category</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<%- include("footer.ejs") %>
